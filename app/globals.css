@@ -1,26 +1,40 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: #6D28D9;
+  --color-background-light: #F3F4F6;
+  --color-surface-light: #FFFFFF;
+  --color-pastel-blue: #93C5FD;
+  --color-pastel-pink: #F9A8D4;
+  --color-pastel-orange: #FDBA74;
+  --color-pastel-green: #86EFAC;
+  --font-sans: var(--font-inter), sans-serif;
+  --font-display: var(--font-playfair), serif;
+  --radius-DEFAULT: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.gradient-card {
+  background: linear-gradient(135deg, #111827 0%, #1F2937 100%);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background-light);
+  color: #1f2937;
+  font-family: var(--font-sans);
 }
+
