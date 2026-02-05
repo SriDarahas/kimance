@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { signup } from "@/app/auth/actions";
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,12 +13,102 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle registration logic here
-    console.log("Register:", { fullName, email, password, confirmPassword, agreeTerms });
+    setError(null);
+    setSuccess(null);
+
+    // Client-side validation
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+
+    if (!agreeTerms) {
+      setError("Please agree to the Terms of Service and Privacy Policy");
+      return;
+    }
+
+    setIsLoading(true);
+
+    const formData = new FormData();
+    formData.append("fullName", fullName);
+    formData.append("email", email);
+    formData.append("password", password);
+
+    const result = await signup(formData);
+    setIsLoading(false);
+
+    if (result?.error) {
+      setError(result.error);
+    } else if (result?.success) {
+      setSuccess(result.success);
+    }
   };
+
+  // Success state - show confirmation message
+  if (success) {
+    return (
+      <div className="font-[family-name:var(--font-inter)] bg-white text-gray-900 min-h-screen">
+        <div className="flex min-h-screen w-full flex-row">
+          {/* Left Panel: Brand Showcase */}
+          <div
+            className="hidden lg:flex w-1/2 relative flex-col justify-between bg-cover bg-center overflow-hidden"
+            style={{
+              backgroundImage:
+                'url("https://lh3.googleusercontent.com/aida-public/AB6AXuArEjg8Wu_EAl12MZeUi4NTQ7sXjZdZhqirQdqQB3v6LL-7Xihu7JYJGtdn-TFC3uFZZFLv4gaNAP82fw6O7Gt1zmkbDjLetvK8HsodcLP33WcJ8L3BOhJ7CsLcGVLIxPBBBR0R_dUmwH9Mk379EEiTrZa-QQYmMequI-tVqQ3a8h5aZaTQBcIfLo3P-ExlBPmiPLIn-NXF-tF37FzZO1x-XkMBTYhcMi5Z-EEeEw7E1sKGtgEskibwiB6jPPxlnDFOgS3wuI4rhRYa")',
+            }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-b from-[#6D28D9]/30 to-gray-900/90"></div>
+            <div className="relative z-10 p-12">
+              <Link href="/" className="flex items-center gap-3">
+                <Image src="/icon.png" alt="Kimance Logo" width={40} height={40} className="rounded" />
+                <span className="text-white text-2xl font-bold tracking-tight font-[family-name:var(--font-playfair)]">
+                  Kimance
+                </span>
+              </Link>
+            </div>
+            <div className="relative z-10 p-12 max-w-[640px]">
+              <h1 className="text-white text-5xl font-bold leading-tight mb-4 tracking-tight font-[family-name:var(--font-playfair)]">
+                Start your journey
+              </h1>
+              <p className="text-white/90 text-xl font-medium leading-relaxed max-w-[480px]">
+                Join thousands of users who trust Kimance for secure, borderless financial management.
+              </p>
+            </div>
+          </div>
+
+          {/* Right Panel: Success Message */}
+          <div className="flex w-full lg:w-1/2 flex-col justify-center items-center bg-white px-4 sm:px-12 xl:px-24">
+            <div className="w-full max-w-[480px] text-center">
+              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span className="material-icons-outlined text-4xl text-green-500">mail</span>
+              </div>
+              <h2 className="text-gray-900 text-3xl font-black leading-tight tracking-tight font-[family-name:var(--font-playfair)] mb-4">
+                Check your email
+              </h2>
+              <p className="text-gray-500 text-base mb-8">{success}</p>
+              <Link
+                href="/login"
+                className="inline-flex items-center justify-center rounded-full bg-[#6D28D9] hover:bg-[#5A24B3] text-white text-base font-bold tracking-wide transition-all shadow-lg shadow-[#6D28D9]/30 px-8 py-3"
+              >
+                Go to Login
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="font-[family-name:var(--font-inter)] bg-white text-gray-900 min-h-screen">
@@ -88,6 +179,14 @@ export default function Register() {
               </p>
             </div>
 
+            {/* Error Message */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+                <span className="material-icons-outlined text-red-500 mt-0.5">error_outline</span>
+                <p className="text-red-700 text-sm">{error}</p>
+              </div>
+            )}
+
             {/* Form */}
             <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
               {/* Full Name Field */}
@@ -102,6 +201,7 @@ export default function Register() {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required
+                  disabled={isLoading}
                 />
               </label>
 
@@ -117,6 +217,7 @@ export default function Register() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  disabled={isLoading}
                 />
               </label>
 
@@ -133,11 +234,14 @@ export default function Register() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    minLength={6}
+                    disabled={isLoading}
                   />
                   <button
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#6D28D9] transition-colors flex items-center justify-center"
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
+                    disabled={isLoading}
                   >
                     <span className="material-icons-outlined text-xl">
                       {showPassword ? "visibility_off" : "visibility"}
@@ -159,11 +263,14 @@ export default function Register() {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
+                    minLength={6}
+                    disabled={isLoading}
                   />
                   <button
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#6D28D9] transition-colors flex items-center justify-center"
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    disabled={isLoading}
                   >
                     <span className="material-icons-outlined text-xl">
                       {showConfirmPassword ? "visibility_off" : "visibility"}
@@ -180,6 +287,7 @@ export default function Register() {
                   onChange={(e) => setAgreeTerms(e.target.checked)}
                   className="mt-1 w-4 h-4 text-[#6D28D9] border-gray-300 rounded focus:ring-[#6D28D9]"
                   required
+                  disabled={isLoading}
                 />
                 <span className="text-sm text-gray-500">
                   I agree to the{" "}
@@ -196,9 +304,17 @@ export default function Register() {
               {/* Create Account Button */}
               <button
                 type="submit"
-                className="flex w-full h-12 items-center justify-center rounded-full bg-[#6D28D9] hover:bg-[#5A24B3] text-white text-base font-bold tracking-wide transition-all shadow-lg shadow-[#6D28D9]/30 mt-2"
+                disabled={isLoading}
+                className="flex w-full h-12 items-center justify-center rounded-full bg-[#6D28D9] hover:bg-[#5A24B3] text-white text-base font-bold tracking-wide transition-all shadow-lg shadow-[#6D28D9]/30 mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Create Account
+                {isLoading ? (
+                  <span className="flex items-center gap-2">
+                    <span className="material-icons-outlined animate-spin">refresh</span>
+                    Creating account...
+                  </span>
+                ) : (
+                  "Create Account"
+                )}
               </button>
             </form>
 
