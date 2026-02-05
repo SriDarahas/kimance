@@ -1,7 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { logout } from "@/app/auth/actions";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect('/login');
+  }
+
+  const userName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
+  const userEmail = user.email || '';
+
   return (
     <div className="bg-[#F3F4F6] text-gray-800 font-[family-name:var(--font-inter)] min-h-screen flex overflow-hidden">
       {/* Sidebar */}
@@ -21,7 +34,7 @@ export default function Home() {
 
         <nav className="flex-1 px-4 space-y-1 mt-2">
           <Link
-            href="#"
+            href="/"
             className="flex items-center gap-3 px-4 py-2.5 bg-[#6D28D9]/10 text-[#6D28D9] rounded-xl font-medium text-sm"
           >
             <span className="material-icons-outlined text-xl">dashboard</span>
@@ -35,7 +48,7 @@ export default function Home() {
             My Wallets
           </Link>
           <Link
-            href="#"
+            href="/send-money"
             className="flex items-center gap-3 px-4 py-2.5 text-gray-500 hover:bg-gray-100 rounded-xl font-medium transition-colors text-sm"
           >
             <span className="material-icons-outlined text-xl">receipt_long</span>
@@ -61,22 +74,24 @@ export default function Home() {
         </nav>
 
         <div className="p-4 border-t border-gray-200">
-          <Link href="/settings" className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 cursor-pointer transition-colors">
-            <Image
-              alt="User Avatar"
-              className="w-9 h-9 rounded-full border-2 border-white shadow-sm"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbXr3DDLyxloYuvfePJxu5u_hv5Cs48XjznWxqit9UDCu3ZjK-6DvfuZpUVWckI1hULyWPmPiYiSljlJWnD4IjiTIh9A1r34OIX50pAiJfo0y_aHeaghYxBGWbr56WXXVKT9W9QXf76NVUJrFN6xVMIrdJ1tieKJwnv3btBt7elx5wSd-rpA1aMGe55bn_MzhWKVZBOwGzimrfK1uYadc4hPe-43-mO4aaoBlFaxDzJKuUu2hchBJrA8TqiATMsFxACVKb3EY0uwZZ"
-              width={36}
-              height={36}
-            />
-            <div className="flex flex-col text-left">
-              <span className="text-sm font-semibold text-gray-900">Yanis M.</span>
-              <span className="text-xs text-gray-500">Pro Member</span>
+          <div className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 cursor-pointer transition-colors group">
+            <div className="w-9 h-9 rounded-full bg-[#6D28D9]/10 flex items-center justify-center text-[#6D28D9] font-semibold text-sm">
+              {userName.charAt(0).toUpperCase()}
             </div>
-            <span className="material-icons-outlined ml-auto text-gray-400 text-xl">
-              expand_more
-            </span>
-          </Link>
+            <div className="flex flex-col text-left flex-1 min-w-0">
+              <span className="text-sm font-semibold text-gray-900 truncate">{userName}</span>
+              <span className="text-xs text-gray-500 truncate">{userEmail}</span>
+            </div>
+            <form action={logout}>
+              <button 
+                type="submit"
+                className="material-icons-outlined text-gray-400 hover:text-[#6D28D9] transition-colors text-xl"
+                title="Sign out"
+              >
+                logout
+              </button>
+            </form>
+          </div>
         </div>
       </aside>
 
@@ -86,7 +101,7 @@ export default function Home() {
         <header className="h-16 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200">
           <div>
             <h1 className="font-[family-name:var(--font-playfair)] text-xl font-semibold text-gray-900">
-              Hi, Yanis
+              Hi, {userName}
             </h1>
             <p className="text-xs text-gray-500">Welcome back to your financial overview</p>
           </div>
