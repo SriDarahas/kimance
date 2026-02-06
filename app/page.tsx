@@ -2,7 +2,36 @@ import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { logout } from "@/app/auth/actions";
+import Sidebar from "@/app/components/Sidebar";
+
+async function getOrCreateBalance(supabase: Awaited<ReturnType<typeof createClient>>, userId: string, email: string) {
+  const { data: balance } = await supabase
+    .from('balances')
+    .select('amount')
+    .eq('user_id', userId)
+    .single();
+
+  if (balance) return balance.amount;
+
+  // Create default balance
+  const { data: newBalance } = await supabase
+    .from('balances')
+    .insert({ user_id: userId, email: email, amount: 100 })
+    .select('amount')
+    .single();
+
+  return newBalance?.amount ?? 100;
+}
+
+async function getTransactions(supabase: Awaited<ReturnType<typeof createClient>>, userId: string) {
+  const { data } = await supabase
+    .from('transactions')
+    .select('*')
+    .or(`sender_id.eq.${userId},recipient_id.eq.${userId}`)
+    .order('created_at', { ascending: false })
+    .limit(5);
+  return data || [];
+}
 
 export default async function Home() {
   const supabase = await createClient();
@@ -14,99 +43,25 @@ export default async function Home() {
 
   const userName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
   const userEmail = user.email || '';
+  const balance = await getOrCreateBalance(supabase, user.id, userEmail);
+  const transactions = await getTransactions(supabase, user.id);
 
   return (
-    <div className="bg-[#F3F4F6] text-gray-800 font-[family-name:var(--font-inter)] min-h-screen flex overflow-hidden">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-gray-200 flex-shrink-0 flex-col hidden md:flex h-screen sticky top-0">
-        <div className="p-6 flex items-center gap-2">
-          <Image
-            src="/icon.png"
-            alt="Kimance Logo"
-            width={36}
-            height={36}
-            className="rounded"
-          />
-          <span className="font-[family-name:var(--font-playfair)] text-2xl text-[#6D28D9] font-bold tracking-tight">
-            Kimance
-          </span>
-        </div>
-
-        <nav className="flex-1 px-4 space-y-1 mt-2">
-          <Link
-            href="/"
-            className="flex items-center gap-3 px-4 py-2.5 bg-[#6D28D9]/10 text-[#6D28D9] rounded-xl font-medium text-sm"
-          >
-            <span className="material-icons-outlined text-xl">dashboard</span>
-            Dashboard
-          </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-3 px-4 py-2.5 text-gray-500 hover:bg-gray-100 rounded-xl font-medium transition-colors text-sm"
-          >
-            <span className="material-icons-outlined text-xl">account_balance_wallet</span>
-            My Wallets
-          </Link>
-          <Link
-            href="/send-money"
-            className="flex items-center gap-3 px-4 py-2.5 text-gray-500 hover:bg-gray-100 rounded-xl font-medium transition-colors text-sm"
-          >
-            <span className="material-icons-outlined text-xl">receipt_long</span>
-            Transactions
-          </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-3 px-4 py-2.5 text-gray-500 hover:bg-gray-100 rounded-xl font-medium transition-colors text-sm"
-          >
-            <span className="material-icons-outlined text-xl">pie_chart</span>
-            Budgeting
-            <span className="ml-auto text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-              New
-            </span>
-          </Link>
-          <Link
-            href="/settings"
-            className="flex items-center gap-3 px-4 py-2.5 text-gray-500 hover:bg-gray-100 rounded-xl font-medium transition-colors text-sm"
-          >
-            <span className="material-icons-outlined text-xl">settings</span>
-            Settings
-          </Link>
-        </nav>
-
-        <div className="p-4 border-t border-gray-200">
-          <div className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 cursor-pointer transition-colors group">
-            <div className="w-9 h-9 rounded-full bg-[#6D28D9]/10 flex items-center justify-center text-[#6D28D9] font-semibold text-sm">
-              {userName.charAt(0).toUpperCase()}
-            </div>
-            <div className="flex flex-col text-left flex-1 min-w-0">
-              <span className="text-sm font-semibold text-gray-900 truncate">{userName}</span>
-              <span className="text-xs text-gray-500 truncate">{userEmail}</span>
-            </div>
-            <form action={logout}>
-              <button 
-                type="submit"
-                className="material-icons-outlined text-gray-400 hover:text-[#6D28D9] transition-colors text-xl"
-                title="Sign out"
-              >
-                logout
-              </button>
-            </form>
-          </div>
-        </div>
-      </aside>
+    <div className="bg-gray-100 text-gray-800 font-sans min-h-screen flex overflow-hidden">
+      <Sidebar userName={userName} userEmail={userEmail} />
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-y-auto">
         {/* Header */}
         <header className="h-16 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200">
           <div>
-            <h1 className="font-[family-name:var(--font-playfair)] text-xl font-semibold text-gray-900">
+            <h1 className="font-serif text-xl font-semibold text-gray-900">
               Hi, {userName}
             </h1>
             <p className="text-xs text-gray-500">Welcome back to your financial overview</p>
           </div>
           <div className="flex items-center gap-3">
-            <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:text-[#6D28D9] transition-colors relative shadow-sm">
+            <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:text-purple-600 transition-colors relative shadow-sm">
               <span className="material-icons-outlined text-xl">notifications</span>
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
             </button>
@@ -123,13 +78,13 @@ export default async function Home() {
             {/* Balance Card */}
             <div className="lg:col-span-5 relative group">
               <div className="gradient-card h-52 rounded-2xl p-6 flex flex-col justify-between text-white shadow-xl relative overflow-hidden ring-1 ring-black/5 transition-transform transform hover:scale-[1.01] duration-300">
-                <div className="absolute top-0 right-0 w-48 h-48 bg-[#6D28D9]/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+                <div className="absolute top-0 right-0 w-48 h-48 bg-purple-600/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2"></div>
                 <div className="relative z-10 flex justify-between items-start">
                   <div>
                     <p className="text-gray-400 font-medium mb-1 text-sm">Global Balance</p>
-                    <h2 className="font-[family-name:var(--font-playfair)] text-4xl font-medium tracking-tight">
-                      $12,450.00
+                    <h2 className="font-serif text-4xl font-medium tracking-tight">
+                      ${Number(balance).toFixed(2)}
                     </h2>
                   </div>
                   <button className="p-2 rounded-full hover:bg-white/10 transition-colors">
@@ -146,7 +101,7 @@ export default async function Home() {
                   </div>
                   <div className="flex -space-x-2">
                     <div className="w-6 h-6 rounded-full bg-white/20 border border-white/10"></div>
-                    <div className="w-6 h-6 rounded-full bg-[#6D28D9]/40 border border-white/10"></div>
+                    <div className="w-6 h-6 rounded-full bg-purple-600/40 border border-white/10"></div>
                   </div>
                 </div>
               </div>
@@ -186,82 +141,60 @@ export default async function Home() {
             {/* Recent Transactions */}
             <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-[family-name:var(--font-playfair)] text-lg font-semibold text-gray-900">
+                <h3 className="font-serif text-lg font-semibold text-gray-900">
                   Recent Transactions
                 </h3>
-                <Link href="#" className="text-[#6D28D9] text-xs font-medium hover:underline">
+                <Link href="#" className="text-purple-600 text-xs font-medium hover:underline">
                   View All
                 </Link>
               </div>
               <div className="space-y-2">
-                <button className="w-full flex items-center justify-between group p-2 hover:bg-gray-50 rounded-lg transition-colors text-left">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center">
-                      <span className="material-icons-outlined text-xl">shopping_basket</span>
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-900 text-sm">Organika Grocers</p>
-                      <p className="text-xs text-gray-500">Today, 2:03pm</p>
-                    </div>
-                  </div>
-                  <span className="font-semibold text-gray-900 text-sm">-$35.43</span>
-                </button>
-                <button className="w-full flex items-center justify-between group p-2 hover:bg-gray-50 rounded-lg transition-colors text-left">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
-                      <span className="material-icons-outlined text-xl">fitness_center</span>
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-900 text-sm">APZ Sports House</p>
-                      <p className="text-xs text-gray-500">Today, 12:43pm</p>
-                    </div>
-                  </div>
-                  <span className="font-semibold text-gray-900 text-sm">-$120.00</span>
-                </button>
-                <button className="w-full flex items-center justify-between group p-2 hover:bg-gray-50 rounded-lg transition-colors text-left">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center">
-                      <span className="material-icons-outlined text-xl">local_bar</span>
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-900 text-sm">Sloven Bar</p>
-                      <p className="text-xs text-gray-500">Yesterday, 10:05pm</p>
-                    </div>
-                  </div>
-                  <span className="font-semibold text-gray-900 text-sm">-$85.20</span>
-                </button>
-                <button className="w-full flex items-center justify-between group p-2 hover:bg-gray-50 rounded-lg transition-colors text-left">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center">
-                      <span className="material-icons-outlined text-xl">subscriptions</span>
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-900 text-sm">Netflix Subscription</p>
-                      <p className="text-xs text-gray-500">Oct 24, 9:00am</p>
-                    </div>
-                  </div>
-                  <span className="font-semibold text-gray-900 text-sm">-$15.99</span>
-                </button>
+                {transactions.length === 0 ? (
+                  <p className="text-gray-500 text-sm text-center py-8">No transactions yet</p>
+                ) : (
+                  transactions.map((tx: { id: string; sender_id: string; sender_email: string; recipient_email: string; amount: number; note: string | null; created_at: string }) => {
+                    const isSent = tx.sender_id === user.id;
+                    const otherEmail = isSent ? tx.recipient_email : tx.sender_email;
+                    const date = new Date(tx.created_at);
+                    const timeStr = date.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+                    return (
+                      <div key={tx.id} className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isSent ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
+                            <span className="material-icons-outlined text-xl">{isSent ? 'arrow_upward' : 'arrow_downward'}</span>
+                          </div>
+                          <div>
+                            <p className="font-semibold text-gray-900 text-sm">{isSent ? `To: ${otherEmail}` : `From: ${otherEmail}`}</p>
+                            <p className="text-xs text-gray-500">{tx.note || timeStr}</p>
+                          </div>
+                        </div>
+                        <span className={`font-semibold text-sm ${isSent ? 'text-red-600' : 'text-green-600'}`}>
+                          {isSent ? '-' : '+'}${Number(tx.amount).toFixed(2)}
+                        </span>
+                      </div>
+                    );
+                  })
+                )}
               </div>
             </div>
 
             {/* Right Column - Insights + Watchlist */}
             <div className="lg:col-span-1 space-y-4">
               {/* AI Insights */}
-              <div className="bg-gradient-to-br from-[#6D28D9]/10 to-blue-500/10 rounded-2xl p-4 border border-[#6D28D9]/20 relative overflow-hidden">
+              <div className="bg-gradient-to-br from-purple-600/10 to-blue-500/10 rounded-2xl p-4 border border-purple-600/20 relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-3 opacity-10">
-                  <span className="material-icons-outlined text-5xl text-[#6D28D9]">psychology</span>
+                  <span className="material-icons-outlined text-5xl text-purple-600">psychology</span>
                 </div>
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="bg-[#6D28D9] text-white text-xs font-bold px-2 py-0.5 rounded">AI</span>
-                  <h3 className="font-[family-name:var(--font-playfair)] text-base font-semibold text-gray-900">
+                  <span className="bg-purple-600 text-white text-xs font-bold px-2 py-0.5 rounded">AI</span>
+                  <h3 className="font-serif text-base font-semibold text-gray-900">
                     Smart Insights
                   </h3>
                 </div>
                 <div className="space-y-2">
                   <div className="bg-white p-3 rounded-xl shadow-sm border border-gray-100">
                     <p className="text-xs text-gray-600 leading-relaxed">
-                      <span className="font-semibold text-[#6D28D9]">Good job!</span> You spent{" "}
+                      <span className="font-semibold text-purple-600">Good job!</span> You spent{" "}
                       <span className="font-semibold text-green-600">15% less</span> on dining out
                       compared to last week.
                     </p>
@@ -274,14 +207,14 @@ export default async function Home() {
                     </p>
                   </div>
                 </div>
-                <button className="mt-3 w-full py-2 bg-white text-[#6D28D9] font-medium text-xs rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                <button className="mt-3 w-full py-2 bg-white text-purple-600 font-medium text-xs rounded-xl shadow-sm hover:shadow-md transition-shadow">
                   View Full Report
                 </button>
               </div>
 
               {/* Watchlist */}
               <div className="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm">
-                <h3 className="font-[family-name:var(--font-playfair)] text-base font-semibold text-gray-900 mb-3">
+                <h3 className="font-serif text-base font-semibold text-gray-900 mb-3">
                   Watchlist
                 </h3>
                 <div className="space-y-2">

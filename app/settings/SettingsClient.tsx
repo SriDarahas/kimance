@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { logout } from "@/app/auth/actions";
+import Sidebar from "@/app/components/Sidebar";
 
 type SettingsTab = "profile" | "security" | "billing" | "notifications";
 
@@ -19,97 +19,21 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
   const [autoSave, setAutoSave] = useState(true);
 
   return (
-    <div className="bg-[#F3F4F6] text-gray-800 font-[family-name:var(--font-inter)] min-h-screen flex overflow-hidden">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-gray-200 flex-shrink-0 flex-col hidden md:flex h-screen sticky top-0">
-        <div className="p-6 flex items-center gap-2">
-          <Image
-            src="/icon.png"
-            alt="Kimance Logo"
-            width={36}
-            height={36}
-            className="rounded"
-          />
-          <span className="font-[family-name:var(--font-playfair)] text-2xl text-[#6D28D9] font-bold tracking-tight">
-            Kimance
-          </span>
-        </div>
-
-        <nav className="flex-1 px-4 space-y-1 mt-2">
-          <Link
-            href="/"
-            className="flex items-center gap-3 px-4 py-2.5 text-gray-500 hover:bg-gray-100 rounded-xl font-medium transition-colors text-sm"
-          >
-            <span className="material-icons-outlined text-xl">dashboard</span>
-            Dashboard
-          </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-3 px-4 py-2.5 text-gray-500 hover:bg-gray-100 rounded-xl font-medium transition-colors text-sm"
-          >
-            <span className="material-icons-outlined text-xl">account_balance_wallet</span>
-            My Wallets
-          </Link>
-          <Link
-            href="/send-money"
-            className="flex items-center gap-3 px-4 py-2.5 text-gray-500 hover:bg-gray-100 rounded-xl font-medium transition-colors text-sm"
-          >
-            <span className="material-icons-outlined text-xl">receipt_long</span>
-            Transactions
-          </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-3 px-4 py-2.5 text-gray-500 hover:bg-gray-100 rounded-xl font-medium transition-colors text-sm"
-          >
-            <span className="material-icons-outlined text-xl">pie_chart</span>
-            Budgeting
-            <span className="ml-auto text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-              New
-            </span>
-          </Link>
-          <Link
-            href="/settings"
-            className="flex items-center gap-3 px-4 py-2.5 bg-[#6D28D9]/10 text-[#6D28D9] rounded-xl font-medium text-sm"
-          >
-            <span className="material-icons-outlined text-xl">settings</span>
-            Settings
-          </Link>
-        </nav>
-
-        <div className="p-4 border-t border-gray-200">
-          <div className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 cursor-pointer transition-colors group">
-            <div className="w-9 h-9 rounded-full bg-[#6D28D9]/10 flex items-center justify-center text-[#6D28D9] font-semibold text-sm">
-              {userName.charAt(0).toUpperCase()}
-            </div>
-            <div className="flex flex-col text-left flex-1 min-w-0">
-              <span className="text-sm font-semibold text-gray-900 truncate">{userName}</span>
-              <span className="text-xs text-gray-500 truncate">{userEmail}</span>
-            </div>
-            <form action={logout}>
-              <button 
-                type="submit"
-                className="material-icons-outlined text-gray-400 hover:text-[#6D28D9] transition-colors text-xl"
-                title="Sign out"
-              >
-                logout
-              </button>
-            </form>
-          </div>
-        </div>
-      </aside>
+    <div className="bg-gray-100 text-gray-800 font-sans min-h-screen flex overflow-hidden">
+      <Sidebar userName={userName} userEmail={userEmail} />
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-y-auto">
         {/* Header */}
         <header className="h-16 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200">
           <div>
-            <h1 className="font-[family-name:var(--font-playfair)] text-xl font-semibold text-gray-900">
+            <h1 className="font-serif text-xl font-semibold text-gray-900">
               Settings
             </h1>
             <p className="text-xs text-gray-500">Manage your account and preferences</p>
           </div>
           <div className="flex items-center gap-3">
-            <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:text-[#6D28D9] transition-colors relative shadow-sm">
+            <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:text-purple-600 transition-colors relative shadow-sm">
               <span className="material-icons-outlined text-xl">notifications</span>
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
             </button>
@@ -132,7 +56,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                   onClick={() => setActiveTab("profile")}
                   className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-sm transition-colors ${
                     activeTab === "profile"
-                      ? "bg-[#6D28D9]/10 text-[#6D28D9]"
+                      ? "bg-purple-600/10 text-purple-600"
                       : "text-gray-600 hover:bg-gray-100"
                   }`}
                 >
@@ -143,7 +67,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                   onClick={() => setActiveTab("security")}
                   className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-sm transition-colors ${
                     activeTab === "security"
-                      ? "bg-[#6D28D9]/10 text-[#6D28D9]"
+                      ? "bg-purple-600/10 text-purple-600"
                       : "text-gray-600 hover:bg-gray-100"
                   }`}
                 >
@@ -154,7 +78,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                   onClick={() => setActiveTab("billing")}
                   className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-sm transition-colors ${
                     activeTab === "billing"
-                      ? "bg-[#6D28D9]/10 text-[#6D28D9]"
+                      ? "bg-purple-600/10 text-purple-600"
                       : "text-gray-600 hover:bg-gray-100"
                   }`}
                 >
@@ -165,7 +89,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                   onClick={() => setActiveTab("notifications")}
                   className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-sm transition-colors ${
                     activeTab === "notifications"
-                      ? "bg-[#6D28D9]/10 text-[#6D28D9]"
+                      ? "bg-purple-600/10 text-purple-600"
                       : "text-gray-600 hover:bg-gray-100"
                   }`}
                 >
@@ -175,14 +99,14 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
               </div>
 
               {/* AI Coach Card */}
-              <div className="bg-gradient-to-br from-[#6D28D9] to-[#9F7AEA] rounded-2xl p-5 text-white shadow-lg relative overflow-hidden">
+              <div className="bg-gradient-to-br from-purple-600 to-purple-400 rounded-2xl p-5 text-white shadow-lg relative overflow-hidden">
                 <div className="absolute -right-4 -top-4 w-20 h-20 bg-white/10 rounded-full blur-xl"></div>
                 <div className="relative z-10">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="material-icons-outlined text-yellow-300 text-lg">
                       auto_awesome
                     </span>
-                    <h4 className="font-[family-name:var(--font-playfair)] font-semibold text-base">
+                    <h4 className="font-serif font-semibold text-base">
                       AI Coach
                     </h4>
                   </div>
@@ -202,7 +126,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
               {/* Header with Actions */}
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-gray-200">
                 <div>
-                  <h2 className="font-[family-name:var(--font-playfair)] text-2xl font-bold text-gray-900 mb-1">
+                  <h2 className="font-serif text-2xl font-bold text-gray-900 mb-1">
                     Profile Settings
                   </h2>
                   <p className="text-sm text-gray-500">
@@ -213,7 +137,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                   <button className="px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
                     Cancel
                   </button>
-                  <button className="px-5 py-2 bg-[#6D28D9] text-white rounded-lg text-sm font-medium hover:bg-[#5A24B3] shadow-lg shadow-purple-200 transition-all">
+                  <button className="px-5 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 shadow-lg shadow-purple-200 transition-all">
                     Save Changes
                   </button>
                 </div>
@@ -252,16 +176,16 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                 {/* Account Tier */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-base font-bold text-gray-900 font-[family-name:var(--font-playfair)]">
+                    <h3 className="text-base font-bold text-gray-900 font-serif">
                       Account Tier
                     </h3>
-                    <Link href="#" className="text-[#6D28D9] text-xs font-medium hover:underline">
+                    <Link href="#" className="text-purple-600 text-xs font-medium hover:underline">
                       Upgrade
                     </Link>
                   </div>
                   <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-3 opacity-10">
-                      <span className="material-icons-outlined text-6xl text-[#6D28D9]">
+                      <span className="material-icons-outlined text-6xl text-purple-600">
                         diamond
                       </span>
                     </div>
@@ -270,7 +194,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                         <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold">
                           Current Plan
                         </span>
-                        <h4 className="text-xl font-bold text-[#6D28D9] mt-0.5">Kimance Gold</h4>
+                        <h4 className="text-xl font-bold text-purple-600 mt-0.5">Kimance Gold</h4>
                       </div>
                       <div className="space-y-2 mb-4">
                         <div className="flex items-center gap-2 text-xs text-gray-600">
@@ -293,7 +217,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                         </div>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-1.5 mb-1.5">
-                        <div className="bg-[#6D28D9] h-1.5 rounded-full w-3/4"></div>
+                        <div className="bg-purple-600 h-1.5 rounded-full w-3/4"></div>
                       </div>
                       <p className="text-xs text-gray-500">
                         Upgrade to Platinum for exclusive metal card
@@ -304,7 +228,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
 
                 {/* AI Financial Coach */}
                 <div className="space-y-3">
-                  <h3 className="text-base font-bold text-gray-900 font-[family-name:var(--font-playfair)]">
+                  <h3 className="text-base font-bold text-gray-900 font-serif">
                     AI Financial Coach
                   </h3>
                   <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm space-y-4">
@@ -321,7 +245,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                       <button
                         onClick={() => setSmartBudgeting(!smartBudgeting)}
                         className={`relative w-10 h-5 rounded-full transition-colors ${
-                          smartBudgeting ? "bg-[#6D28D9]" : "bg-gray-200"
+                          smartBudgeting ? "bg-purple-600" : "bg-gray-200"
                         }`}
                       >
                         <div
@@ -344,7 +268,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                       <button
                         onClick={() => setInvestmentTips(!investmentTips)}
                         className={`relative w-10 h-5 rounded-full transition-colors ${
-                          investmentTips ? "bg-[#6D28D9]" : "bg-gray-200"
+                          investmentTips ? "bg-purple-600" : "bg-gray-200"
                         }`}
                       >
                         <div
@@ -367,7 +291,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                       <button
                         onClick={() => setAutoSave(!autoSave)}
                         className={`relative w-10 h-5 rounded-full transition-colors ${
-                          autoSave ? "bg-[#6D28D9]" : "bg-gray-200"
+                          autoSave ? "bg-purple-600" : "bg-gray-200"
                         }`}
                       >
                         <div
@@ -384,15 +308,15 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
               {/* Connected Accounts */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-base font-bold text-gray-900 font-[family-name:var(--font-playfair)]">
+                  <h3 className="text-base font-bold text-gray-900 font-serif">
                     Connected Accounts
                   </h3>
-                  <button className="flex items-center gap-1 text-xs font-medium text-[#6D28D9] hover:text-[#5A24B3] transition-colors">
+                  <button className="flex items-center gap-1 text-xs font-medium text-purple-600 hover:text-purple-700 transition-colors">
                     <span className="material-icons-outlined text-sm">add</span> Add New
                   </button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <button className="group bg-white border border-gray-100 p-4 rounded-2xl flex items-center gap-3 hover:border-[#6D28D9]/50 transition-all shadow-sm hover:shadow-md text-left">
+                  <button className="group bg-white border border-gray-100 p-4 rounded-2xl flex items-center gap-3 hover:border-purple-600/50 transition-all shadow-sm hover:shadow-md text-left">
                     <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
                       <span className="material-icons-outlined text-gray-600 text-lg">
                         account_balance
@@ -402,11 +326,11 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                       <p className="font-medium text-gray-900 text-sm">Chase Bank</p>
                       <p className="text-xs text-gray-500">**** 4829</p>
                     </div>
-                    <span className="material-icons-outlined text-gray-400 group-hover:text-[#6D28D9] text-lg">
+                    <span className="material-icons-outlined text-gray-400 group-hover:text-purple-600 text-lg">
                       navigate_next
                     </span>
                   </button>
-                  <button className="group bg-white border border-gray-100 p-4 rounded-2xl flex items-center gap-3 hover:border-[#6D28D9]/50 transition-all shadow-sm hover:shadow-md text-left">
+                  <button className="group bg-white border border-gray-100 p-4 rounded-2xl flex items-center gap-3 hover:border-purple-600/50 transition-all shadow-sm hover:shadow-md text-left">
                     <div className="w-9 h-9 rounded-full bg-orange-100 flex items-center justify-center">
                       <span className="material-icons-outlined text-orange-500 text-lg">
                         currency_bitcoin
@@ -416,11 +340,11 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                       <p className="font-medium text-gray-900 text-sm">Metamask</p>
                       <p className="text-xs text-gray-500">0x71...8a92</p>
                     </div>
-                    <span className="material-icons-outlined text-gray-400 group-hover:text-[#6D28D9] text-lg">
+                    <span className="material-icons-outlined text-gray-400 group-hover:text-purple-600 text-lg">
                       navigate_next
                     </span>
                   </button>
-                  <button className="border-2 border-dashed border-gray-200 p-4 rounded-2xl flex items-center justify-center gap-2 hover:border-[#6D28D9]/50 hover:bg-[#6D28D9]/5 transition-all text-gray-500 hover:text-[#6D28D9]">
+                  <button className="border-2 border-dashed border-gray-200 p-4 rounded-2xl flex items-center justify-center gap-2 hover:border-purple-600/50 hover:bg-purple-600/5 transition-all text-gray-500 hover:text-purple-600">
                     <span className="material-icons-outlined text-lg">add_card</span>
                     <span className="text-sm font-medium">Link Card</span>
                   </button>
@@ -429,7 +353,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
 
               {/* Preferences */}
               <div className="space-y-3">
-                <h3 className="text-base font-bold text-gray-900 font-[family-name:var(--font-playfair)]">
+                <h3 className="text-base font-bold text-gray-900 font-serif">
                   Preferences
                 </h3>
                 <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -437,7 +361,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">
                       Primary Currency
                     </label>
-                    <select className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-[#6D28D9] focus:border-[#6D28D9] py-2 px-3 text-sm transition-colors">
+                    <select className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-purple-600 focus:border-purple-600 py-2 px-3 text-sm transition-colors">
                       <option>USD - US Dollar</option>
                       <option>EUR - Euro</option>
                       <option>GBP - British Pound</option>
@@ -448,7 +372,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">
                       Language
                     </label>
-                    <select className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-[#6D28D9] focus:border-[#6D28D9] py-2 px-3 text-sm transition-colors">
+                    <select className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-purple-600 focus:border-purple-600 py-2 px-3 text-sm transition-colors">
                       <option>English (US)</option>
                       <option>Spanish</option>
                       <option>French</option>
@@ -459,7 +383,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">
                       Time Zone
                     </label>
-                    <select className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-[#6D28D9] focus:border-[#6D28D9] py-2 px-3 text-sm transition-colors">
+                    <select className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-purple-600 focus:border-purple-600 py-2 px-3 text-sm transition-colors">
                       <option>(GMT-05:00) Eastern Time</option>
                       <option>(GMT-08:00) Pacific Time</option>
                       <option>(GMT+00:00) London</option>
