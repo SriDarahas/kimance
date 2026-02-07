@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import Sidebar from "@/app/components/Sidebar";
+import WatchlistClient from "@/app/components/WatchlistClient";
 
 async function getOrCreateBalance(supabase: Awaited<ReturnType<typeof createClient>>, userId: string, email: string) {
   const { data: balance } = await supabase
@@ -212,38 +213,8 @@ export default async function Home() {
                 </button>
               </div>
 
-              {/* Watchlist */}
-              <div className="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm">
-                <h3 className="font-serif text-base font-semibold text-gray-900 mb-3">
-                  Watchlist
-                </h3>
-                <div className="space-y-2">
-                  <button className="w-full flex items-center justify-between hover:bg-gray-50 rounded-lg p-1.5 transition-colors">
-                    <div className="flex items-center gap-2">
-                      <div className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center text-white text-xs font-bold">
-                        B
-                      </div>
-                      <span className="text-xs font-medium text-gray-800">Bitcoin</span>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-xs font-semibold text-gray-800">$34,210</span>
-                      <span className="text-xs text-green-500 block">+1.2%</span>
-                    </div>
-                  </button>
-                  <button className="w-full flex items-center justify-between hover:bg-gray-50 rounded-lg p-1.5 transition-colors">
-                    <div className="flex items-center gap-2">
-                      <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-bold">
-                        E
-                      </div>
-                      <span className="text-xs font-medium text-gray-800">Ethereum</span>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-xs font-semibold text-gray-800">$1,780</span>
-                      <span className="text-xs text-red-500 block">-0.5%</span>
-                    </div>
-                  </button>
-                </div>
-              </div>
+              {/* Watchlist (client) */}
+              <WatchlistClient />
             </div>
           </div>
         </div>
