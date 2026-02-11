@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -10,30 +11,36 @@ interface SidebarProps {
   userEmail: string;
 }
 
-const navItems = [
+interface NavItem {
+  href: string;
+  icon: string;
+  label: string;
+  badge?: string;
+}
+
+const navItems: NavItem[] = [
   { href: "/", icon: "dashboard", label: "Dashboard" },
   { href: "#", icon: "account_balance_wallet", label: "My Wallets" },
   { href: "/send-money", icon: "send", label: "Send Money" },
-  { href: "#", icon: "pie_chart", label: "Budgeting", badge: "New" },
+  { href: "/marketplace", icon: "storefront", label: "Marketplace" },
+  { href: "/find-tax-experts", icon: "person_search", label: "Find Tax Experts" },
   { href: "/settings", icon: "settings", label: "Settings" },
 ];
 
 export default function Sidebar({ userName, userEmail }: SidebarProps) {
   const pathname = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  return (
-    <aside className="w-64 bg-white border-r border-gray-200 shrink-0 flex-col hidden md:flex h-screen sticky top-0">
-      <div className="p-6 flex items-center gap-2">
+  const SidebarContent = () => (
+    <>
+      <div className="p-6">
         <Image
-          src="/icon.png"
+          src="/logo-crop.png"
           alt="Kimance Logo"
-          width={36}
-          height={36}
-          className="rounded"
+          width={140}
+          height={40}
+          className="h-10 w-auto"
         />
-        <span className="font-serif text-2xl text-purple-600 font-bold tracking-tight">
-          Kimance
-        </span>
       </div>
 
       <nav className="flex-1 px-4 space-y-1 mt-2">
@@ -43,6 +50,7 @@ export default function Sidebar({ userName, userEmail }: SidebarProps) {
             <Link
               key={item.label}
               href={item.href}
+              onClick={() => setMobileMenuOpen(false)}
               className={`flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-sm transition-colors ${
                 isActive
                   ? "bg-purple-600/10 text-purple-600"
@@ -81,6 +89,54 @@ export default function Sidebar({ userName, userEmail }: SidebarProps) {
           </form>
         </div>
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Mobile Header */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4">
+        <Image
+          src="/logo-crop.png"
+          alt="Kimance Logo"
+          width={120}
+          height={34}
+          className="h-8 w-auto"
+        />
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+        >
+          <span className="material-icons-outlined text-2xl text-gray-600">
+            {mobileMenuOpen ? "close" : "menu"}
+          </span>
+        </button>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div 
+          className="md:hidden fixed inset-0 bg-black/50 z-40"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Mobile Sidebar */}
+      <aside 
+        className={`md:hidden fixed top-0 left-0 w-72 bg-white h-full z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${
+          mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <SidebarContent />
+      </aside>
+
+      {/* Desktop Sidebar */}
+      <aside className="w-64 bg-white border-r border-gray-200 shrink-0 flex-col hidden md:flex h-screen sticky top-0">
+        <SidebarContent />
+      </aside>
+
+      {/* Mobile spacer for fixed header */}
+      <div className="md:hidden h-16 shrink-0" />
+    </>
   );
 }
