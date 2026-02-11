@@ -168,9 +168,6 @@ export default function MarketplaceClient({ userName, userEmail }: MarketplaceCl
               <span className="material-icons-outlined text-xl">notifications</span>
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
             </button>
-            <button className="md:hidden w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500">
-              <span className="material-icons-outlined text-xl">menu</span>
-            </button>
           </div>
         </header>
 
