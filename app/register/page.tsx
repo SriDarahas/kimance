@@ -68,23 +68,23 @@ export default function Register() {
                 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuArEjg8Wu_EAl12MZeUi4NTQ7sXjZdZhqirQdqQB3v6LL-7Xihu7JYJGtdn-TFC3uFZZFLv4gaNAP82fw6O7Gt1zmkbDjLetvK8HsodcLP33WcJ8L3BOhJ7CsLcGVLIxPBBBR0R_dUmwH9Mk379EEiTrZa-QQYmMequI-tVqQ3a8h5aZaTQBcIfLo3P-ExlBPmiPLIn-NXF-tF37FzZO1x-XkMBTYhcMi5Z-EEeEw7E1sKGtgEskibwiB6jPPxlnDFOgS3wuI4rhRYa")',
             }}
           >
-            <div className="absolute inset-0 bg-gradient-to-b from-[#6D28D9]/30 to-gray-900/90"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-[#6D28D9]/15 to-gray-900/60"></div>
             <div className="relative z-10 p-12">
-              <Link href="/" className="flex items-center gap-3">
-                <Image src="/icon.png" alt="Kimance Logo" width={40} height={40} className="rounded" />
-                <span className="text-white text-2xl font-bold tracking-tight font-[family-name:var(--font-playfair)]">
-                  Kimance
-                </span>
+              <Link href="/" className="inline-block bg-white/95 backdrop-blur-sm px-4 py-2 rounded-xl shadow-lg">
+                <Image src="/logo-crop.png" alt="Kimance Logo" width={140} height={40} className="h-10 w-auto" />
               </Link>
             </div>
-            <div className="relative z-10 p-12 max-w-[640px]">
-              <h1 className="text-white text-5xl font-bold leading-tight mb-4 tracking-tight font-[family-name:var(--font-playfair)]">
-                Start your journey
-              </h1>
-              <p className="text-white/90 text-xl font-medium leading-relaxed max-w-[480px]">
-                Join thousands of users who trust Kimance for secure, borderless financial management.
-              </p>
+            <div className="relative z-10 flex-1 flex items-center justify-center p-12">
+              <div className="text-center max-w-[540px]">
+                <h1 className="text-white text-5xl font-bold leading-tight mb-4 tracking-tight font-[family-name:var(--font-playfair)]">
+                  Start your journey
+                </h1>
+                <p className="text-white/80 text-xl font-medium leading-relaxed">
+                  Join thousands of users who trust Kimance for secure, borderless financial management.
+                </p>
+              </div>
             </div>
+            <div className="h-24"></div>
           </div>
 
           {/* Right Panel: Success Message */}
@@ -122,51 +122,50 @@ export default function Register() {
           }}
         >
           {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#6D28D9]/30 to-gray-900/90"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-[#6D28D9]/15 to-gray-900/60"></div>
 
           {/* Logo Area */}
           <div className="relative z-10 p-12">
-            <Link href="/" className="flex items-center gap-3">
+            <Link href="/" className="inline-block bg-white/95 backdrop-blur-sm px-4 py-2 rounded-xl shadow-lg">
               <Image
-                src="/icon.png"
+                src="/logo-crop.png"
                 alt="Kimance Logo"
-                width={40}
+                width={140}
                 height={40}
-                className="rounded"
+                className="h-10 w-auto"
               />
-              <span className="text-white text-2xl font-bold tracking-tight font-[family-name:var(--font-playfair)]">
-                Kimance
-              </span>
             </Link>
           </div>
 
           {/* Hero Text Area */}
-          <div className="relative z-10 p-12 max-w-[640px]">
-            <h1 className="text-white text-5xl font-bold leading-tight mb-4 tracking-tight font-[family-name:var(--font-playfair)]">
-              Start your journey
-            </h1>
-            <p className="text-white/90 text-xl font-medium leading-relaxed max-w-[480px]">
-              Join thousands of users who trust Kimance for secure, borderless
-              financial management.
-            </p>
+          <div className="relative z-10 flex-1 flex items-center justify-center p-12">
+            <div className="text-center max-w-[540px]">
+              <h1 className="text-white text-5xl font-bold leading-tight mb-4 tracking-tight font-[family-name:var(--font-playfair)]">
+                Start your journey
+              </h1>
+              <p className="text-white/80 text-xl font-medium leading-relaxed">
+                Join thousands of users who trust Kimance for secure, borderless
+                financial management.
+              </p>
+            </div>
           </div>
+
+          {/* Spacer for symmetry */}
+          <div className="h-24"></div>
         </div>
 
         {/* Right Panel: Register Form */}
         <div className="flex w-full lg:w-1/2 flex-col justify-center items-center bg-white px-4 sm:px-12 xl:px-24 py-12">
           <div className="w-full max-w-[480px] flex flex-col gap-6">
             {/* Mobile Logo (Visible only on small screens) */}
-            <Link href="/" className="lg:hidden flex items-center gap-2 mb-4">
+            <Link href="/" className="lg:hidden flex justify-center mb-4">
               <Image
-                src="/icon.png"
+                src="/logo-crop.png"
                 alt="Kimance Logo"
-                width={32}
-                height={32}
-                className="rounded"
+                width={140}
+                height={40}
+                className="h-10 w-auto"
               />
-              <span className="text-gray-900 text-xl font-bold font-[family-name:var(--font-playfair)]">
-                Kimance
-              </span>
             </Link>
 
             {/* Header */}
