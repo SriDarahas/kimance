@@ -35,8 +35,15 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
+  // Redirect authenticated users from landing page to dashboard
+  if (request.nextUrl.pathname === '/' && user) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/dashboard'
+    return NextResponse.redirect(url)
+  }
+
   // Protected routes - redirect to login if not authenticated
-  const protectedPaths = ['/', '/send-money', '/settings']
+  const protectedPaths = ['/dashboard', '/send-money', '/settings']
   const isProtectedPath = protectedPaths.some(
     (path) =>
       request.nextUrl.pathname === path ||
@@ -56,7 +63,7 @@ export async function middleware(request: NextRequest) {
 
   if (isAuthPath && user) {
     const url = request.nextUrl.clone()
-    url.pathname = '/'
+    url.pathname = '/dashboard'
     return NextResponse.redirect(url)
   }
 
