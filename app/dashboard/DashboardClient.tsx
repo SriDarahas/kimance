@@ -39,7 +39,7 @@ export default function DashboardClient({
       <header className="h-16 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200">
         <div>
           <h1 className="font-serif text-xl font-semibold text-gray-900">
-            {t('welcome', { name: userName })}
+            {t('welcome', { name: userName || 'Ethan' })}
           </h1>
           <p className="text-xs text-gray-500">{t('welcomeBack')}</p>
         </div>

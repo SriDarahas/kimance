@@ -12,7 +12,7 @@ interface Wallet {
   email: string;
   currency: string;
   balance: number;
-  type: string;
+  type: 'fiat' | 'crypto';
   created_at: string;
 }
 

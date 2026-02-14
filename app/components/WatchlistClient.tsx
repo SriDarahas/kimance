@@ -16,7 +16,7 @@ type RatesResponse = {
 
 export default function WatchlistClient() {
   const { language } = useLanguage()
-  const t = (key: any) => getTranslation(language, key)
+  const t = (key: any, vars?: Record<string, string>) => getTranslation(language, key, vars)
   const [rates, setRates] = useState<Record<string, Rate> | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

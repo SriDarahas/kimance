@@ -16,7 +16,7 @@ interface SettingsClientProps {
 
 export default function SettingsClient({ userName, userEmail }: SettingsClientProps) {
   const { language } = useLanguage();
-  const t = (key: any) => getTranslation(language, key);
+  const t = (key: any, vars?: Record<string, string>) => getTranslation(language, key, vars);
   const [activeTab, setActiveTab] = useState<SettingsTab>("profile");
   const [smartBudgeting, setSmartBudgeting] = useState(true);
   const [investmentTips, setInvestmentTips] = useState(false);

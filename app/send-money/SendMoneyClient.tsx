@@ -22,7 +22,7 @@ export default function SendMoneyClient({ userName, userEmail }: SendMoneyClient
   const [success, setSuccess] = useState(false);
   const [balance, setBalance] = useState<number | null>(null);
   const { language } = useLanguage();
-  const t = (key: any) => getTranslation(language, key);
+  const t = (key: any, vars?: Record<string, string>) => getTranslation(language, key, vars);
 
   useEffect(() => {
     getBalance().then(res => {

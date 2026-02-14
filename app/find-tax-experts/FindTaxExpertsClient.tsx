@@ -132,7 +132,7 @@ const taxExperts = [
 
 export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExpertsClientProps) {
   const { language } = useLanguage();
-  const t = (key: any) => getTranslation(language, key);
+  const t = (key: any, vars?: Record<string, string>) => getTranslation(language, key, vars);
   const [serviceType, setServiceType] = useState("personal");
   const [selectedExpertise, setSelectedExpertise] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<"list" | "map">("list");

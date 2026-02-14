@@ -167,7 +167,7 @@ const offers: Offer[] = [
 
 export default function MarketplaceClient({ userName, userEmail }: MarketplaceClientProps) {
   const { language } = useLanguage();
-  const t = (key: any) => getTranslation(language, key);
+  const t = (key: any, vars?: Record<string, string>) => getTranslation(language, key, vars);
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 

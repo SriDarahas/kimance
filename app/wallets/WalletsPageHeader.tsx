@@ -5,7 +5,7 @@ import { getTranslation } from "@/lib/i18n";
 
 export default function WalletsPageHeader() {
   const { language } = useLanguage();
-  const t = (key: any) => getTranslation(language, key);
+  const t = (key: any, vars?: Record<string, string>) => getTranslation(language, key, vars);
 
   return (
     <header className="h-16 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200">
