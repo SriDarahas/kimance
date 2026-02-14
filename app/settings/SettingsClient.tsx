@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import Sidebar from "@/app/components/Sidebar";
+import { useLanguage } from "@/app/providers/LanguageProvider";
+import { getTranslation } from "@/lib/i18n";
 
 type SettingsTab = "profile" | "security" | "billing" | "notifications";
 
@@ -13,6 +15,8 @@ interface SettingsClientProps {
 }
 
 export default function SettingsClient({ userName, userEmail }: SettingsClientProps) {
+  const { language } = useLanguage();
+  const t = (key: any) => getTranslation(language, key);
   const [activeTab, setActiveTab] = useState<SettingsTab>("profile");
   const [smartBudgeting, setSmartBudgeting] = useState(true);
   const [investmentTips, setInvestmentTips] = useState(false);
@@ -28,9 +32,9 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
         <header className="h-16 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200">
           <div>
             <h1 className="font-serif text-xl font-semibold text-gray-900">
-              Settings
+              {t('settings')}
             </h1>
-            <p className="text-xs text-gray-500">Manage your account and preferences</p>
+            <p className="text-xs text-gray-500">{t('manageAccount')}</p>
           </div>
           <div className="flex items-center gap-3">
             <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:text-purple-600 transition-colors relative shadow-sm">
@@ -50,7 +54,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
             <aside className="lg:w-64 space-y-6">
               <div className="space-y-1">
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-4 mb-2">
-                  Settings
+                  {t('settings')}
                 </p>
                 <button
                   onClick={() => setActiveTab("profile")}
@@ -61,7 +65,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                   }`}
                 >
                   <span className="material-icons-outlined text-xl">person</span>
-                  Profile & Account
+                  {t('profileAccount')}
                 </button>
                 <button
                   onClick={() => setActiveTab("security")}
@@ -72,7 +76,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                   }`}
                 >
                   <span className="material-icons-outlined text-xl">security</span>
-                  Security
+                  {t('security')}
                 </button>
                 <button
                   onClick={() => setActiveTab("billing")}
@@ -83,7 +87,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                   }`}
                 >
                   <span className="material-icons-outlined text-xl">account_balance_wallet</span>
-                  Billing & Plans
+                  {t('billingPlans')}
                 </button>
                 <button
                   onClick={() => setActiveTab("notifications")}
@@ -94,7 +98,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                   }`}
                 >
                   <span className="material-icons-outlined text-xl">notifications_active</span>
-                  Notifications
+                  {t('notifications')}
                 </button>
               </div>
 
@@ -107,14 +111,14 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                       auto_awesome
                     </span>
                     <h4 className="font-serif font-semibold text-base">
-                      AI Coach
+                      {t('aiCoach')}
                     </h4>
                   </div>
                   <p className="text-xs text-purple-100 mb-3 leading-relaxed">
-                    Your financial health score is up by 12% this month.
+                    {t('yourFinancialHealth')}
                   </p>
                   <button className="w-full py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/20 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-1">
-                    View Insights
+                    {t('viewInsights')}
                     <span className="material-icons-outlined text-sm">arrow_forward</span>
                   </button>
                 </div>
@@ -127,18 +131,18 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-gray-200">
                 <div>
                   <h2 className="font-serif text-2xl font-bold text-gray-900 mb-1">
-                    Profile Settings
+                    {t('profileSettings')}
                   </h2>
                   <p className="text-sm text-gray-500">
-                    Manage your personal information and preferences.
+                    {t('managePersonalInfo')}
                   </p>
                 </div>
                 <div className="flex gap-2">
                   <button className="px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
-                    Cancel
+                    {t('cancel')}
                   </button>
                   <button className="px-5 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 shadow-lg shadow-purple-200 transition-all">
-                    Save Changes
+                    {t('saveChanges')}
                   </button>
                 </div>
               </div>
@@ -162,10 +166,10 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                   <p className="text-sm text-gray-500 mb-3">{userEmail}</p>
                   <div className="flex flex-wrap gap-2">
                     <span className="px-2.5 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full border border-green-200 flex items-center gap-1">
-                      <span className="material-icons-outlined text-xs">verified</span> Verified
+                      <span className="material-icons-outlined text-xs">verified</span> {t('verified')}
                     </span>
                     <span className="px-2.5 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full border border-purple-200">
-                      Premium Member
+                      {t('premiumMember')}
                     </span>
                   </div>
                 </div>
@@ -177,10 +181,10 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <h3 className="text-base font-bold text-gray-900 font-serif">
-                      Account Tier
+                      {t('accountTier')}
                     </h3>
                     <Link href="#" className="text-purple-600 text-xs font-medium hover:underline">
-                      Upgrade
+                      {t('upgrade')}
                     </Link>
                   </div>
                   <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm relative overflow-hidden">
@@ -192,7 +196,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                     <div className="relative z-10">
                       <div className="mb-3">
                         <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold">
-                          Current Plan
+                          {t('currentPlan')}
                         </span>
                         <h4 className="text-xl font-bold text-purple-600 mt-0.5">Kimance Gold</h4>
                       </div>
@@ -201,26 +205,26 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                           <span className="material-icons-outlined text-green-500 text-sm">
                             check_circle
                           </span>
-                          <span>Zero transaction fees</span>
+                          <span>{t('zeroTransactionFees')}</span>
                         </div>
                         <div className="flex items-center gap-2 text-xs text-gray-600">
                           <span className="material-icons-outlined text-green-500 text-sm">
                             check_circle
                           </span>
-                          <span>Priority Support</span>
+                          <span>{t('prioritySupport')}</span>
                         </div>
                         <div className="flex items-center gap-2 text-xs text-gray-600">
                           <span className="material-icons-outlined text-green-500 text-sm">
                             check_circle
                           </span>
-                          <span>Crypto Analytics Dashboard</span>
+                          <span>{t('cryptoAnalytics')}</span>
                         </div>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-1.5 mb-1.5">
                         <div className="bg-purple-600 h-1.5 rounded-full w-3/4"></div>
                       </div>
                       <p className="text-xs text-gray-500">
-                        Upgrade to Platinum for exclusive metal card
+                        {t('upgradeToPlatinum')}
                       </p>
                     </div>
                   </div>
@@ -229,8 +233,8 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                 {/* AI Financial Coach */}
                 <div className="space-y-3">
                   <h3 className="text-base font-bold text-gray-900 font-serif">
-                    AI Financial Coach
-                  </h3>
+                      {t('aiFinancialCoach')}
+                    </h3>
                   <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="flex gap-3">
@@ -238,8 +242,8 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                           <span className="material-icons-outlined text-lg">analytics</span>
                         </div>
                         <div>
-                          <p className="font-medium text-gray-900 text-sm">Smart Budgeting</p>
-                          <p className="text-xs text-gray-500">Receive proactive spending alerts</p>
+                          <p className="font-medium text-gray-900 text-sm">{t('smartBudgeting')}</p>
+                          <p className="text-xs text-gray-500">{t('smartBudgetingDesc')}</p>
                         </div>
                       </div>
                       <button
@@ -261,8 +265,8 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                           <span className="material-icons-outlined text-lg">psychology</span>
                         </div>
                         <div>
-                          <p className="font-medium text-gray-900 text-sm">Investment Tips</p>
-                          <p className="text-xs text-gray-500">AI-driven portfolio suggestions</p>
+                          <p className="font-medium text-gray-900 text-sm">{t('investmentTips')}</p>
+                          <p className="text-xs text-gray-500">{t('investmentTipsDesc')}</p>
                         </div>
                       </div>
                       <button
@@ -284,8 +288,8 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                           <span className="material-icons-outlined text-lg">savings</span>
                         </div>
                         <div>
-                          <p className="font-medium text-gray-900 text-sm">Auto-Save</p>
-                          <p className="text-xs text-gray-500">Round up purchases to savings</p>
+                          <p className="font-medium text-gray-900 text-sm">{t('autoSave')}</p>
+                          <p className="text-xs text-gray-500">{t('autoSaveDesc')}</p>
                         </div>
                       </div>
                       <button
@@ -309,10 +313,10 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <h3 className="text-base font-bold text-gray-900 font-serif">
-                    Connected Accounts
+                    {t('connectedAccounts')}
                   </h3>
                   <button className="flex items-center gap-1 text-xs font-medium text-purple-600 hover:text-purple-700 transition-colors">
-                    <span className="material-icons-outlined text-sm">add</span> Add New
+                    <span className="material-icons-outlined text-sm">add</span> {t('addNew')}
                   </button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -344,9 +348,9 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                       navigate_next
                     </span>
                   </button>
-                  <button className="border-2 border-dashed border-gray-200 p-4 rounded-2xl flex items-center justify-center gap-2 hover:border-purple-600/50 hover:bg-purple-600/5 transition-all text-gray-500 hover:text-purple-600">
-                    <span className="material-icons-outlined text-lg">add_card</span>
-                    <span className="text-sm font-medium">Link Card</span>
+                    <button className="border-2 border-dashed border-gray-200 p-4 rounded-2xl flex items-center justify-center gap-2 hover:border-purple-600/50 hover:bg-purple-600/5 transition-all text-gray-500 hover:text-purple-600">
+                      <span className="material-icons-outlined text-lg">add_card</span>
+                    <span className="text-sm font-medium">{t('linkCard')}</span>
                   </button>
                 </div>
               </div>
@@ -354,12 +358,12 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
               {/* Preferences */}
               <div className="space-y-3">
                 <h3 className="text-base font-bold text-gray-900 font-serif">
-                  Preferences
+                  {t('preferences')}
                 </h3>
                 <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Primary Currency
+                      {t('primaryCurrency')}
                     </label>
                     <select className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-purple-600 focus:border-purple-600 py-2 px-3 text-sm transition-colors">
                       <option>USD - US Dollar</option>
@@ -370,7 +374,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Language
+                      {t('languageLabel')}
                     </label>
                     <select className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-purple-600 focus:border-purple-600 py-2 px-3 text-sm transition-colors">
                       <option>English (US)</option>
@@ -381,7 +385,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Time Zone
+                      {t('timeZone')}
                     </label>
                     <select className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-purple-600 focus:border-purple-600 py-2 px-3 text-sm transition-colors">
                       <option>(GMT-05:00) Eastern Time</option>
@@ -391,19 +395,18 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Theme</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('theme')}</label>
                     <div className="flex items-center bg-gray-50 p-1 rounded-xl border border-gray-200">
                       <button className="flex-1 flex items-center justify-center gap-1 py-1.5 px-2 rounded-lg text-xs font-medium transition-all bg-white shadow-sm text-gray-900">
-                        <span className="material-icons-outlined text-sm">light_mode</span> Light
+                        <span className="material-icons-outlined text-sm">light_mode</span> {t('light')}
                       </button>
                       <button className="flex-1 flex items-center justify-center gap-1 py-1.5 px-2 rounded-lg text-xs font-medium transition-all text-gray-500 hover:text-gray-900">
-                        <span className="material-icons-outlined text-sm">dark_mode</span> Dark
+                        <span className="material-icons-outlined text-sm">dark_mode</span> {t('dark')}
                       </button>
                       <button className="flex-1 flex items-center justify-center gap-1 py-1.5 px-2 rounded-lg text-xs font-medium transition-all text-gray-500 hover:text-gray-900">
                         <span className="material-icons-outlined text-sm">
                           settings_system_daydream
-                        </span>{" "}
-                        Auto
+                        </span> {t('auto')}
                       </button>
                     </div>
                   </div>
@@ -414,7 +417,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
               <div className="pt-4 border-t border-gray-200">
                 <button className="text-red-500 hover:text-red-600 font-medium text-sm flex items-center gap-2 transition-colors">
                   <span className="material-icons-outlined text-lg">delete_outline</span>
-                  Delete Account
+                  {t('deleteAccount')}
                 </button>
               </div>
             </div>

@@ -1,5 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
+import { useLanguage } from '@/app/providers/LanguageProvider'
+import { getTranslation } from '@/lib/i18n'
 
 type Rate = {
   code: string
@@ -13,6 +15,8 @@ type RatesResponse = {
 }
 
 export default function WatchlistClient() {
+  const { language } = useLanguage()
+  const t = (key: any) => getTranslation(language, key)
   const [rates, setRates] = useState<Record<string, Rate> | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -40,9 +44,9 @@ export default function WatchlistClient() {
 
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm">
-      <h3 className="font-serif text-base font-semibold text-gray-900 mb-3">Watchlist</h3>
+      <h3 className="font-serif text-base font-semibold text-gray-900 mb-3">{t('watchlist')}</h3>
       <div className="space-y-2">
-        {loading && <p className="text-xs text-gray-500">Loading rates…</p>}
+        {loading && <p className="text-xs text-gray-500">{t('loadingRates')}</p>}
         {error && <p className="text-xs text-red-500">{error}</p>}
 
         {!loading && !error && (
@@ -54,7 +58,7 @@ export default function WatchlistClient() {
               </div>
               <div className="text-right">
                 <span className="text-xs font-semibold text-gray-800">{rates?.USD ? rates.USD.value.toFixed(4) : '—'}</span>
-                <span className="text-xs text-gray-500 block">Base: USD</span>
+                <span className="text-xs text-gray-500 block">{t('baseUSD')}</span>
               </div>
             </div>
 
@@ -65,7 +69,7 @@ export default function WatchlistClient() {
               </div>
               <div className="text-right">
                 <span className="text-xs font-semibold text-gray-800">{rates?.CAD ? rates.CAD.value.toFixed(4) : '—'}</span>
-                <span className="text-xs text-gray-500 block">Updated every 10s</span>
+                <span className="text-xs text-gray-500 block">{t('updatedEvery10s')}</span>
               </div>
             </div>
           </>

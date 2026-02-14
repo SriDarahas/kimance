@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import Sidebar from "@/app/components/Sidebar";
+import { useLanguage } from "@/app/providers/LanguageProvider";
+import { getTranslation } from "@/lib/i18n";
 
 interface MarketplaceClientProps {
   userName: string;
@@ -23,19 +25,24 @@ interface OfferStat {
   label: string;
   value: string;
   valueClass?: string;
+  labelKey?: string;
 }
 
 interface Offer {
   id: number;
   title: string;
+  titleKey?: string;
   description: string;
+  descriptionKey?: string;
   icon: string;
   iconBg: string;
   iconColor: string;
   rating: number | null;
   badge: string | null;
+  badgeKey?: string;
   stats: OfferStat[];
   cta: string;
+  ctaKey?: string;
   category: string;
 }
 
@@ -43,102 +50,124 @@ const offers: Offer[] = [
   {
     id: 1,
     title: "SME Growth Capital",
+    titleKey: "smgGrowthCapital",
     description: "Flexible working capital loans for expanding businesses with minimal paperwork.",
+    descriptionKey: "smgDescription",
     icon: "account_balance",
     iconBg: "bg-emerald-50",
     iconColor: "text-emerald-600",
     rating: 4.5,
     badge: null,
     stats: [
-      { label: "Limit", value: "Up to $50k" },
-      { label: "Speed", value: "24h Approval" },
+      { label: "Limit", labelKey: "limit", value: "Up to $50k" },
+      { label: "Speed", labelKey: "speed", value: "24h Approval" },
     ],
     cta: "Apply Now",
+    ctaKey: "applyNow",
     category: "loans",
   },
   {
     id: 2,
     title: "ETH Native Staking",
+    titleKey: "ethStaking",
     description: "Secure institutional-grade staking with daily rewards payout.",
+    descriptionKey: "ethDescription",
     icon: "currency_bitcoin",
     iconBg: "bg-indigo-50",
     iconColor: "text-indigo-600",
     rating: null,
     badge: "Trending",
+    badgeKey: "trending",
     stats: [
-      { label: "APY", value: "4.2%", valueClass: "text-emerald-500" },
-      { label: "Custody", value: "Insured" },
+      { label: "APY", labelKey: "apy", value: "4.2%", valueClass: "text-emerald-500" },
+      { label: "Custody", labelKey: "custody", value: "Insured" },
     ],
     cta: "Start Staking",
+    ctaKey: "startStaking",
     category: "crypto",
   },
   {
     id: 3,
     title: "TurboTax Integration",
+    titleKey: "turbotax",
     description: "Automated filing for small business owners. Sync your accounts instantly.",
+    descriptionKey: "turbotaxDescription",
     icon: "receipt_long",
     iconBg: "bg-red-50",
     iconColor: "text-red-600",
     rating: 4.8,
     badge: null,
     stats: [
-      { label: "Cost", value: "$0 Setup" },
-      { label: "Type", value: "SaaS" },
+      { label: "Cost", labelKey: "cost", value: "$0 Setup" },
+      { label: "Type", labelKey: "type", value: "SaaS" },
     ],
     cta: "Connect",
+    ctaKey: "connect",
     category: "taxes",
   },
   {
     id: 4,
     title: "Nova Business Checking",
+    titleKey: "nova",
     description: "Fee-free business banking with integrated invoicing and expense cards.",
+    descriptionKey: "novaDescription",
     icon: "payments",
     iconBg: "bg-blue-50",
     iconColor: "text-blue-600",
     rating: null,
     badge: "New",
+    badgeKey: "new",
     stats: [
-      { label: "Fees", value: "$0/mo", valueClass: "text-emerald-500" },
-      { label: "Cashback", value: "1.5%" },
+      { label: "Fees", labelKey: "fees", value: "$0/mo", valueClass: "text-emerald-500" },
+      { label: "Cashback", labelKey: "cashback", value: "1.5%" },
     ],
     cta: "Open Account",
+    ctaKey: "openAccount",
     category: "payments",
   },
   {
     id: 5,
     title: "Rapid Invoice Factor",
+    titleKey: "rapidInvoice",
     description: "Get paid for your outstanding invoices today. Ideal for cash flow gaps.",
+    descriptionKey: "rapidInvoiceDescription",
     icon: "request_quote",
     iconBg: "bg-purple-50",
     iconColor: "text-purple-600",
     rating: 4.2,
     badge: null,
     stats: [
-      { label: "Rate", value: "1.5% fee" },
-      { label: "Funding", value: "Same Day" },
+      { label: "Rate", labelKey: "rate", value: "1.5% fee" },
+      { label: "Funding", labelKey: "funding", value: "Same Day" },
     ],
     cta: "Factor Now",
+    ctaKey: "factorNow",
     category: "loans",
   },
   {
     id: 6,
     title: "Brex Corporate Card",
+    titleKey: "brex",
     description: "Higher limits, no personal guarantee, and rewards on software.",
+    descriptionKey: "brexDescription",
     icon: "credit_card",
     iconBg: "bg-gray-900",
     iconColor: "text-white",
     rating: 4.9,
     badge: null,
     stats: [
-      { label: "Credit", value: "Dynamic" },
-      { label: "Rewards", value: "7x Points" },
+      { label: "Credit", labelKey: "credit", value: "Dynamic" },
+      { label: "Rewards", labelKey: "rewards", value: "7x Points" },
     ],
     cta: "Apply",
+    ctaKey: "applyNow",
     category: "business",
   },
 ];
 
 export default function MarketplaceClient({ userName, userEmail }: MarketplaceClientProps) {
+  const { language } = useLanguage();
+  const t = (key: any) => getTranslation(language, key);
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -159,9 +188,9 @@ export default function MarketplaceClient({ userName, userEmail }: MarketplaceCl
         <header className="h-16 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200">
           <div>
             <h1 className="font-serif text-xl font-semibold text-gray-900">
-              Marketplace
+              {t('marketplace')}
             </h1>
-            <p className="text-xs text-gray-500">Explore financial tools and services</p>
+            <p className="text-xs text-gray-500">{t('exploreFinancialTools')}</p>
           </div>
           <div className="flex items-center gap-3">
             <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:text-purple-600 transition-colors relative shadow-sm">
@@ -176,10 +205,10 @@ export default function MarketplaceClient({ userName, userEmail }: MarketplaceCl
           {/* Hero Search Section */}
           <div className="text-center max-w-3xl mx-auto">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-3 tracking-tight">
-              Find the best financial tools for your growth
+              {t('findBestTools')}
             </h2>
             <p className="text-base text-gray-500 mb-6">
-              Explore tailored solutions from top providers.
+              {t('exploreTailored')}
             </p>
             <div className="relative max-w-2xl mx-auto">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -190,7 +219,7 @@ export default function MarketplaceClient({ userName, userEmail }: MarketplaceCl
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="block w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 shadow-lg shadow-purple-500/5 focus:ring-2 focus:ring-purple-600 focus:border-transparent bg-white text-gray-900 placeholder:text-gray-400"
-                placeholder="Search for loans, insurance, or crypto..."
+                placeholder={t('searchPlaceholder')}
               />
             </div>
           </div>
@@ -203,11 +232,11 @@ export default function MarketplaceClient({ userName, userEmail }: MarketplaceCl
               <div className="shrink-0">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-100 text-purple-600 text-xs font-bold uppercase tracking-wide mb-3">
                   <span className="material-icons-outlined text-sm">auto_awesome</span>
-                  AI Recommendation
+                  {t('aiRecommendation')}
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Best offer for your profile</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{t('bestOfferProfile')}</h3>
                 <p className="text-gray-500 text-sm max-w-xs">
-                  Based on your recent transaction volume and risk profile analysis.
+                  {t('profileAnalysis')}
                 </p>
               </div>
               {/* Recommended Card */}
@@ -218,26 +247,26 @@ export default function MarketplaceClient({ userName, userEmail }: MarketplaceCl
                       <span className="material-icons-outlined text-blue-600">shield</span>
                     </div>
                     <div>
-                      <h4 className="font-bold text-gray-900">Term Life Protect</h4>
+                      <h4 className="font-bold text-gray-900">{t('termLifeProtect')}</h4>
                       <div className="flex items-center gap-2 text-sm text-gray-500">
                         <span>Allianz</span>
                         <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
-                        <span>$500k Coverage</span>
+                        <span>$500k {t('coverage')}</span>
                       </div>
                     </div>
                   </div>
                   <div className="flex items-center gap-6 w-full sm:w-auto justify-between sm:justify-end">
                     <div className="text-center">
-                      <div className="text-xs text-gray-400 font-medium uppercase">AI Fit Score</div>
+                      <div className="text-xs text-gray-400 font-medium uppercase">{t('aiFitScore')}</div>
                       <div className="text-xl font-bold text-purple-600">92%</div>
                     </div>
                     <div className="h-8 w-px bg-gray-200 hidden sm:block"></div>
                     <div className="text-center hidden sm:block">
-                      <div className="text-xs text-gray-400 font-medium uppercase">Monthly</div>
+                      <div className="text-xs text-gray-400 font-medium uppercase">{t('monthly')}</div>
                       <div className="text-xl font-bold text-gray-900">$24</div>
                     </div>
                     <button className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2.5 rounded-lg font-semibold transition-colors shadow-lg shadow-purple-500/20">
-                      View Offer
+                      {t('viewOffer')}
                     </button>
                   </div>
                 </div>
@@ -257,14 +286,14 @@ export default function MarketplaceClient({ userName, userEmail }: MarketplaceCl
                     : "bg-white border border-gray-200 text-gray-600 hover:border-purple-300 hover:text-purple-600"
                 }`}
               >
-                {category.label}
+                {t(category.id === 'all' ? 'allOffers' : category.id === 'business' ? 'businessTools' : category.id)}
               </button>
             ))}
           </div>
 
           {/* Featured Offers Header */}
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-bold text-gray-900">Featured Offers</h3>
+            <h3 className="text-lg font-bold text-gray-900">{t('featuredOffers')}</h3>
             <div className="flex gap-2">
               <button className="p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-purple-600">
                 <span className="material-icons-outlined">grid_view</span>
@@ -295,27 +324,27 @@ export default function MarketplaceClient({ userName, userEmail }: MarketplaceCl
                   )}
                   {offer.badge && (
                     <div className="flex items-center gap-1 bg-purple-100 px-2 py-1 rounded text-xs font-semibold text-purple-600">
-                      <span>{offer.badge}</span>
+                      <span>{offer.badgeKey ? t(offer.badgeKey) : offer.badge}</span>
                     </div>
                   )}
                 </div>
                 <div className="mb-4">
                   <h4 className="text-lg font-bold text-gray-900 mb-1 group-hover:text-purple-600 transition-colors">
-                    {offer.title}
+                    {offer.titleKey ? t(offer.titleKey) : offer.title}
                   </h4>
-                  <p className="text-sm text-gray-500 line-clamp-2">{offer.description}</p>
+                  <p className="text-sm text-gray-500 line-clamp-2">{offer.descriptionKey ? t(offer.descriptionKey) : offer.description}</p>
                 </div>
                 <div className="grid grid-cols-2 gap-4 mb-6 pt-4 border-t border-gray-100">
                   {offer.stats.map((stat, index) => (
                     <div key={index}>
-                      <p className="text-xs text-gray-400 uppercase font-medium">{stat.label}</p>
+                      <p className="text-xs text-gray-400 uppercase font-medium">{stat.labelKey ? t(stat.labelKey) : stat.label}</p>
                       <p className={`font-bold ${stat.valueClass || "text-gray-900"}`}>{stat.value}</p>
                     </div>
                   ))}
                 </div>
                 <div className="mt-auto">
                   <span className="w-full block text-center bg-white border border-gray-200 text-gray-900 py-2.5 rounded-lg font-semibold group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600 transition-all">
-                    {offer.cta}
+                    {offer.ctaKey ? t(offer.ctaKey) : offer.cta}
                   </span>
                 </div>
               </Link>
