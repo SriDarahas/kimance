@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Sidebar from "@/app/components/Sidebar";
+import { useLanguage } from "@/app/providers/LanguageProvider";
+import { getTranslation } from "@/lib/i18n";
 
 interface FindTaxExpertsClientProps {
   userName: string;
@@ -9,17 +11,17 @@ interface FindTaxExpertsClientProps {
 }
 
 const serviceTypes = [
-  { id: "personal", label: "Personal" },
-  { id: "business", label: "Business" },
+  { id: "personal", key: "personal" },
+  { id: "business", key: "business" },
 ];
 
 const expertiseOptions = [
-  { id: "crypto", label: "Crypto Tax" },
-  { id: "expats", label: "Expats" },
-  { id: "audit", label: "Audit" },
-  { id: "small-biz", label: "Small Biz" },
-  { id: "freelancers", label: "Freelancers" },
-  { id: "corporate", label: "Corporate" },
+  { id: "crypto", key: "cryptoTax" },
+  { id: "expats", key: "expats" },
+  { id: "audit", key: "audit" },
+  { id: "small-biz", key: "smallBiz" },
+  { id: "freelancers", key: "freelancers" },
+  { id: "corporate", key: "corporate" },
 ];
 
 const taxExperts = [
@@ -31,7 +33,8 @@ const taxExperts = [
     reviews: 120,
     hourlyRate: "$150",
     description: "Specializing in small business tax returns and audit defense. Over 10 years of experience with CRA negotiations and complex filings.",
-    tags: ["Individual Returns", "Audit Defense", "Bookkeeping"],
+    descriptionKey: "sarahDescription",
+    tags: ["individual", "auditDefense", "bookkeeping"],
     verified: true,
     online: true,
     initials: null,
@@ -47,12 +50,13 @@ const taxExperts = [
     reviews: 45,
     hourlyRate: "$200",
     description: "Expert Enrolled Agent focused on cryptocurrency taxation and international expat tax compliance. Let's simplify your crypto portfolio.",
-    tags: ["Crypto Tax", "International", "Investments"],
+    descriptionKey: "michaelDescription",
+    tags: ["cryptoTax", "internationalTax", "investments"],
     verified: true,
     online: false,
     initials: null,
     image: "MC",
-    featured: "Crypto Tax",
+    featured: "cryptoTax",
     serviceType: "personal",
     expertise: ["crypto", "expats"],
   },
@@ -64,7 +68,8 @@ const taxExperts = [
     reviews: 210,
     hourlyRate: "Custom",
     description: "Full-service accounting firm for mid-sized businesses. We handle payroll, corporate tax, and strategic financial planning.",
-    tags: ["Corporate Tax", "Payroll", "Strategy"],
+    descriptionKey: "apexDescription",
+    tags: ["corporateTax", "payroll", "strategy"],
     verified: true,
     online: false,
     initials: "AP",
@@ -80,7 +85,8 @@ const taxExperts = [
     reviews: 88,
     hourlyRate: "$135",
     description: "Helping freelancers and creative professionals navigate taxes. Maximize your deductions with a personalized approach.",
-    tags: ["Freelancers", "Creatives", "Deductions"],
+    descriptionKey: "elenaDescription",
+    tags: ["freelancers", "creatives", "deductions"],
     verified: true,
     online: true,
     initials: null,
@@ -96,7 +102,8 @@ const taxExperts = [
     reviews: 156,
     hourlyRate: "$175",
     description: "Corporate tax specialist with expertise in R&D tax credits and international business structures.",
-    tags: ["Corporate Tax", "R&D Credits", "International"],
+    descriptionKey: "davidDescription",
+    tags: ["corporateTax", "rdCredits", "internationalTax"],
     verified: true,
     online: true,
     initials: null,
@@ -112,7 +119,8 @@ const taxExperts = [
     reviews: 92,
     hourlyRate: "$160",
     description: "Audit defense specialist with 15+ years helping individuals and small businesses navigate CRA audits.",
-    tags: ["Audit Defense", "Tax Planning", "Individual Returns"],
+    descriptionKey: "amandaDescription",
+    tags: ["auditDefense", "taxPlanning", "individual"],
     verified: true,
     online: false,
     initials: null,
@@ -123,6 +131,8 @@ const taxExperts = [
 ];
 
 export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExpertsClientProps) {
+  const { language } = useLanguage();
+  const t = (key: any, vars?: Record<string, string>) => getTranslation(language, key, vars);
   const [serviceType, setServiceType] = useState("personal");
   const [selectedExpertise, setSelectedExpertise] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
@@ -173,9 +183,9 @@ export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExp
         <header className="h-16 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200">
           <div>
             <h1 className="font-serif text-xl font-semibold text-gray-900">
-              Find Tax Experts
+              {t('findTaxExperts')}
             </h1>
-            <p className="text-xs text-gray-500">Connect with certified tax professionals</p>
+            <p className="text-xs text-gray-500">{t('browseQualified')}</p>
           </div>
           <div className="flex items-center gap-3">
             <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:text-purple-600 transition-colors relative shadow-sm">
@@ -205,7 +215,7 @@ export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExp
                         : "text-gray-500 hover:text-gray-900"
                     }`}
                   >
-                    {type.label}
+                    {t(type.key)}
                   </button>
                 ))}
               </div>
@@ -218,9 +228,9 @@ export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExp
                 <div className="relative">
                   <span className="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">public</span>
                   <select className="pl-10 pr-4 py-2 bg-gray-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-purple-600 text-gray-700">
-                    <option>Canada</option>
-                    <option>United States</option>
-                    <option>United Kingdom</option>
+                    <option>{t('canada')}</option>
+                    <option>{t('unitedStates')}</option>
+                    <option>{t('unitedKingdom')}</option>
                   </select>
                 </div>
                 <div className="relative">
@@ -230,7 +240,7 @@ export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExp
                     value={locationQuery ?? ""}
                     onChange={(e) => setLocationQuery(e.target.value)}
                     className="pl-10 pr-4 py-2 bg-gray-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-purple-600 text-gray-700 placeholder-gray-400 w-40"
-                    placeholder="City or postal code"
+                    placeholder={t('cityOrPostal')}
                   />
                 </div>
               </div>
@@ -250,7 +260,7 @@ export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExp
                         : "bg-gray-100 text-gray-600 border border-transparent hover:bg-purple-50 hover:text-purple-600 hover:border-purple-200"
                     }`}
                   >
-                    {expertise.label}
+                    {t(expertise.key)}
                   </button>
                 ))}
               </div>
@@ -260,7 +270,7 @@ export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExp
                 onClick={resetFilters}
                 className="text-sm text-purple-600 font-medium hover:underline ml-auto"
               >
-                Reset
+                {t('reset')}
               </button>
             </div>
           </div>
@@ -268,8 +278,8 @@ export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExp
           {/* Header & View Toggle */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-1">Tax Experts in Canada</h2>
-              <p className="text-gray-500">Showing {filteredExperts.length} verified professional{filteredExperts.length !== 1 ? 's' : ''}</p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-1">{t('taxExpertsCanada')}</h2>
+              <p className="text-gray-500">{t(filteredExperts.length !== 1 ? 'showingExpertsPlural' : 'showingExperts', { count: filteredExperts.length.toString() })}</p>
             </div>
             <div className="flex items-center gap-3">
               <div className="flex bg-white p-1 rounded-full border border-gray-200 shadow-sm">
@@ -282,7 +292,7 @@ export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExp
                   }`}
                 >
                   <span className="material-icons-outlined text-base">grid_view</span>
-                  List
+                  {t('listView')}
                 </button>
                 <button
                   onClick={() => setViewMode("map")}
@@ -293,7 +303,7 @@ export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExp
                   }`}
                 >
                   <span className="material-icons-outlined text-base">map</span>
-                  Map
+                  {t('mapView')}
                 </button>
               </div>
             </div>
@@ -333,7 +343,7 @@ export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExp
                       {expert.verified && (
                         <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple-100 text-purple-600 text-xs font-semibold border border-purple-200">
                           <span className="material-icons-outlined text-xs">verified</span>
-                          Verified by Kimance
+                          {t('verifiedByKimance')}
                         </div>
                       )}
                     </div>
@@ -343,12 +353,12 @@ export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExp
                       {expert.rating}
                       <span className="material-icons text-sm">star</span>
                     </div>
-                    <span className="text-xs text-gray-400">({expert.reviews} Reviews)</span>
+                    <span className="text-xs text-gray-400">({expert.reviews} {t('reviews')})</span>
                   </div>
                 </div>
 
                 <p className="text-gray-600 text-sm mb-6 line-clamp-2">
-                  {expert.description}
+                  {expert.descriptionKey ? t(expert.descriptionKey) : expert.description}
                 </p>
 
                 <div className="flex flex-wrap gap-2 mb-6">
@@ -356,12 +366,12 @@ export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExp
                     <span
                       key={index}
                       className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        expert.featured === tag
+                        (expert.featured && expert.featured === tag)
                           ? "bg-purple-50 text-purple-600 border border-purple-100"
                           : "bg-gray-100 text-gray-600"
                       }`}
                     >
-                      {tag}
+                      {t(tag)}
                     </span>
                   ))}
                 </div>
@@ -370,10 +380,10 @@ export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExp
                   <div className="text-gray-900 font-bold text-lg">
                     {expert.hourlyRate}
                     {expert.hourlyRate !== "Custom" && (
-                      <span className="text-sm font-medium text-gray-500">/hr</span>
+                      <span className="text-sm font-medium text-gray-500">{t('hourly')}</span>
                     )}
                     {expert.hourlyRate === "Custom" && (
-                      <span className="text-sm font-medium text-gray-500"> pricing</span>
+                      <span className="text-sm font-medium text-gray-500"> {t('pricingCustom')}</span>
                     )}
                   </div>
                   <div className="flex gap-2">
@@ -381,7 +391,7 @@ export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExp
                       <span className="material-icons-outlined text-lg">favorite_border</span>
                     </button>
                     <button className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-full text-sm font-bold shadow-md shadow-purple-500/20 transition-all">
-                      Request Quote
+                      {t('requestQuote')}
                     </button>
                   </div>
                 </div>
@@ -392,10 +402,10 @@ export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExp
             <div className="bg-gray-900 rounded-xl p-6 flex flex-col items-center justify-center text-center relative overflow-hidden group md:col-span-2 min-h-[160px]">
               <div className="absolute inset-0 bg-purple-600/20"></div>
               <div className="relative z-10 max-w-lg">
-                <h3 className="text-2xl font-bold text-white mb-2">Are you a Tax Professional?</h3>
-                <p className="text-gray-300 text-sm mb-4">Join 5,000+ verified experts growing their practice on Kimance.</p>
+                <h3 className="text-2xl font-bold text-white mb-2">{t('areYouTaxPro')}</h3>
+                <p className="text-gray-300 text-sm mb-4">{t('joinExperts')}</p>
                 <button className="bg-white text-gray-900 hover:bg-gray-100 px-6 py-2 rounded-full text-sm font-bold transition-colors">
-                  Create Partner Profile
+                  {t('createPartnerProfile')}
                 </button>
               </div>
             </div>

@@ -2,33 +2,16 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { logout } from "@/app/auth/actions";
+import LanguageSwitcher from "@/app/components/LanguageSwitcher";
+import SidebarNavigation from "@/app/components/SidebarNavigation";
 
 interface SidebarProps {
   userName: string;
   userEmail: string;
 }
 
-interface NavItem {
-  href: string;
-  icon: string;
-  label: string;
-  badge?: string;
-}
-
-const navItems: NavItem[] = [
-  { href: "/", icon: "dashboard", label: "Dashboard" },
-  { href: "#", icon: "account_balance_wallet", label: "My Wallets" },
-  { href: "/send-money", icon: "send", label: "Send Money" },
-  { href: "/marketplace", icon: "storefront", label: "Marketplace" },
-  { href: "/find-tax-experts", icon: "person_search", label: "Find Tax Experts" },
-  { href: "/settings", icon: "settings", label: "Settings" },
-];
-
 export default function Sidebar({ userName, userEmail }: SidebarProps) {
-  const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const SidebarContent = () => (
@@ -43,33 +26,10 @@ export default function Sidebar({ userName, userEmail }: SidebarProps) {
         />
       </div>
 
-      <nav className="flex-1 px-4 space-y-1 mt-2">
-        {navItems.map((item) => {
-          const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href) && item.href !== "#";
-          return (
-            <Link
-              key={item.label}
-              href={item.href}
-              onClick={() => setMobileMenuOpen(false)}
-              className={`flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-sm transition-colors ${
-                isActive
-                  ? "bg-purple-600/10 text-purple-600"
-                  : "text-gray-500 hover:bg-gray-100"
-              }`}
-            >
-              <span className="material-icons-outlined text-xl">{item.icon}</span>
-              {item.label}
-              {item.badge && (
-                <span className="ml-auto text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                  {item.badge}
-                </span>
-              )}
-            </Link>
-          );
-        })}
-      </nav>
+      <SidebarNavigation onNavigate={() => setMobileMenuOpen(false)} />
 
-      <div className="p-4 border-t border-gray-200">
+      <div className="p-4 border-t border-gray-200 space-y-3">
+        <LanguageSwitcher />
         <div className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 cursor-pointer transition-colors group">
           <div className="w-9 h-9 rounded-full bg-purple-600/10 flex items-center justify-center text-purple-600 font-semibold text-sm">
             {userName.charAt(0).toUpperCase()}
