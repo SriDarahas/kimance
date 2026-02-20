@@ -96,7 +96,7 @@ export default function HowItWorks() {
                 
                 {/* Icon Badge */}
                 <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md border border-gray-100">
-                  <step.icon className="w-6 h-6 text-emerald-600" />
+                  <step.icon className="w-6 h-6 text-violet-600" />
                 </div>
               </div>
 

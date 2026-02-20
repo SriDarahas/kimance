@@ -57,13 +57,22 @@ export default function Hero() {
   const headlineText = "Send. Store. Exchange. Protect. Grow.";
 
   return (
-    <section 
-      id="hero" 
+    <section
+      id="hero"
       ref={containerRef}
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800 text-white px-4"
     >
-      {/* Background Elements - Subtle noise or gradient overlay could go here */}
-      <div className="absolute inset-0 bg-[url('/noise.png')] opacity-5 mix-blend-overlay pointer-events-none"></div>
+      {/* Background Image - Global/World map abstract */}
+      <div
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-20"
+        style={{
+          backgroundImage: `url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')`,
+        }}
+      />
+      {/* Dark overlay to ensure text readability */}
+      <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/80 via-slate-900/70 to-slate-800/90" />
+      {/* Noise texture */}
+      <div className="absolute inset-0 z-0 bg-[url('/noise.png')] opacity-5 mix-blend-overlay pointer-events-none" />
       
       <div className="relative z-10 text-center max-w-5xl mx-auto w-full">
         <h1 
@@ -71,13 +80,13 @@ export default function Hero() {
           className="font-playfair text-5xl md:text-7xl lg:text-8xl font-bold leading-tight tracking-tight mb-6 perspective-1000"
         >
           {headlineText.split(" ").map((word, i) => (
-            <span key={i} className="word inline-block mr-2 md:mr-4 opacity-0 will-change-transform">
+            <span key={i} className="word inline-block mr-2 md:mr-4 will-change-transform">
               {word}
             </span>
           ))}
         </h1>
         
-        <div ref={taglineRef as React.RefObject<HTMLDivElement>} className="opacity-0">
+        <div ref={taglineRef as React.RefObject<HTMLDivElement>}>
           <p className="text-xl md:text-2xl text-gray-200 font-light max-w-2xl mx-auto leading-relaxed">
             Money without borders.
           </p>
@@ -85,13 +94,13 @@ export default function Hero() {
 
         <div 
           ref={ctaRef as React.RefObject<HTMLDivElement>} 
-          className="flex flex-col sm:flex-row gap-4 mt-10 justify-center items-center opacity-0"
+          className="flex flex-col sm:flex-row gap-4 mt-10 justify-center items-center"
         >
           <Link 
             href="/register" 
-            className="group relative px-8 py-4 bg-emerald-500 text-white font-semibold rounded-full overflow-hidden transition-all hover:bg-emerald-400 hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] hover:scale-105 active:scale-95"
+            className="group relative px-8 py-4 bg-violet-500 text-white font-semibold rounded-full overflow-hidden transition-all hover:bg-violet-400 hover:shadow-[0_0_30px_rgba(109,40,217,0.4)] hover:scale-105 active:scale-95"
           >
-            <span className="relative z-10">Get Started</span>
+            <span className="relative z-10">Start Now</span>
           </Link>
           
           <Link 
@@ -110,7 +119,7 @@ export default function Hero() {
       {/* Scroll Indicator */}
       <div 
         ref={scrollContainerRef as React.RefObject<HTMLDivElement>}
-        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 opacity-0"
+        className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
       >
         <div ref={scrollBounceRef} className="flex flex-col items-center gap-2 text-white/60">
           <span className="text-xs uppercase tracking-widest">Scroll</span>

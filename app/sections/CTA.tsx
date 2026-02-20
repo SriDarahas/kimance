@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
 export default function CTA() {
@@ -33,7 +34,7 @@ export default function CTA() {
     >
       {/* Background decorative elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-10">
-        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-emerald-400 rounded-full blur-[100px]" />
+        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-violet-400 rounded-full blur-[100px]" />
         <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-teal-400 rounded-full blur-[100px]" />
       </div>
 
@@ -53,28 +54,32 @@ export default function CTA() {
         <div className="flex flex-col items-center gap-8">
           <Link 
             href="/register"
-            className="inline-block bg-emerald-500 text-white px-10 py-4 rounded-full text-lg font-bold hover:bg-emerald-400 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="inline-block bg-violet-500 text-white px-10 py-4 rounded-full text-lg font-bold hover:bg-violet-400 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             Create Free Account
           </Link>
           
-          {/* App store buttons (Placeholders) */}
-          <div className="flex flex-wrap justify-center gap-4 mt-4">
-            <div className="bg-black/20 hover:bg-black/30 transition-colors px-6 py-3 rounded-lg text-sm font-medium cursor-pointer flex items-center gap-2 backdrop-blur-sm border border-white/10">
-              <span className="text-xl"></span>
-              <div className="text-left">
-                <div className="text-[10px] uppercase leading-none opacity-80">Download on the</div>
-                <div className="text-sm font-bold leading-none mt-1">App Store</div>
-              </div>
-            </div>
+          {/* App store buttons */}
+          <div className="flex flex-wrap justify-center items-center gap-6 mt-6">
+            <Link href="#">
+              <Image
+                src="/app_icon/app_store.svg"
+                alt="Download on the App Store"
+                width={180}
+                height={54}
+                className="h-[187px] w-auto hover:opacity-80 transition-opacity"
+              />
+            </Link>
             
-            <div className="bg-black/20 hover:bg-black/30 transition-colors px-6 py-3 rounded-lg text-sm font-medium cursor-pointer flex items-center gap-2 backdrop-blur-sm border border-white/10">
-              <span className="text-xl">▶</span>
-              <div className="text-left">
-                <div className="text-[10px] uppercase leading-none opacity-80">Get it on</div>
-                <div className="text-sm font-bold leading-none mt-1">Google Play</div>
-              </div>
-            </div>
+            <Link href="#">
+              <Image
+                src="/app_icon/google_play_store.svg"
+                alt="Get it on Google Play"
+                width={180}
+                height={54}
+                className="h-14 w-auto hover:opacity-80 transition-opacity"
+              />
+            </Link>
           </div>
         </div>
       </div>

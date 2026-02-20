@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Hero from "@/app/sections/Hero";
+import CurrencyExchange from "@/app/sections/CurrencyExchange";
 import Features from "@/app/sections/Features";
 import HowItWorks from "@/app/sections/HowItWorks";
 import GlobalReach from "@/app/sections/GlobalReach";
@@ -23,6 +24,7 @@ export default function MarketingPage() {
   return (
     <div className="flex flex-col">
       <Hero />
+      <CurrencyExchange />
       <Features />
       <HowItWorks />
       <GlobalReach />

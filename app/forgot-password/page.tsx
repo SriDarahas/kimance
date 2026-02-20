@@ -41,17 +41,14 @@ export default function ForgotPasswordPage() {
 
           {/* Logo Area */}
           <div className="relative z-10 p-12">
-            <Link href="/" className="flex items-center gap-3">
+            <Link href="/" className="inline-block bg-white/95 backdrop-blur-sm px-4 py-2 rounded-xl shadow-lg">
               <Image
-                src="/icon.png"
+                src="/logo-transparent-new.png"
                 alt="Kimance Logo"
-                width={40}
-                height={40}
-                className="rounded"
+                width={400}
+                height={114}
+                className="h-[126px] w-auto"
               />
-              <span className="text-white text-2xl font-bold tracking-tight font-[family-name:var(--font-playfair)]">
-                Kimance
-              </span>
             </Link>
           </div>
 
@@ -70,17 +67,14 @@ export default function ForgotPasswordPage() {
         <div className="flex w-full lg:w-1/2 flex-col justify-center items-center bg-white px-4 sm:px-12 xl:px-24">
           <div className="w-full max-w-[480px] flex flex-col gap-8">
             {/* Mobile Logo (Visible only on small screens) */}
-            <Link href="/" className="lg:hidden flex items-center gap-2 mb-4">
+            <Link href="/" className="lg:hidden flex justify-center mb-4">
               <Image
-                src="/icon.png"
+                src="/logo-transparent-new.png"
                 alt="Kimance Logo"
-                width={32}
-                height={32}
-                className="rounded"
+                width={400}
+                height={114}
+                className="h-[126px] w-auto"
               />
-              <span className="text-gray-900 text-xl font-bold font-[family-name:var(--font-playfair)]">
-                Kimance
-              </span>
             </Link>
 
             {/* Header */}
