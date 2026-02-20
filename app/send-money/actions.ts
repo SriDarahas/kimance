@@ -45,13 +45,16 @@ export async function checkRecipient(email: string) {
   return { exists: true }
 }
 
-export async function sendMoney(recipientEmail: string, amount: number, note?: string) {
+export async function sendMoney(recipientEmail: string, recipientAmount: number, note?: string, deductAmount?: number) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   
   if (!user) return { error: 'Not authenticated' }
   if (recipientEmail === user.email) return { error: 'Cannot send money to yourself' }
-  if (amount <= 0) return { error: 'Amount must be positive' }
+  if (recipientAmount <= 0) return { error: 'Amount must be positive' }
+
+  // If deductAmount is provided (promo applied), use it; otherwise deduct full amount
+  const amountToDeduct = deductAmount !== undefined ? deductAmount : recipientAmount
 
   // Get sender's balance (create if doesn't exist)
   let { data: senderBalance } = await supabase
@@ -70,7 +73,7 @@ export async function sendMoney(recipientEmail: string, amount: number, note?: s
     senderBalance = newBalance
   }
 
-  if (senderBalance.amount < amount) {
+  if (senderBalance.amount < amountToDeduct) {
     return { error: 'Insufficient balance' }
   }
 
@@ -85,18 +88,18 @@ export async function sendMoney(recipientEmail: string, amount: number, note?: s
     return { error: 'Recipient not found. They must have an account first.' }
   }
 
-  // Deduct from sender
+  // Deduct discounted amount from sender
   const { error: senderError } = await supabase
     .from('balances')
-    .update({ amount: senderBalance.amount - amount, updated_at: new Date().toISOString() })
+    .update({ amount: senderBalance.amount - amountToDeduct, updated_at: new Date().toISOString() })
     .eq('user_id', user.id)
 
   if (senderError) return { error: 'Failed to deduct balance' }
 
-  // Add to recipient
+  // Add full amount to recipient
   const { error: recipientError } = await supabase
     .from('balances')
-    .update({ amount: recipientBalance.amount + amount, updated_at: new Date().toISOString() })
+    .update({ amount: recipientBalance.amount + recipientAmount, updated_at: new Date().toISOString() })
     .eq('email', recipientEmail)
 
   if (recipientError) {
@@ -114,11 +117,11 @@ export async function sendMoney(recipientEmail: string, amount: number, note?: s
     sender_email: user.email,
     recipient_id: recipientBalance.user_id,
     recipient_email: recipientEmail,
-    amount,
+    amount: recipientAmount,
     note: note || null,
   })
 
-  return { success: true, newBalance: senderBalance.amount - amount }
+  return { success: true, newBalance: senderBalance.amount - amountToDeduct }
 }
 
 export async function getTransactions() {
