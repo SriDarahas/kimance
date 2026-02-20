@@ -7,6 +7,11 @@ import Sidebar from "@/app/components/Sidebar";
 import { useLanguage } from "@/app/providers/LanguageProvider";
 import { getTranslation } from "@/lib/i18n";
 
+const PROMO_CODES: Record<string, { discount: number; label: string }> = {
+  TESTPROMO: { discount: 0.2, label: "20% off" },
+  "5OFF": { discount: 0.05, label: "5% off" },
+};
+
 interface SendMoneyClientProps {
   userName: string;
   userEmail: string;
@@ -21,6 +26,9 @@ export default function SendMoneyClient({ userName, userEmail }: SendMoneyClient
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [balance, setBalance] = useState<number | null>(null);
+  const [promoCode, setPromoCode] = useState("");
+  const [appliedPromo, setAppliedPromo] = useState<string | null>(null);
+  const [promoError, setPromoError] = useState<string | null>(null);
   const { language } = useLanguage();
   const t = (key: any, vars?: Record<string, string>) => getTranslation(language, key, vars);
 
@@ -55,10 +63,35 @@ export default function SendMoneyClient({ userName, userEmail }: SendMoneyClient
     setStep(3);
   };
 
+  const discountPercent = appliedPromo && PROMO_CODES[appliedPromo] ? PROMO_CODES[appliedPromo].discount : 0;
+  const originalAmount = parseFloat(amount) || 0;
+  const discountAmount = originalAmount * discountPercent;
+  const finalAmount = originalAmount - discountAmount;
+
+  const handleApplyPromo = () => {
+    setPromoError(null);
+    const code = promoCode.trim().toUpperCase();
+    if (!code) return;
+    if (PROMO_CODES[code]) {
+      setAppliedPromo(code);
+      setPromoError(null);
+    } else {
+      setPromoError("Invalid promo code");
+      setAppliedPromo(null);
+    }
+  };
+
+  const handleRemovePromo = () => {
+    setAppliedPromo(null);
+    setPromoCode("");
+    setPromoError(null);
+  };
+
   const handleSend = async () => {
     setLoading(true);
     setError(null);
-    const result = await sendMoney(recipientEmail, parseFloat(amount), note);
+    // Send full amount to recipient, but only deduct the discounted amount from sender
+    const result = await sendMoney(recipientEmail, originalAmount, note, appliedPromo ? finalAmount : undefined);
     if (result.error) {
       setError(result.error);
     } else {
@@ -75,6 +108,9 @@ export default function SendMoneyClient({ userName, userEmail }: SendMoneyClient
     setNote("");
     setError(null);
     setSuccess(false);
+    setPromoCode("");
+    setAppliedPromo(null);
+    setPromoError(null);
   };
 
   return (
@@ -166,7 +202,13 @@ export default function SendMoneyClient({ userName, userEmail }: SendMoneyClient
                   <span className="material-icons-outlined text-green-600 text-4xl">check</span>
                 </div>
                 <h3 className="font-serif text-2xl font-bold text-gray-900 mb-2">{t('moneySent')}</h3>
-                <p className="text-gray-600 mb-2">{t('successfullySent')} <span className="font-bold text-purple-600">${amount}</span></p>
+                <p className="text-gray-600 mb-2">{t('successfullySent')} <span className="font-bold text-purple-600">${originalAmount.toFixed(2)}</span></p>
+                {appliedPromo && (
+                  <p className="text-green-600 text-sm mb-1 flex items-center justify-center gap-1">
+                    <span className="material-icons-outlined text-base">local_offer</span>
+                    Promo applied — only ${finalAmount.toFixed(2)} was deducted from your balance
+                  </p>
+                )}
                 <p className="text-gray-500 text-sm mb-8">{t('to')} {recipientEmail}</p>
                 <div className="flex gap-3 justify-center">
                   <Link href="/" className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-xl transition-colors">
@@ -296,8 +338,23 @@ export default function SendMoneyClient({ userName, userEmail }: SendMoneyClient
                   </div>
                   <div className="flex justify-between items-center py-2 border-b border-gray-200">
                     <span className="text-gray-500 text-sm">{t('amount')}</span>
-                    <span className="font-bold text-2xl text-purple-600">${parseFloat(amount).toFixed(2)}</span>
+                    <span className="font-bold text-2xl text-purple-600">${originalAmount.toFixed(2)}</span>
                   </div>
+                  {appliedPromo && (
+                    <>
+                      <div className="flex justify-between items-center py-2 border-b border-gray-200">
+                        <span className="text-gray-500 text-sm flex items-center gap-1.5">
+                          <span className="material-icons-outlined text-green-500 text-base">local_offer</span>
+                          Promo ({PROMO_CODES[appliedPromo].label})
+                        </span>
+                        <span className="font-semibold text-green-600">-${discountAmount.toFixed(2)} savings</span>
+                      </div>
+                      <div className="flex justify-between items-center py-2 border-b border-gray-200">
+                        <span className="text-gray-500 text-sm font-medium">Deducted from you</span>
+                        <span className="font-bold text-lg text-green-600">${finalAmount.toFixed(2)}</span>
+                      </div>
+                    </>
+                  )}
                   {note && (
                     <div className="flex justify-between items-center py-2">
                       <span className="text-gray-500 text-sm">{t('note')}</span>
@@ -305,6 +362,55 @@ export default function SendMoneyClient({ userName, userEmail }: SendMoneyClient
                     </div>
                   )}
                 </div>
+
+                {/* Promo Code */}
+                <div className="bg-gray-50 rounded-2xl p-5 space-y-3">
+                  <div className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                    <span className="material-icons-outlined text-purple-500 text-lg">confirmation_number</span>
+                    Promo Code
+                  </div>
+                  {appliedPromo ? (
+                    <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-xl px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <span className="material-icons-outlined text-green-600 text-lg">check_circle</span>
+                        <span className="font-bold text-green-800 text-sm uppercase tracking-wide">{appliedPromo}</span>
+                        <span className="text-green-600 text-sm">— {PROMO_CODES[appliedPromo].label} applied</span>
+                      </div>
+                      <button
+                        onClick={handleRemovePromo}
+                        className="text-gray-400 hover:text-red-500 transition-colors"
+                      >
+                        <span className="material-icons-outlined text-lg">close</span>
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={promoCode}
+                          onChange={(e) => { setPromoCode(e.target.value.toUpperCase()); setPromoError(null); }}
+                          placeholder="Enter promo code"
+                          className="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all text-sm font-medium uppercase tracking-wide"
+                        />
+                        <button
+                          onClick={handleApplyPromo}
+                          disabled={!promoCode.trim()}
+                          className="px-5 py-3 bg-purple-600 hover:bg-purple-700 text-white text-sm font-bold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                        >
+                          Apply
+                        </button>
+                      </div>
+                      {promoError && (
+                        <p className="text-red-500 text-xs font-medium ml-1 flex items-center gap-1">
+                          <span className="material-icons-outlined text-sm">error_outline</span>
+                          {promoError}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+
                 <div className="bg-purple-50 rounded-xl p-4 flex gap-3 items-start">
                   <span className="material-icons-outlined text-purple-600 mt-0.5">verified_user</span>
                   <p className="text-sm text-purple-800">

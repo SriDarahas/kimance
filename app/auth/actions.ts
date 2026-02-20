@@ -84,3 +84,83 @@ export async function updatePassword(formData: FormData) {
   revalidatePath('/', 'layout')
   redirect('/')
 }
+
+export async function signupWithPhone(formData: FormData) {
+  const supabase = await createClient()
+
+  const phone = formData.get('phone') as string
+  const password = formData.get('password') as string
+  const fullName = formData.get('fullName') as string
+
+  const { error } = await supabase.auth.signUp({
+    phone,
+    password,
+    options: {
+      data: {
+        full_name: fullName,
+      },
+    },
+  })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  return { success: 'A verification code has been sent to your phone number.' }
+}
+
+export async function loginWithPhone(formData: FormData) {
+  const supabase = await createClient()
+
+  const phone = formData.get('phone') as string
+  const password = formData.get('password') as string
+
+  const { error } = await supabase.auth.signInWithPassword({
+    phone,
+    password,
+  })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  revalidatePath('/', 'layout')
+  redirect('/')
+}
+
+export async function sendPhoneOtp(formData: FormData) {
+  const supabase = await createClient()
+
+  const phone = formData.get('phone') as string
+
+  const { error } = await supabase.auth.signInWithOtp({
+    phone,
+  })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  return { success: 'A verification code has been sent to your phone number.' }
+}
+
+export async function verifyPhoneOtp(formData: FormData) {
+  const supabase = await createClient()
+
+  const phone = formData.get('phone') as string
+  const token = formData.get('token') as string
+  const type = (formData.get('type') as string) || 'sms'
+
+  const { error } = await supabase.auth.verifyOtp({
+    phone,
+    token,
+    type: type as 'sms' | 'phone_change',
+  })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  revalidatePath('/', 'layout')
+  redirect('/')
+}
