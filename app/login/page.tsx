@@ -208,11 +208,11 @@ export default function Login() {
           <div className="relative z-10 p-12">
             <Link href="/" className="inline-block bg-white/95 backdrop-blur-sm px-4 py-2 rounded-xl shadow-lg">
               <Image
-                src="/logo-transparent-new.png"
+                src="/logo-transparent.png"
                 alt="Kimance Logo"
-                width={400}
-                height={114}
-                className="h-[126px] w-auto"
+                width={100}
+                height={29}
+                className="h-[32px] w-auto"
               />
             </Link>
           </div>
@@ -240,11 +240,11 @@ export default function Login() {
             {/* Mobile Logo (Visible only on small screens) */}
             <Link href="/" className="lg:hidden flex justify-center mb-4">
               <Image
-                src="/logo-transparent-new.png"
+                src="/logo-transparent.png"
                 alt="Kimance Logo"
-                width={400}
-                height={114}
-                className="h-[126px] w-auto"
+                width={100}
+                height={29}
+                className="h-[32px] w-auto"
               />
             </Link>
 

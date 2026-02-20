@@ -16,11 +16,11 @@ export default function MarketingLayout({
           <div className="flex items-center pl-6">
             <Link href="/" className="flex items-center">
               <Image
-                src="/logo-transparent-new.png"
+                src="/logo-transparent.png"
                 alt="Kimance"
-                width={800}
-                height={200}
-                className="h-[180px] w-auto object-contain"
+                width={200}
+                height={50}
+                className="h-[45px] w-auto object-contain"
                 priority
               />
             </Link>
@@ -69,11 +69,11 @@ export default function MarketingLayout({
           <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
             <div className="flex items-center gap-2">
               <Image
-                src="/logo-transparent-new.png"
+                src="/logo-transparent.png"
                 alt="Kimance"
-                width={256}
-                height={64}
-                className="h-36 w-auto object-contain"
+                width={64}
+                height={16}
+                className="h-9 w-auto object-contain"
               />
               <span className="text-sm font-medium text-gray-500">
                 © {new Date().getFullYear()} Kimance. All rights reserved.

@@ -5,24 +5,42 @@ import { ArrowRightLeft, ChevronDown, TrendingUp } from "lucide-react";
 import { createPortal } from "react-dom";
 
 const CURRENCIES = [
-  { code: "USD", name: "US Dollar",         flag: "🇺🇸" },
-  { code: "EUR", name: "Euro",              flag: "🇪🇺" },
-  { code: "GBP", name: "British Pound",     flag: "🇬🇧" },
-  { code: "CAD", name: "Canadian Dollar",   flag: "🇨🇦" },
-  { code: "AUD", name: "Australian Dollar", flag: "🇦🇺" },
-  { code: "NGN", name: "Nigerian Naira",    flag: "🇳🇬" },
-  { code: "KES", name: "Kenyan Shilling",   flag: "🇰🇪" },
-  { code: "GHS", name: "Ghanaian Cedi",     flag: "🇬🇭" },
-  { code: "ZAR", name: "South African Rand",flag: "🇿🇦" },
-  { code: "INR", name: "Indian Rupee",      flag: "🇮🇳" },
-  { code: "MXN", name: "Mexican Peso",      flag: "🇲🇽" },
-  { code: "PKR", name: "Pakistani Rupee",   flag: "🇵🇰" },
-  { code: "BDT", name: "Bangladeshi Taka",  flag: "🇧🇩" },
-  { code: "PHP", name: "Philippine Peso",   flag: "🇵🇭" },
-  { code: "JPY", name: "Japanese Yen",      flag: "🇯🇵" },
-  { code: "CNY", name: "Chinese Yuan",      flag: "🇨🇳" },
-  { code: "AED", name: "UAE Dirham",        flag: "🇦🇪" },
+  { code: "USD", name: "US Dollar",         countryCode: "us" },
+  { code: "EUR", name: "Euro",              countryCode: "eu" },
+  { code: "GBP", name: "British Pound",     countryCode: "gb" },
+  { code: "CAD", name: "Canadian Dollar",    countryCode: "ca" },
+  { code: "AUD", name: "Australian Dollar", countryCode: "au" },
+  { code: "NGN", name: "Nigerian Naira",   countryCode: "ng" },
+  { code: "KES", name: "Kenyan Shilling",  countryCode: "ke" },
+  { code: "GHS", name: "Ghanaian Cedi",    countryCode: "gh" },
+  { code: "ZAR", name: "South African Rand", countryCode: "za" },
+  { code: "INR", name: "Indian Rupee",     countryCode: "in" },
+  { code: "MXN", name: "Mexican Peso",     countryCode: "mx" },
+  { code: "PKR", name: "Pakistani Rupee",  countryCode: "pk" },
+  { code: "BDT", name: "Bangladeshi Taka", countryCode: "bd" },
+  { code: "PHP", name: "Philippine Peso",  countryCode: "ph" },
+  { code: "JPY", name: "Japanese Yen",      countryCode: "jp" },
+  { code: "CNY", name: "Chinese Yuan",      countryCode: "cn" },
+  { code: "AED", name: "UAE Dirham",        countryCode: "ae" },
 ];
+
+// SVG Flag component using flagcdn.com
+function Flag({ code, size = 24 }: { code: string; size?: number }) {
+  return (
+    <img
+      src={`https://flagcdn.com/w40/${code.toLowerCase()}.png`}
+      srcSet={`
+        https://flagcdn.com/w40/${code.toLowerCase()}.png 1x,
+        https://flagcdn.com/w80/${code.toLowerCase()}.png 2x
+      `}
+      alt=""
+      width={size}
+      height={(size * 3) / 4}
+      className="object-cover rounded-sm"
+      loading="lazy"
+    />
+  );
+}
 
 interface CurrencyExchangeWidgetProps {
   /** Compact mode for dashboard use — hides the section heading & tagline */
@@ -117,7 +135,7 @@ function CurrencySelect({
                       : "text-gray-700"
                   }`}
                 >
-                  <span className="text-base">{c.flag}</span>
+                  <Flag code={c.countryCode} size={24} />
                   <span className="font-medium">{c.code}</span>
                   <span className="text-gray-400 text-xs ml-auto">{c.name}</span>
                 </button>
@@ -136,7 +154,7 @@ function CurrencySelect({
         onClick={openDropdown}
         className="flex items-center gap-2 rounded-xl bg-white border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-800 hover:border-violet-400 transition-colors shadow-sm min-w-[120px]"
       >
-        <span className="text-lg leading-none">{current.flag}</span>
+        <Flag code={current.countryCode} size={24} />
         <span>{current.code}</span>
         <ChevronDown
           className={`w-3.5 h-3.5 text-gray-400 ml-auto transition-transform ${
@@ -168,11 +186,7 @@ export default function CurrencyExchangeWidget({ compact = false, className = ""
     setLoading(true);
     setError(null);
     try {
-      const apiKey = process.env.EXCHANGE_RATE_API_KEY;
-      if (!apiKey) throw new Error("API key not configured");
-      const res = await fetch(
-        `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${from}`
-      );
+      const res = await fetch(`/api/exchange-rate?from=${from}`);
       if (!res.ok) throw new Error("bad response");
       const data: { result: string; conversion_rates: Record<string, number> } =
         await res.json();
@@ -254,7 +268,7 @@ export default function CurrencyExchangeWidget({ compact = false, className = ""
                 className="flex-1 bg-transparent text-2xl font-bold text-gray-900 outline-none text-right placeholder:text-gray-300 min-w-0"
                 placeholder="0"
               />
-              <span className="text-gray-400 text-sm font-medium">{fromMeta.flag}</span>
+              <Flag code={fromMeta.countryCode} size={20} />
             </div>
           </div>
 
@@ -291,7 +305,7 @@ export default function CurrencyExchangeWidget({ compact = false, className = ""
                   </span>
                 )}
               </div>
-              <span className="text-violet-400 text-sm font-medium">{toMeta.flag}</span>
+              <Flag code={toMeta.countryCode} size={20} />
             </div>
           </div>
 

@@ -18,11 +18,11 @@ export default function Sidebar({ userName, userEmail }: SidebarProps) {
     <>
       <div className="p-6">
         <Image
-          src="/logo-transparent-new.png"
+          src="/logo-transparent.png"
           alt="Kimance Logo"
-          width={400}
-          height={114}
-          className="h-[126px] w-auto"
+          width={100}
+          height={29}
+          className="h-[32px] w-auto"
         />
       </div>
 
@@ -57,11 +57,11 @@ export default function Sidebar({ userName, userEmail }: SidebarProps) {
       {/* Mobile Header */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4">
         <Image
-          src="/logo-transparent-new.png"
+          src="/logo-transparent.png"
           alt="Kimance Logo"
-          width={324}
-          height={93}
-          className="h-[108px] w-auto"
+          width={81}
+          height={23}
+          className="h-[27px] w-auto"
         />
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
