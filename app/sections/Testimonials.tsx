@@ -32,12 +32,12 @@ const testimonials = [
 ];
 
 const logos = [
-  "Visa",
-  "Mastercard",
-  "USDC",
-  "M-Pesa",
-  "PayPal",
-  "Wise"
+  { name: "Visa", src: "/companies/visa.svg" },
+  { name: "Mastercard", src: "/companies/mastercard.svg" },
+  { name: "USDC", src: "/companies/usdc.svg" },
+  { name: "M-Pesa", src: "/companies/m-pesa.svg" },
+  { name: "PayPal", src: "/companies/paypal.svg" },
+  { name: "Wise", src: "/companies/wise.svg" },
 ];
 
 export default function Testimonials() {
@@ -94,13 +94,13 @@ export default function Testimonials() {
               
               {/* Quote */}
               <blockquote className="text-gray-600 italic mb-6 flex-grow relative">
-                <span className="text-4xl text-emerald-200 absolute -top-4 -left-2 font-serif">"</span>
+                <span className="text-4xl text-violet-200 absolute -top-4 -left-2 font-serif">"</span>
                 <span className="relative z-10">{t.quote}</span>
               </blockquote>
               
               {/* User info */}
               <div className="mt-auto flex items-center">
-                <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold mr-3">
+                <div className="w-10 h-10 rounded-full bg-violet-100 flex items-center justify-center text-violet-600 font-bold mr-3">
                   {t.name.charAt(0)}
                 </div>
                 <div>
@@ -125,9 +125,9 @@ export default function Testimonials() {
               {logos.map((logo, index) => (
                 <div 
                   key={index} 
-                  className="mx-8 px-6 py-3 bg-white/50 rounded-lg border border-gray-200 text-gray-400 font-bold text-xl grayscale hover:grayscale-0 transition-all duration-300 flex items-center justify-center min-w-[120px] hover:bg-white hover:shadow-sm"
+                  className="mx-8 px-6 py-3 bg-white/50 rounded-lg border border-gray-200 grayscale hover:grayscale-0 transition-all duration-300 flex items-center justify-center min-w-[120px] hover:bg-white hover:shadow-sm"
                 >
-                  {logo}
+                  <img src={logo.src} alt={logo.name} className="h-8 w-auto object-contain" />
                 </div>
               ))}
             </Marquee>

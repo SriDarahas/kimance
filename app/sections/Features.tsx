@@ -70,10 +70,10 @@ export default function Features() {
           {features.map((feature, index) => (
             <div 
               key={index} 
-              className="feature-card group bg-white rounded-2xl p-8 border border-gray-100 hover:border-emerald-200 transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
+              className="feature-card group bg-white rounded-2xl p-8 border border-gray-100 hover:border-violet-200 transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
             >
-              <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-100 transition-colors">
-                <feature.icon className="w-6 h-6 text-emerald-600" />
+              <div className="w-12 h-12 bg-violet-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-violet-100 transition-colors">
+                <feature.icon className="w-6 h-6 text-violet-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
                 {feature.title}

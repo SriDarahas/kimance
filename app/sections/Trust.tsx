@@ -45,7 +45,7 @@ export default function Trust() {
           {securityFeatures.map((feature) => (
             <div key={feature.title} className="flex items-start gap-4">
               <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
-                <feature.icon className="w-6 h-6 text-emerald-600" />
+                <feature.icon className="w-6 h-6 text-violet-600" />
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-900">{feature.title}</h3>

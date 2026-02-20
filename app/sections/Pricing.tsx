@@ -35,7 +35,7 @@ export default function Pricing() {
     <section id="pricing" className="py-24 bg-white relative overflow-hidden">
       {/* Subtle background decoration */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl pointer-events-none">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-50 rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-violet-50 rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-teal-50 rounded-full blur-3xl opacity-50 translate-y-1/2 -translate-x-1/2" />
       </div>
 
@@ -54,9 +54,9 @@ export default function Pricing() {
           {fees.map((fee) => (
             <div
               key={fee.label}
-              className="group p-8 rounded-2xl bg-gray-50 hover:bg-white hover:shadow-xl hover:shadow-emerald-100/50 transition-all duration-300 border border-transparent hover:border-emerald-100 text-center"
+              className="group p-8 rounded-2xl bg-gray-50 hover:bg-white hover:shadow-xl hover:shadow-violet-100/50 transition-all duration-300 border border-transparent hover:border-violet-100 text-center"
             >
-              <div className="text-3xl md:text-4xl font-bold text-emerald-600 mb-3 group-hover:scale-105 transition-transform duration-300">
+              <div className="text-3xl md:text-4xl font-bold text-violet-600 mb-3 group-hover:scale-105 transition-transform duration-300">
                 {fee.value}
               </div>
               <div className="text-lg font-semibold text-gray-900 mb-2">
@@ -72,7 +72,7 @@ export default function Pricing() {
         <div className="text-center">
           <Link
             href="/register"
-            className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white transition-all duration-200 bg-emerald-500 rounded-full hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-200 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+            className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white transition-all duration-200 bg-violet-500 rounded-full hover:bg-violet-600 hover:shadow-lg hover:shadow-violet-200 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2"
           >
             Get Started Free
           </Link>
