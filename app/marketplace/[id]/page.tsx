@@ -225,5 +225,5 @@ export default async function MarketplaceDetailPage({ params }: PageProps) {
   const userName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
   const userEmail = user.email || '';
 
-  return <MarketplaceDetailClient userName={userName} userEmail={userEmail} offer={offer} />;
+  return <MarketplaceDetailClient userName={userName} userEmail={userEmail} offer={offer as any} />;
 }

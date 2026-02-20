@@ -248,9 +248,9 @@ export default function CurrencyExchangeWidget({ compact = false, className = ""
           </span>
         </div>
 
-        <div className="p-6 md:p-8">
+        <div className={compact ? "p-4" : "p-6 md:p-8"}>
           {/* You send row */}
-          <div className="mb-4">
+          <div className="mb-3">
             <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
               You send
             </label>
@@ -273,7 +273,7 @@ export default function CurrencyExchangeWidget({ compact = false, className = ""
           </div>
 
           {/* Swap button */}
-          <div className="flex items-center justify-center my-4">
+          <div className={`flex items-center justify-center ${compact ? "my-2" : "my-4"}`}>
             <button
               type="button"
               onClick={swap}
@@ -284,7 +284,7 @@ export default function CurrencyExchangeWidget({ compact = false, className = ""
           </div>
 
           {/* They receive row */}
-          <div className="mb-6">
+          <div className={compact ? "mb-3" : "mb-6"}>
             <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
               They receive
             </label>
@@ -310,18 +310,20 @@ export default function CurrencyExchangeWidget({ compact = false, className = ""
           </div>
 
           {/* Fee note + CTA */}
-          <div className="flex items-center justify-between gap-4 flex-wrap">
-            <div className="flex items-center gap-2 text-sm text-gray-500">
-              <span className="w-2 h-2 rounded-full bg-green-400 inline-block" />
-              No hidden fees · Instant transfer
+          {!compact && (
+            <div className="flex items-center justify-between gap-4 flex-wrap">
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <span className="w-2 h-2 rounded-full bg-green-400 inline-block" />
+                No hidden fees · Instant transfer
+              </div>
+              <a
+                href="/register"
+                className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-violet-600 hover:bg-violet-700 text-white text-sm font-semibold transition-all shadow-sm hover:shadow-md"
+              >
+                Send Now →
+              </a>
             </div>
-            <a
-              href="/register"
-              className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-violet-600 hover:bg-violet-700 text-white text-sm font-semibold transition-all shadow-sm hover:shadow-md"
-            >
-              Send Now →
-            </a>
-          </div>
+          )}
         </div>
       </div>
     </div>

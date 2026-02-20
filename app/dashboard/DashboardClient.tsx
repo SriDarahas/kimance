@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useLanguage } from "@/app/providers/LanguageProvider";
 import { getTranslation } from "@/lib/i18n";
-import WatchlistClient from "@/app/components/WatchlistClient";
+import CurrencyExchangeWidget from "@/app/components/CurrencyExchangeWidget";
 
 interface Transaction {
   id: string;
@@ -104,7 +104,7 @@ export default function DashboardClient({
               </div>
               <span className="font-medium text-gray-800 text-xs">{t('sendMoney')}</span>
             </Link>
-            <Link href="#" className="h-full flex flex-col items-center justify-center gap-2 p-4 rounded-2xl bg-orange-200 hover:bg-orange-300 transition-colors group border border-transparent">
+            <Link href="/exchange-rate" className="h-full flex flex-col items-center justify-center gap-2 p-4 rounded-2xl bg-orange-200 hover:bg-orange-300 transition-colors group border border-transparent">
               <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-900 group-hover:scale-110 transition-transform shadow-sm">
                 <span className="material-icons-outlined text-xl">currency_exchange</span>
               </div>
@@ -195,8 +195,8 @@ export default function DashboardClient({
               </button>
             </div>
 
-            {/* Watchlist (client) */}
-            <WatchlistClient />
+            {/* Currency Exchange Widget */}
+            <CurrencyExchangeWidget compact className="" />
           </div>
         </div>
       </div>
