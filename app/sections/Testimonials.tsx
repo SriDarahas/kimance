@@ -38,6 +38,7 @@ const logos = [
   { name: "M-Pesa", src: "/companies/m-pesa.svg" },
   { name: "PayPal", src: "/companies/paypal.svg" },
   { name: "Wise", src: "/companies/wise.svg" },
+  { name: "Orange Money", src: "/companies/orange-money.svg" },
 ];
 
 export default function Testimonials() {
@@ -73,7 +74,7 @@ export default function Testimonials() {
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 font-display">
             Trusted by Global Users
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Join thousands of users who trust Kimance for their financial freedom.
           </p>
         </div>
@@ -93,7 +94,7 @@ export default function Testimonials() {
               </div>
               
               {/* Quote */}
-              <blockquote className="text-gray-600 italic mb-6 flex-grow relative">
+              <blockquote className="text-lg text-gray-600 italic mb-6 flex-grow relative">
                 <span className="text-4xl text-violet-200 absolute -top-4 -left-2 font-serif">"</span>
                 <span className="relative z-10">{t.quote}</span>
               </blockquote>
@@ -105,7 +106,7 @@ export default function Testimonials() {
                 </div>
                 <div>
                   <p className="font-semibold text-gray-900">{t.name}</p>
-                  <p className="text-sm text-gray-500">{t.role}</p>
+                  <p className="text-base text-gray-500">{t.role}</p>
                 </div>
               </div>
             </div>
@@ -114,9 +115,9 @@ export default function Testimonials() {
         
         {/* Logo marquee */}
         <div className="text-center pt-10 border-t border-gray-200">
-          <p className="text-sm text-gray-500 mb-8 uppercase tracking-wider font-medium">Trusted by leading companies</p>
+          <p className="text-base text-gray-500 mb-8 uppercase tracking-wider font-medium">Trusted by leading companies</p>
           
-          <div className="relative overflow-hidden">
+          <div className="logos-marquee-container relative overflow-hidden">
             {/* Gradient masks for marquee edges */}
             <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none"></div>
             <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none"></div>
@@ -125,9 +126,9 @@ export default function Testimonials() {
               {logos.map((logo, index) => (
                 <div 
                   key={index} 
-                  className="mx-8 px-6 py-3 bg-white/50 rounded-lg border border-gray-200 grayscale hover:grayscale-0 transition-all duration-300 flex items-center justify-center min-w-[120px] hover:bg-white hover:shadow-sm"
-                >
-                  <img src={logo.src} alt={logo.name} className="h-8 w-auto object-contain" />
+                  className="logo-grayscale mx-8 px-6 py-3 bg-white/50 rounded-lg border border-gray-200 flex items-center justify-center min-w-[120px] hover:bg-white hover:shadow-sm"
+>
+                  <img src={logo.src} alt={logo.name} className="h-12 w-auto object-contain" />
                 </div>
               ))}
             </Marquee>

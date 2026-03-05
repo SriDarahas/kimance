@@ -60,14 +60,14 @@ export default function CTA() {
           </Link>
           
           {/* App store buttons */}
-          <div className="flex flex-wrap justify-center items-center gap-6 mt-6">
+          <div className="flex flex-wrap justify-center items-center gap-4 mt-4">
             <Link href="#">
               <Image
                 src="/app_icon/app_store.svg"
                 alt="Download on the App Store"
                 width={180}
                 height={54}
-                className="h-[187px] w-auto hover:opacity-80 transition-opacity"
+                className="h-14 w-auto hover:opacity-80 transition-opacity"
               />
             </Link>
             

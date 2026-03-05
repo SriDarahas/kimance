@@ -54,19 +54,19 @@ export default function Hero() {
     return () => ctx.revert();
   }, []);
 
-  const headlineText = "Send. Store. Exchange. Protect. Grow.";
+  const verbsText = "Send. Store. Exchange. Protect. Grow.";
 
   return (
     <section
       id="hero"
       ref={containerRef}
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800 text-white px-4"
+      className="relative flex flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800 text-white px-4" style={{ minHeight: 'calc(100vh - 97px)' }}
     >
       {/* Background Image - Global/World map abstract */}
       <div
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-20"
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-40"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')`,
+          backgroundImage: `url('/banner.png')`,
         }}
       />
       {/* Dark overlay to ensure text readability */}
@@ -74,27 +74,33 @@ export default function Hero() {
       {/* Noise texture */}
       <div className="absolute inset-0 z-0 bg-[url('/noise.png')] opacity-5 mix-blend-overlay pointer-events-none" />
       
-      <div className="relative z-10 text-center max-w-5xl mx-auto w-full">
+      <div className="relative z-10 text-center max-w-5xl mx-auto w-full pb-24">
         <h1 
           ref={headlineRef}
-          className="font-playfair text-5xl md:text-7xl lg:text-8xl font-bold leading-tight tracking-tight mb-6 perspective-1000"
+          className="font-playfair font-bold leading-tight tracking-tight perspective-1000"
         >
-          {headlineText.split(" ").map((word, i) => (
-            <span key={i} className="word inline-block mr-2 md:mr-4 will-change-transform">
-              {word}
-            </span>
-          ))}
+          <div className="text-4xl md:text-6xl lg:text-7xl mb-2">
+            {verbsText.split(" ").map((word, i) => (
+              <span key={i} className="word inline-block mr-1 md:mr-2 will-change-transform">
+                {word}
+              </span>
+            ))}
+          </div>
+          <div className="text-2xl md:text-3xl lg:text-4xl text-gray-200 font-light">
+            {"All with Security You Can Trust.".split(" ").map((word, i) => (
+              <span key={i} className="word inline-block mr-1 md:mr-2 will-change-transform">
+                {word}
+              </span>
+            ))}
+          </div>
         </h1>
         
-        <div ref={taglineRef as React.RefObject<HTMLDivElement>}>
-          <p className="text-xl md:text-2xl text-gray-200 font-light max-w-2xl mx-auto leading-relaxed">
-            Money without borders.
-          </p>
-        </div>
+        <div ref={taglineRef as React.RefObject<HTMLDivElement>} aria-hidden="true" />
+
 
         <div 
           ref={ctaRef as React.RefObject<HTMLDivElement>} 
-          className="flex flex-col sm:flex-row gap-4 mt-10 justify-center items-center"
+          className="flex flex-col sm:flex-row gap-4 mt-6 justify-center items-center"
         >
           <Link 
             href="/register" 
@@ -119,10 +125,10 @@ export default function Hero() {
       {/* Scroll Indicator */}
       <div 
         ref={scrollContainerRef as React.RefObject<HTMLDivElement>}
-        className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+        className="absolute bottom-6 left-1/2 transform -translate-x-1/2"
       >
         <div ref={scrollBounceRef} className="flex flex-col items-center gap-2 text-white/60">
-          <span className="text-xs uppercase tracking-widest">Scroll</span>
+          <span className="text-sm uppercase tracking-widest">Scroll</span>
           <svg 
             width="24" 
             height="24" 

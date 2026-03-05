@@ -224,10 +224,10 @@ export default function CurrencyExchangeWidget({ compact = false, className = ""
             <TrendingUp className="w-4 h-4" />
             Live Exchange Rates
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 font-display">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3 font-display">
             See how far your money goes
           </h2>
-          <p className="text-gray-500 max-w-xl mx-auto text-lg">
+          <p className="text-gray-500 max-w-xl mx-auto text-xl">
             Real-time rates. No hidden fees. Just honest, transparent transfers.
           </p>
         </div>

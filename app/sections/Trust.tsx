@@ -34,22 +34,24 @@ export default function Trust() {
   });
 
   return (
-    <section id="trust" className="py-20 bg-white">
+    <section id="trust" className="py-20 bg-gradient-to-br from-slate-50 via-violet-50/40 to-white">
       <div ref={sectionRef} className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-gray-900">Bank-Level Security</h2>
-          <p className="text-gray-600 mt-4">Your security is our top priority</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Secure. Always.</h2>
+          <p className="text-gray-600 mt-4 max-w-2xl mx-auto text-xl leading-relaxed">
+            Your money deserves the highest protection. Kimance uses enterprise-grade security to keep every transaction, every wallet, and every piece of data completely secure.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {securityFeatures.map((feature) => (
             <div key={feature.title} className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
-                <feature.icon className="w-6 h-6 text-violet-600" />
+              <div className="w-14 h-14 bg-violet-500 rounded-xl flex items-center justify-center shrink-0 shadow-md shadow-violet-200">
+                <feature.icon className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">{feature.title}</h3>
-                <p className="text-gray-600 text-sm mt-1 leading-relaxed">
+                <h3 className="text-xl font-semibold text-gray-900">{feature.title}</h3>
+                <p className="text-gray-600 text-lg mt-1 leading-relaxed">
                   {feature.description}
                 </p>
               </div>
@@ -57,7 +59,7 @@ export default function Trust() {
           ))}
         </div>
 
-        <div className="text-center mt-12 text-sm text-gray-500 font-medium">
+        <div className="text-center mt-12 text-base text-gray-500 font-medium">
           KYC/AML compliant • GDPR ready
         </div>
       </div>

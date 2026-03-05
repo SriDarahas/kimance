@@ -57,7 +57,7 @@ function ConnectionArc({ from, to }: { from: CityType; to: CityType }) {
   return (
     <Line
       points={points}
-      color="#10b981"
+      color="#8b5cf6"
       lineWidth={2}
       transparent
       opacity={0.8}
@@ -72,11 +72,11 @@ function CityMarker({ city }: { city: CityType }) {
     <group position={pos}>
       <mesh>
         <sphereGeometry args={[0.02, 16, 16]} />
-        <meshBasicMaterial color="#10b981" />
+        <meshBasicMaterial color="#8b5cf6" />
       </mesh>
       <mesh>
         <sphereGeometry args={[0.035, 16, 16]} />
-        <meshBasicMaterial color="#10b981" transparent opacity={0.3} />
+        <meshBasicMaterial color="#8b5cf6" transparent opacity={0.3} />
       </mesh>
     </group>
   );
@@ -85,7 +85,7 @@ function CityMarker({ city }: { city: CityType }) {
 function Earth() {
   const earthTexture = useLoader(
     THREE.TextureLoader,
-    "https://unpkg.com/three-globe@2.31.0/example/img/earth-blue-marble.jpg"
+    "/images/earth-blue-marble.jpg"
   );
   
   return (
@@ -150,7 +150,7 @@ function GlobeContent() {
 
 export default function Globe() {
   return (
-    <div className="w-full h-[500px] md:h-[600px]">
+    <div className="w-full h-[400px] md:h-[600px] overflow-hidden">
       <Canvas 
         camera={{ position: [0, 0, 2.8], fov: 45 }}
         style={{ background: 'transparent' }}

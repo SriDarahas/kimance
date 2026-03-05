@@ -8,6 +8,8 @@ import Trust from "@/app/sections/Trust";
 import Testimonials from "@/app/sections/Testimonials";
 import Pricing from "@/app/sections/Pricing";
 import CTA from "@/app/sections/CTA";
+import MarketplaceSection from "@/app/sections/Marketplace";
+import RateTicker from "@/app/components/RateTicker";
 
 export const metadata: Metadata = {
   title: "Kimance - Global Financial Platform | Send, Store, Exchange",
@@ -24,8 +26,10 @@ export default function MarketingPage() {
   return (
     <div className="flex flex-col">
       <Hero />
+      <RateTicker />
       <CurrencyExchange />
       <Features />
+      <MarketplaceSection />
       <HowItWorks />
       <GlobalReach />
       <Trust />

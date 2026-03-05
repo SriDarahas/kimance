@@ -62,7 +62,7 @@ export default function Pricing() {
               <div className="text-lg font-semibold text-gray-900 mb-2">
                 {fee.label}
               </div>
-              <div className="text-sm text-gray-500 leading-relaxed">
+              <div className="text-base text-gray-500 leading-relaxed">
                 {fee.description}
               </div>
             </div>
@@ -76,7 +76,7 @@ export default function Pricing() {
           >
             Get Started Free
           </Link>
-          <p className="mt-4 text-sm text-gray-500">
+          <p className="mt-4 text-base text-gray-500">
             No credit card required for setup
           </p>
         </div>

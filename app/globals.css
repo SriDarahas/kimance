@@ -47,3 +47,16 @@ body {
   font-family: var(--font-sans);
 }
 
+.logo-grayscale {
+  filter: grayscale(1);
+  transition: filter 0.3s ease;
+}
+
+.logo-grayscale:hover {
+  filter: grayscale(0);
+}
+
+/* When marquee container is hovered (animation paused), reveal all logo colors */
+.logos-marquee-container:hover .logo-grayscale {
+  filter: grayscale(0);
+}
