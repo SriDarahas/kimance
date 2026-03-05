@@ -32,6 +32,15 @@
   background: linear-gradient(135deg, #111827 0%, #1F2937 100%);
 }
 
+@keyframes ticker-scroll {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-ticker {
+  animation: ticker-scroll 30s linear infinite !important;
+}
+
 body {
   background: var(--color-background-light);
   color: #1f2937;

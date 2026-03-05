@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useLanguage } from "@/app/providers/LanguageProvider";
 import { getTranslation } from "@/lib/i18n";
-import CurrencyExchangeWidget from "@/app/components/CurrencyExchangeWidget";
+import CurrencyDashboard from "@/app/components/CurrencyDashboard";
 
 interface Transaction {
   id: string;
@@ -35,13 +35,13 @@ export default function DashboardClient({
 
   return (
     <>
-      {/* Header */}
-      <header className="h-16 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200">
+      {/* Header — #35: Bigger text */}
+      <header className="h-20 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200">
         <div>
-          <h1 className="font-serif text-xl font-semibold text-gray-900">
+          <h1 className="font-serif text-2xl font-bold text-gray-900">
             {t('welcome', { name: userName || 'Ethan' })}
           </h1>
-          <p className="text-xs text-gray-500">{t('welcomeBack')}</p>
+          <p className="text-sm text-gray-500">{t('welcomeBack')}</p>
         </div>
         <div className="flex items-center gap-3">
           <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:text-purple-600 transition-colors relative shadow-sm">
@@ -56,9 +56,14 @@ export default function DashboardClient({
 
       {/* Dashboard Content */}
       <div className="p-6 max-w-6xl mx-auto w-full space-y-6">
-        {/* Top Row - Balance Card + Quick Actions */}
+        {/* #34: REARRANGED — Row 1: Currency Rates (top-left) + Balance (top-right) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Balance Card */}
+          {/* #37: Currency Dashboard — Rate is now first/prominent */}
+          <div className="lg:col-span-7">
+            <CurrencyDashboard />
+          </div>
+
+          {/* Balance Card — moved to right side */}
           <div className="lg:col-span-5 relative group">
             <div className="gradient-card h-52 rounded-2xl p-6 flex flex-col justify-between text-white shadow-xl relative overflow-hidden ring-1 ring-black/5 transition-transform transform hover:scale-[1.01] duration-300">
               <div className="absolute top-0 right-0 w-48 h-48 bg-purple-600/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
@@ -89,45 +94,45 @@ export default function DashboardClient({
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Quick Actions */}
-          <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <Link href="#" className="h-full flex flex-col items-center justify-center gap-2 p-4 rounded-2xl bg-blue-200 hover:bg-blue-300 transition-colors group border border-transparent">
-              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-900 group-hover:scale-110 transition-transform shadow-sm">
-                <span className="material-icons-outlined text-xl">add</span>
-              </div>
-              <span className="font-medium text-gray-800 text-xs">{t('addFunds')}</span>
-            </Link>
-            <Link href="/send-money" className="h-full flex flex-col items-center justify-center gap-2 p-4 rounded-2xl bg-purple-200 hover:bg-purple-300 transition-colors group border border-transparent">
-              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-900 group-hover:scale-110 transition-transform shadow-sm">
-                <span className="material-icons-outlined text-xl">arrow_forward</span>
-              </div>
-              <span className="font-medium text-gray-800 text-xs">{t('sendMoney')}</span>
-            </Link>
-            <Link href="/exchange-rate" className="h-full flex flex-col items-center justify-center gap-2 p-4 rounded-2xl bg-orange-200 hover:bg-orange-300 transition-colors group border border-transparent">
-              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-900 group-hover:scale-110 transition-transform shadow-sm">
-                <span className="material-icons-outlined text-xl">currency_exchange</span>
-              </div>
-              <span className="font-medium text-gray-800 text-xs">{t('exchange')}</span>
-            </Link>
-            <Link href="#" className="h-full flex flex-col items-center justify-center gap-2 p-4 rounded-2xl bg-green-200 hover:bg-green-300 transition-colors group border border-transparent">
-              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-900 group-hover:scale-110 transition-transform shadow-sm">
-                <span className="material-icons-outlined text-xl">currency_bitcoin</span>
-              </div>
-              <span className="font-medium text-gray-800 text-xs">{t('crypto')}</span>
-            </Link>
-          </div>
+        {/* #34: Quick Actions — now underneath as a full-width row */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <Link href="#" className="flex flex-col items-center justify-center gap-3 p-5 rounded-2xl bg-blue-100 hover:bg-blue-200 transition-colors group border border-blue-200">
+            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-gray-900 group-hover:scale-110 transition-transform shadow-sm">
+              <span className="material-icons-outlined text-2xl">add</span>
+            </div>
+            <span className="font-semibold text-gray-800 text-sm">{t('addFunds')}</span>
+          </Link>
+          <Link href="/send-money" className="flex flex-col items-center justify-center gap-3 p-5 rounded-2xl bg-purple-100 hover:bg-purple-200 transition-colors group border border-purple-200">
+            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-gray-900 group-hover:scale-110 transition-transform shadow-sm">
+              <span className="material-icons-outlined text-2xl">arrow_forward</span>
+            </div>
+            <span className="font-semibold text-gray-800 text-sm">{t('sendMoney')}</span>
+          </Link>
+          <Link href="/exchange-rate" className="flex flex-col items-center justify-center gap-3 p-5 rounded-2xl bg-orange-100 hover:bg-orange-200 transition-colors group border border-orange-200">
+            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-gray-900 group-hover:scale-110 transition-transform shadow-sm">
+              <span className="material-icons-outlined text-2xl">currency_exchange</span>
+            </div>
+            <span className="font-semibold text-gray-800 text-sm">{t('exchange')}</span>
+          </Link>
+          <Link href="#" className="flex flex-col items-center justify-center gap-3 p-5 rounded-2xl bg-green-100 hover:bg-green-200 transition-colors group border border-green-200">
+            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-gray-900 group-hover:scale-110 transition-transform shadow-sm">
+              <span className="material-icons-outlined text-2xl">currency_bitcoin</span>
+            </div>
+            <span className="font-semibold text-gray-800 text-sm">{t('crypto')}</span>
+          </Link>
         </div>
 
         {/* Bottom Row - Transactions + Insights */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Recent Transactions */}
+          {/* Recent Transactions — #35: Bigger titles */}
           <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-serif text-lg font-semibold text-gray-900">
+              <h3 className="font-serif text-xl font-bold text-gray-900">
                 {t('recentTransactions')}
               </h3>
-              <Link href="#" className="text-purple-600 text-xs font-medium hover:underline">
+              <Link href="#" className="text-purple-600 text-sm font-medium hover:underline">
                 {t('viewAll')}
               </Link>
             </div>
@@ -163,7 +168,7 @@ export default function DashboardClient({
             </div>
           </div>
 
-          {/* Right Column - Insights + Watchlist */}
+          {/* Right Column - Insights + Exchange Widget — #35: Bigger titles */}
           <div className="lg:col-span-1 space-y-4">
             {/* AI Insights */}
             <div className="bg-gradient-to-br from-purple-600/10 to-blue-500/10 rounded-2xl p-4 border border-purple-600/20 relative overflow-hidden">
@@ -172,7 +177,7 @@ export default function DashboardClient({
               </div>
               <div className="flex items-center gap-2 mb-3">
                 <span className="bg-purple-600 text-white text-xs font-bold px-2 py-0.5 rounded">AI</span>
-                <h3 className="font-serif text-base font-semibold text-gray-900">
+                <h3 className="font-serif text-lg font-bold text-gray-900">
                   {t('smartInsights')}
                 </h3>
               </div>
@@ -195,8 +200,16 @@ export default function DashboardClient({
               </button>
             </div>
 
-            {/* Currency Exchange Widget */}
-            <CurrencyExchangeWidget compact className="" />
+            {/* Quick Convert Link */}
+            <Link href="/exchange-rate" className="block bg-gradient-to-r from-purple-600 to-violet-600 rounded-2xl p-4 text-white hover:shadow-lg transition-shadow">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-serif text-base font-bold">Convert Currency</h3>
+                  <p className="text-white/70 text-xs mt-1">Real-time rates, no hidden fees</p>
+                </div>
+                <span className="material-icons-outlined text-2xl">arrow_forward</span>
+              </div>
+            </Link>
           </div>
         </div>
       </div>

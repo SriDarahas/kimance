@@ -20,9 +20,9 @@ export default function Sidebar({ userName, userEmail }: SidebarProps) {
         <Image
           src="/logo-transparent.png"
           alt="Kimance Logo"
-          width={100}
-          height={29}
-          className="h-[32px] w-auto"
+          width={140}
+          height={40}
+          className="h-[44px] w-auto"
         />
       </div>
 
@@ -59,9 +59,9 @@ export default function Sidebar({ userName, userEmail }: SidebarProps) {
         <Image
           src="/logo-transparent.png"
           alt="Kimance Logo"
-          width={81}
-          height={23}
-          className="h-[27px] w-auto"
+          width={110}
+          height={32}
+          className="h-[34px] w-auto"
         />
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

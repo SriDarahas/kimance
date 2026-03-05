@@ -274,13 +274,13 @@ export default function MarketplaceClient({ userName, userEmail }: MarketplaceCl
             </div>
           </div>
 
-          {/* Category Navigation */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
+          {/* Category Navigation — #36: Full-width buttons */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2">
             {categories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => setActiveCategory(category.id)}
-                className={`shrink-0 px-5 py-2.5 rounded-full font-medium text-sm transition-all ${
+                className={`w-full px-4 py-3 rounded-xl font-semibold text-sm transition-all text-center ${
                   activeCategory === category.id
                     ? "bg-purple-600 text-white shadow-md shadow-purple-500/20"
                     : "bg-white border border-gray-200 text-gray-600 hover:border-purple-300 hover:text-purple-600"

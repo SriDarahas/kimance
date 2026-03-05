@@ -2,8 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { login, loginWithPhone, sendPhoneOtp, verifyPhoneOtp } from "@/app/auth/actions";
+
+type Rate = { code: string; value: number };
+type RatesResponse = { data?: Record<string, Rate>; error?: string };
+
+const TICKER_CURRENCIES = ["USD", "CAD", "EUR", "GBP", "CDF", "XAF", "XOF", "KES", "NGN", "RWF", "BIF", "TZS", "UGX"];
 
 export default function Login() {
   const [authMethod, setAuthMethod] = useState<"email" | "phone">("email");
@@ -16,6 +21,21 @@ export default function Login() {
   const [otpSent, setOtpSent] = useState(false);
   const [otpCode, setOtpCode] = useState("");
   const [phoneAuthMode, setPhoneAuthMode] = useState<"password" | "otp">("password");
+  const [rates, setRates] = useState<Record<string, Rate> | null>(null);
+
+  // #27/#31: Fetch exchange rates for ticker
+  useEffect(() => {
+    async function loadRates() {
+      try {
+        const res = await fetch(`/api/currency?base=USD&symbols=${TICKER_CURRENCIES.join(",")}`);
+        const json = (await res.json()) as RatesResponse;
+        if (json.data) setRates(json.data);
+      } catch { /* silent fail */ }
+    }
+    loadRates();
+    const id = setInterval(loadRates, 30000);
+    return () => clearInterval(id);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,7 +72,6 @@ export default function Login() {
           setError(result.error);
         }
       } else {
-        // OTP mode - send OTP
         const formData = new FormData();
         formData.append("phone", phone);
 
@@ -66,7 +85,6 @@ export default function Login() {
         }
       }
     }
-    // Success will redirect automatically via server action
   };
 
   const handleVerifyOtp = async (e: React.FormEvent) => {
@@ -87,46 +105,102 @@ export default function Login() {
     }
   };
 
+  // Shared left panel component
+  const LeftPanel = () => (
+    <div className="hidden lg:flex w-1/2 relative flex-col justify-between overflow-hidden">
+      {/* #28: Brighter, local image */}
+      <Image
+        src="/login-hero.png"
+        alt="Kimance - Global Finance"
+        fill
+        className="object-cover"
+        priority
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#1e1033]/60 via-[#1e1033]/40 to-[#1e1033]/80"></div>
+
+      {/* Logo centered at top — no white bg */}
+      <div className="relative z-10 flex justify-center pt-10">
+        <Link href="/">
+          <Image src="/logo-transparent.png" alt="Kimance Logo" width={220} height={60} className="h-16 w-auto drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]" />
+        </Link>
+      </div>
+
+      {/* #30: Hero text with updated messaging */}
+      <div className="relative z-10 flex-1 flex items-center justify-center p-12">
+        <div className="text-center max-w-[540px]" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>
+          <h1 className="text-white text-4xl font-bold leading-tight mb-4 tracking-tight font-[family-name:var(--font-playfair)]">
+            Send. Store. Exchange.
+            <br />
+            <span className="text-purple-300">Protect. Grow.</span>
+          </h1>
+          <p className="text-white text-lg font-semibold leading-relaxed">
+            All with Security You Can Trust.
+          </p>
+          <p className="text-white/80 text-sm mt-4 leading-relaxed">
+            AI-powered finance with secure, global transactions at your fingertips.
+            Join thousands managing money smarter across borders.
+          </p>
+        </div>
+      </div>
+
+      {/* Bottom exchange rate preview */}
+      <div className="relative z-10 px-8 pb-8">
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="material-icons-outlined text-purple-300 text-lg">currency_exchange</span>
+              <span className="text-white/70 text-xs font-medium">Live Rates</span>
+            </div>
+            <span className="text-green-400 text-[10px] flex items-center gap-1">
+              <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
+              LIVE
+            </span>
+          </div>
+          <div className="grid grid-cols-3 gap-3 mt-3">
+            {["CAD", "EUR", "GBP"].map((code) => (
+              <div key={code} className="text-center">
+                <span className="text-white/50 text-[10px] block">USD/{code}</span>
+                <span className="text-white font-bold text-sm">
+                  {rates?.[code] ? rates[code].value.toFixed(4) : "—"}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   // Phone OTP verification screen
   if (otpSent && authMethod === "phone" && phoneAuthMode === "otp") {
     return (
-      <div className="font-[family-name:var(--font-inter)] bg-white text-gray-900 min-h-screen">
-        <div className="flex min-h-screen w-full flex-row">
-          {/* Left Panel: Brand Showcase */}
-          <div
-            className="hidden lg:flex w-1/2 relative flex-col justify-between bg-cover bg-center overflow-hidden"
-            style={{
-              backgroundImage:
-                'url("https://lh3.googleusercontent.com/aida-public/AB6AXuArEjg8Wu_EAl12MZeUi4NTQ7sXjZdZhqirQdqQB3v6LL-7Xihu7JYJGtdn-TFC3uFZZFLv4gaNAP82fw6O7Gt1zmkbDjLetvK8HsodcLP33WcJ8L3BOhJ7CsLcGVLIxPBBBR0R_dUmwH9Mk379EEiTrZa-QQYmMequI-tVqQ3a8h5aZaTQBcIfLo3P-ExlBPmiPLIn-NXF-tF37FzZO1x-XkMBTYhcMi5Z-EEeEw7E1sKGtgEskibwiB6jPPxlnDFOgS3wuI4rhRYa")',
-            }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-[#6D28D9]/15 to-gray-900/60"></div>
-            <div className="relative z-10 p-12">
-              <Link href="/" className="inline-block bg-white/95 backdrop-blur-sm px-4 py-2 rounded-xl shadow-lg">
-                <Image src="/logo-crop.png" alt="Kimance Logo" width={140} height={40} className="h-10 w-auto" />
-              </Link>
-            </div>
-            <div className="relative z-10 flex-1 flex items-center justify-center p-12">
-              <div className="text-center max-w-[540px]">
-                <h1 className="text-white text-5xl font-bold leading-tight mb-4 tracking-tight font-[family-name:var(--font-playfair)]">
-                  Money without borders
-                </h1>
-                <p className="text-white/80 text-xl font-medium leading-relaxed">
-                  Experience the future of AI-powered finance with secure, global transactions at your fingertips.
-                </p>
+      <div className="font-[family-name:var(--font-inter)] bg-white text-gray-900 min-h-screen flex flex-col">
+        {/* Currency Ticker */}
+        <div className="w-full bg-[#1e1033] text-white overflow-hidden h-10 flex items-center relative z-50">
+          <div className="flex animate-ticker whitespace-nowrap">
+            {[...Array(2)].map((_, rep) => (
+              <div key={rep} className="flex items-center gap-6 px-4">
+                {TICKER_CURRENCIES.map((code) => (
+                  <span key={`${code}-${rep}`} className="flex items-center gap-1.5 text-xs font-medium">
+                    <span className="text-purple-300 font-bold">{code}</span>
+                    <span className="text-white/80">{rates?.[code] ? rates[code].value.toFixed(code === "CDF" || code === "BIF" || code === "UGX" || code === "TZS" || code === "KES" || code === "NGN" || code === "XAF" || code === "XOF" || code === "RWF" ? 2 : 4) : "—"}</span>
+                    <span className="text-green-400 text-[10px]">●</span>
+                  </span>
+                ))}
               </div>
-            </div>
-            <div className="h-24"></div>
+            ))}
           </div>
+        </div>
 
-          {/* Right Panel: OTP Verification */}
+        <div className="flex flex-1 w-full flex-row">
+          <LeftPanel />
           <div className="flex w-full lg:w-1/2 flex-col justify-center items-center bg-white px-4 sm:px-12 xl:px-24">
             <div className="w-full max-w-[480px] flex flex-col gap-6">
               <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto">
                 <span className="material-icons-outlined text-4xl text-[#6D28D9]">sms</span>
               </div>
               <div className="text-center">
-                <h2 className="text-gray-900 text-3xl font-black leading-tight tracking-tight font-[family-name:var(--font-playfair)] mb-2">
+                <h2 className="text-gray-900 text-2xl font-bold leading-tight tracking-tight font-[family-name:var(--font-playfair)] mb-2">
                   Enter verification code
                 </h2>
                 <p className="text-gray-500 text-base">
@@ -143,9 +217,7 @@ export default function Login() {
 
               <form className="flex flex-col gap-5" onSubmit={handleVerifyOtp}>
                 <label className="flex flex-col gap-2">
-                  <span className="text-gray-900 text-sm font-semibold ml-1">
-                    Verification Code
-                  </span>
+                  <span className="text-gray-900 text-sm font-semibold ml-1">Verification Code</span>
                   <input
                     className="flex w-full h-14 px-5 rounded-full border border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#6D28D9] focus:ring-2 focus:ring-[#6D28D9]/20 transition-all text-base font-medium text-center tracking-[0.5em]"
                     placeholder="000000"
@@ -159,7 +231,6 @@ export default function Login() {
                     autoFocus
                   />
                 </label>
-
                 <button
                   type="submit"
                   disabled={isLoading || otpCode.length !== 6}
@@ -170,12 +241,9 @@ export default function Login() {
                       <span className="material-icons-outlined animate-spin">refresh</span>
                       Verifying...
                     </span>
-                  ) : (
-                    "Verify & Sign In"
-                  )}
+                  ) : "Verify & Sign In"}
                 </button>
               </form>
-
               <button
                 type="button"
                 onClick={() => { setOtpSent(false); setOtpCode(""); setError(null); }}
@@ -191,74 +259,46 @@ export default function Login() {
   }
 
   return (
-    <div className="font-[family-name:var(--font-inter)] bg-white text-gray-900 min-h-screen">
-      <div className="flex min-h-screen w-full flex-row">
-        {/* Left Panel: Brand Showcase */}
-        <div
-          className="hidden lg:flex w-1/2 relative flex-col justify-between bg-cover bg-center overflow-hidden"
-          style={{
-            backgroundImage:
-              'url("https://lh3.googleusercontent.com/aida-public/AB6AXuArEjg8Wu_EAl12MZeUi4NTQ7sXjZdZhqirQdqQB3v6LL-7Xihu7JYJGtdn-TFC3uFZZFLv4gaNAP82fw6O7Gt1zmkbDjLetvK8HsodcLP33WcJ8L3BOhJ7CsLcGVLIxPBBBR0R_dUmwH9Mk379EEiTrZa-QQYmMequI-tVqQ3a8h5aZaTQBcIfLo3P-ExlBPmiPLIn-NXF-tF37FzZO1x-XkMBTYhcMi5Z-EEeEw7E1sKGtgEskibwiB6jPPxlnDFOgS3wuI4rhRYa")',
-          }}
-        >
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#6D28D9]/15 to-gray-900/60"></div>
-
-          {/* Logo Area */}
-          <div className="relative z-10 p-12">
-            <Link href="/" className="inline-block bg-white/95 backdrop-blur-sm px-4 py-2 rounded-xl shadow-lg">
-              <Image
-                src="/logo-transparent.png"
-                alt="Kimance Logo"
-                width={100}
-                height={29}
-                className="h-[32px] w-auto"
-              />
-            </Link>
-          </div>
-
-          {/* Hero Text Area */}
-          <div className="relative z-10 flex-1 flex items-center justify-center p-12">
-            <div className="text-center max-w-[540px]">
-              <h1 className="text-white text-5xl font-bold leading-tight mb-4 tracking-tight font-[family-name:var(--font-playfair)]">
-                Money without borders
-              </h1>
-              <p className="text-white/80 text-xl font-medium leading-relaxed">
-                Experience the future of AI-powered finance with secure, global
-                transactions at your fingertips.
-              </p>
+    <div className="font-[family-name:var(--font-inter)] bg-white text-gray-900 min-h-screen flex flex-col">
+      {/* #27 & #31: Currency Ticker Bar */}
+      <div className="w-full bg-[#1e1033] text-white overflow-hidden h-10 flex items-center relative z-50">
+        <div className="flex animate-ticker whitespace-nowrap">
+          {[...Array(2)].map((_, rep) => (
+            <div key={rep} className="flex items-center gap-6 px-4">
+              {TICKER_CURRENCIES.map((code) => (
+                <span key={`${code}-${rep}`} className="flex items-center gap-1.5 text-xs font-medium">
+                  <span className="text-purple-300 font-bold">{code}</span>
+                  <span className="text-white/80">{rates?.[code] ? rates[code].value.toFixed(code === "CDF" || code === "BIF" || code === "UGX" || code === "TZS" || code === "KES" || code === "NGN" || code === "XAF" || code === "XOF" || code === "RWF" ? 2 : 4) : "—"}</span>
+                  <span className="text-green-400 text-[10px]">●</span>
+                </span>
+              ))}
             </div>
-          </div>
-
-          {/* Spacer for symmetry */}
-          <div className="h-24"></div>
+          ))}
         </div>
+      </div>
+
+      <div className="flex flex-1 w-full flex-row">
+        <LeftPanel />
 
         {/* Right Panel: Login Form */}
         <div className="flex w-full lg:w-1/2 flex-col justify-center items-center bg-white px-4 sm:px-12 xl:px-24">
-          <div className="w-full max-w-[480px] flex flex-col gap-8">
-            {/* Mobile Logo (Visible only on small screens) */}
+          <div className="w-full max-w-[480px] flex flex-col gap-7">
+            {/* Mobile Logo */}
             <Link href="/" className="lg:hidden flex justify-center mb-4">
-              <Image
-                src="/logo-transparent.png"
-                alt="Kimance Logo"
-                width={100}
-                height={29}
-                className="h-[32px] w-auto"
-              />
+              <Image src="/logo-crop.png" alt="Kimance Logo" width={160} height={45} className="h-11 w-auto" />
             </Link>
 
-            {/* Header */}
+            {/* #32: Decreased text size */}
             <div className="flex flex-col gap-2">
-              <h2 className="text-gray-900 text-4xl font-black leading-tight tracking-tight font-[family-name:var(--font-playfair)]">
+              <h2 className="text-gray-900 text-2xl font-bold leading-tight tracking-tight font-[family-name:var(--font-playfair)]">
                 Welcome Back
               </h2>
-              <p className="text-gray-500 text-base font-normal">
+              <p className="text-gray-500 text-sm font-normal">
                 Enter your credentials to access your account.
               </p>
             </div>
 
-            {/* Auth Method Toggle */}
+            {/* Auth Method Toggle (preserved from main) */}
             <div className="flex bg-gray-100 rounded-full p-1">
               <button
                 type="button"
@@ -296,12 +336,9 @@ export default function Login() {
 
             {/* Form */}
             <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
-              {/* Email / Phone Field */}
               {authMethod === "email" ? (
                 <label className="flex flex-col gap-2">
-                  <span className="text-gray-900 text-sm font-semibold ml-1">
-                    Email Address
-                  </span>
+                  <span className="text-gray-900 text-sm font-semibold ml-1">Email Address</span>
                   <input
                     className="flex w-full h-14 px-5 rounded-full border border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#6D28D9] focus:ring-2 focus:ring-[#6D28D9]/20 transition-all text-base font-medium"
                     placeholder="name@example.com"
@@ -314,9 +351,7 @@ export default function Login() {
                 </label>
               ) : (
                 <label className="flex flex-col gap-2">
-                  <span className="text-gray-900 text-sm font-semibold ml-1">
-                    Phone Number
-                  </span>
+                  <span className="text-gray-900 text-sm font-semibold ml-1">Phone Number</span>
                   <div className="relative w-full">
                     <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-base font-medium pointer-events-none flex items-center gap-1">
                       <span className="material-icons-outlined text-lg">phone</span>
@@ -334,12 +369,9 @@ export default function Login() {
                 </label>
               )}
 
-              {/* Password Field - shown for email or phone with password mode */}
               {(authMethod === "email" || phoneAuthMode === "password") && (
                 <label className="flex flex-col gap-2">
-                  <span className="text-gray-900 text-sm font-semibold ml-1">
-                    Password
-                  </span>
+                  <span className="text-gray-900 text-sm font-semibold ml-1">Password</span>
                   <div className="relative w-full">
                     <input
                       className="flex w-full h-14 pl-5 pr-12 rounded-full border border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#6D28D9] focus:ring-2 focus:ring-[#6D28D9]/20 transition-all text-base font-medium"
@@ -364,7 +396,6 @@ export default function Login() {
                 </label>
               )}
 
-              {/* Phone auth mode toggle */}
               {authMethod === "phone" && (
                 <button
                   type="button"
@@ -375,19 +406,14 @@ export default function Login() {
                 </button>
               )}
 
-              {/* Forgot Password Link - only for email or phone password mode */}
               {(authMethod === "email" || phoneAuthMode === "password") && (
                 <div className="flex justify-end">
-                  <Link
-                    href="/forgot-password"
-                    className="text-[#6D28D9] hover:text-[#5A24B3] text-sm font-bold tracking-tight transition-colors"
-                  >
+                  <Link href="/forgot-password" className="text-[#6D28D9] hover:text-[#5A24B3] text-sm font-bold tracking-tight transition-colors">
                     Forgot Password?
                   </Link>
                 </div>
               )}
 
-              {/* Sign In Button */}
               <button
                 type="submit"
                 disabled={isLoading}
@@ -404,32 +430,19 @@ export default function Login() {
               </button>
             </form>
 
-            {/* Footer Sign Up */}
             <div className="flex items-center justify-center gap-1 mt-4">
-              <p className="text-gray-500 text-sm font-medium">
-                Don&apos;t have an account?
-              </p>
-              <Link
-                href="/register"
-                className="text-[#6D28D9] hover:text-[#5A24B3] text-sm font-bold transition-colors"
-              >
+              <p className="text-gray-500 text-sm font-medium">Don&apos;t have an account?</p>
+              <Link href="/register" className="text-[#6D28D9] hover:text-[#5A24B3] text-sm font-bold transition-colors">
                 Create an account
               </Link>
             </div>
 
-            {/* Footer Links */}
             <div className="flex items-center justify-center gap-3 mt-8 pt-6 border-t border-gray-100">
-              <Link href="/contact" className="text-gray-400 hover:text-[#6D28D9] text-xs font-medium transition-colors">
-                Contact Us
-              </Link>
+              <Link href="/contact" className="text-gray-400 hover:text-[#6D28D9] text-xs font-medium transition-colors">Contact Us</Link>
               <span className="text-gray-200">|</span>
-              <Link href="/features" className="text-gray-400 hover:text-[#6D28D9] text-xs font-medium transition-colors">
-                Explore Our Features
-              </Link>
+              <Link href="/features" className="text-gray-400 hover:text-[#6D28D9] text-xs font-medium transition-colors">Explore Our Features</Link>
               <span className="text-gray-200">|</span>
-              <Link href="/exchange-rate" className="text-gray-400 hover:text-[#6D28D9] text-xs font-medium transition-colors">
-                Exchange Rate
-              </Link>
+              <Link href="/exchange-rate" className="text-gray-400 hover:text-[#6D28D9] text-xs font-medium transition-colors">Exchange Rate</Link>
             </div>
           </div>
         </div>
