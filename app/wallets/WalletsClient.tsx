@@ -127,7 +127,7 @@ export default function WalletsClient({ initialWallets, userId }: WalletsClientP
           <div className="bg-gray-50 rounded-2xl border border-gray-200 p-5 mb-4">
             <h3 className="font-semibold text-gray-900 mb-4">{t('addWallet')}</h3>
             <div className="flex gap-3 flex-wrap">
-              <div className="flex-1 min-w-[200px]">
+              <div className="flex-1 min-w-50">
                 <label className="block text-sm font-medium text-gray-700 mb-2">{t('selectCurrency')}</label>
                 <select
                   value={selectedCurrency}

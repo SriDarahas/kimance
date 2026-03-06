@@ -62,7 +62,7 @@ export default function CurrencyDashboard() {
   });
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm overflow-hidden">
+    <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm h-64 flex flex-col">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <span className="material-icons-outlined text-purple-600">currency_exchange</span>
@@ -108,7 +108,7 @@ export default function CurrencyDashboard() {
             return (
               <div
                 key={curr.code}
-                className="shrink-0 w-[120px] flex flex-col items-center gap-1 p-3 rounded-xl border border-gray-100 hover:border-purple-200 hover:bg-purple-50 transition-colors"
+                className="shrink-0 w-30 flex flex-col items-center gap-1 p-3 rounded-xl border border-gray-100 hover:border-purple-200 hover:bg-purple-50 transition-colors"
               >
                 <span className="text-2xl">{curr.flag}</span>
                 <span className="text-sm font-bold text-gray-900">{curr.code}</span>

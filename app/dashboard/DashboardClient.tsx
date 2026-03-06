@@ -36,7 +36,7 @@ export default function DashboardClient({
   return (
     <>
       {/* Header — #35: Bigger text */}
-      <header className="h-20 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200">
+      <header className="h-20 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200 py-10">
         <div>
           <h1 className="font-serif text-2xl font-bold text-gray-900">
             {t('welcome', { name: userName || 'Ethan' })}
@@ -65,7 +65,7 @@ export default function DashboardClient({
 
           {/* Balance Card — moved to right side */}
           <div className="lg:col-span-5 relative group">
-            <div className="gradient-card h-52 rounded-2xl p-6 flex flex-col justify-between text-white shadow-xl relative overflow-hidden ring-1 ring-black/5 transition-transform transform hover:scale-[1.01] duration-300">
+            <div className="gradient-card h-64 rounded-2xl p-6 flex flex-col justify-between text-white shadow-xl relative overflow-hidden ring-1 ring-black/5 transition-transform transform hover:scale-[1.01] duration-300">
               <div className="absolute top-0 right-0 w-48 h-48 bg-purple-600/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
               <div className="absolute bottom-0 left-0 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2"></div>
               <div className="relative z-10 flex justify-between items-start">
@@ -171,7 +171,7 @@ export default function DashboardClient({
           {/* Right Column - Insights + Exchange Widget — #35: Bigger titles */}
           <div className="lg:col-span-1 space-y-4">
             {/* AI Insights */}
-            <div className="bg-gradient-to-br from-purple-600/10 to-blue-500/10 rounded-2xl p-4 border border-purple-600/20 relative overflow-hidden">
+            <div className="bg-linear-to-br from-purple-600/10 to-blue-500/10 rounded-2xl p-4 border border-purple-600/20 relative overflow-hidden">
               <div className="absolute top-0 right-0 p-3 opacity-10">
                 <span className="material-icons-outlined text-5xl text-purple-600">psychology</span>
               </div>
@@ -201,7 +201,7 @@ export default function DashboardClient({
             </div>
 
             {/* Quick Convert Link */}
-            <Link href="/exchange-rate" className="block bg-gradient-to-r from-purple-600 to-violet-600 rounded-2xl p-4 text-white hover:shadow-lg transition-shadow">
+            <Link href="/exchange-rate" className="block bg-linear-to-r from-purple-600 to-violet-600 rounded-2xl p-4 text-white hover:shadow-lg transition-shadow">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-serif text-base font-bold">Convert Currency</h3>

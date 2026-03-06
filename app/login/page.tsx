@@ -431,18 +431,18 @@ export default function Login() {
             </form>
 
             <div className="flex items-center justify-center gap-1 mt-4">
-              <p className="text-gray-500 text-sm font-medium">Don&apos;t have an account?</p>
-              <Link href="/register" className="text-[#6D28D9] hover:text-[#5A24B3] text-sm font-bold transition-colors">
+              <p className="text-gray-500 text-base font-medium">Don&apos;t have an account?</p>
+              <Link href="/register" className="text-[#6D28D9] hover:text-[#5A24B3] text-base font-bold transition-colors">
                 Create an account
               </Link>
             </div>
 
             <div className="flex items-center justify-center gap-3 mt-8 pt-6 border-t border-gray-100">
-              <Link href="/contact" className="text-gray-400 hover:text-[#6D28D9] text-xs font-medium transition-colors">Contact Us</Link>
+              <Link href="/contact" className="text-gray-400 hover:text-[#6D28D9] text-sm font-medium transition-colors">Contact Us</Link>
               <span className="text-gray-200">|</span>
-              <Link href="/features" className="text-gray-400 hover:text-[#6D28D9] text-xs font-medium transition-colors">Explore Our Features</Link>
+              <Link href="/features" className="text-gray-400 hover:text-[#6D28D9] text-sm font-medium transition-colors">Explore Our Features</Link>
               <span className="text-gray-200">|</span>
-              <Link href="/exchange-rate" className="text-gray-400 hover:text-[#6D28D9] text-xs font-medium transition-colors">Exchange Rate</Link>
+              <Link href="/exchange-rate" className="text-gray-400 hover:text-[#6D28D9] text-sm font-medium transition-colors">Exchange Rate</Link>
             </div>
           </div>
         </div>

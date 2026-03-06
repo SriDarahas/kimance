@@ -180,12 +180,12 @@ export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExp
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-y-auto">
         {/* Header */}
-        <header className="h-16 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200">
+        <header className="h-20 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200 py-10">
           <div>
-            <h1 className="font-serif text-xl font-semibold text-gray-900">
+            <h1 className="font-serif text-2xl font-bold text-gray-900">
               {t('findTaxExperts')}
             </h1>
-            <p className="text-xs text-gray-500">{t('browseQualified')}</p>
+            <p className="text-sm text-gray-500">{t('browseQualified')}</p>
           </div>
           <div className="flex items-center gap-3">
             <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:text-purple-600 transition-colors relative shadow-sm">
@@ -209,7 +209,7 @@ export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExp
                   <button
                     key={type.id}
                     onClick={() => setServiceType(type.id)}
-                    className={`py-2 px-4 rounded-full text-sm font-medium transition-all ${
+                    className={`py-2 px-4 rounded-full text-base font-medium transition-all ${
                       serviceType === type.id
                         ? "bg-white text-gray-900 shadow-sm"
                         : "text-gray-500 hover:text-gray-900"
@@ -227,7 +227,7 @@ export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExp
               <div className="flex items-center gap-2">
                 <div className="relative">
                   <span className="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">public</span>
-                  <select className="pl-10 pr-4 py-2 bg-gray-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-purple-600 text-gray-700">
+                  <select className="pl-10 pr-4 py-2 bg-gray-100 border-none rounded-xl text-base focus:ring-2 focus:ring-purple-600 text-gray-700">
                     <option>{t('canada')}</option>
                     <option>{t('unitedStates')}</option>
                     <option>{t('unitedKingdom')}</option>
@@ -239,7 +239,7 @@ export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExp
                     type="text"
                     value={locationQuery ?? ""}
                     onChange={(e) => setLocationQuery(e.target.value)}
-                    className="pl-10 pr-4 py-2 bg-gray-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-purple-600 text-gray-700 placeholder-gray-400 w-40"
+                    className="pl-10 pr-4 py-2 bg-gray-100 border-none rounded-xl text-base focus:ring-2 focus:ring-purple-600 text-gray-700 placeholder-gray-400 w-40"
                     placeholder={t('cityOrPostal')}
                   />
                 </div>
@@ -254,7 +254,7 @@ export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExp
                   <button
                     key={expertise.id}
                     onClick={() => toggleExpertise(expertise.id)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                       selectedExpertise.includes(expertise.id)
                         ? "bg-purple-100 text-purple-600 border border-purple-200"
                         : "bg-gray-100 text-gray-600 border border-transparent hover:bg-purple-50 hover:text-purple-600 hover:border-purple-200"
@@ -399,7 +399,7 @@ export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExp
             ))}
 
             {/* CTA Banner */}
-            <div className="bg-gray-900 rounded-xl p-6 flex flex-col items-center justify-center text-center relative overflow-hidden group md:col-span-2 min-h-[160px]">
+            <div className="bg-gray-900 rounded-xl p-6 flex flex-col items-center justify-center text-center relative overflow-hidden group md:col-span-2 min-h-40">
               <div className="absolute inset-0 bg-purple-600/20"></div>
               <div className="relative z-10 max-w-lg">
                 <h3 className="text-2xl font-bold text-white mb-2">{t('areYouTaxPro')}</h3>
