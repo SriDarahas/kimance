@@ -7,8 +7,6 @@ import { updateUserRole } from "./actions";
 interface User {
   id: string;
   email: string;
-  full_name: string | null;
-  phone: string | null;
   role: string;
   created_at: string;
 }
@@ -66,7 +64,7 @@ function UserModal({ user, currentUserId, onClose, onRoleChange }: { user: User;
             <div>
               <p className="text-purple-200 text-xs font-semibold uppercase tracking-widest mb-1">User Profile</p>
               <p className="text-white text-2xl font-serif font-bold truncate max-w-[280px]">
-                {user.full_name || user.email}
+                {user.email}
               </p>
             </div>
             <button onClick={onClose} className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
@@ -77,7 +75,7 @@ function UserModal({ user, currentUserId, onClose, onRoleChange }: { user: User;
 
         <div className="p-6 space-y-4">
           <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
-            <Avatar name={user.full_name || user.email} color={isAdmin ? "purple" : "blue"} />
+            <Avatar name={user.email} color={isAdmin ? "purple" : "blue"} />
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-gray-900 break-all">{user.email}</p>
               <p className="text-xs text-gray-400 font-mono">{user.id}</p>
@@ -88,18 +86,6 @@ function UserModal({ user, currentUserId, onClose, onRoleChange }: { user: User;
           </div>
 
           <div className="divide-y divide-gray-50 border border-gray-100 rounded-xl overflow-hidden">
-            <div className="flex justify-between items-center px-4 py-3 gap-4">
-              <span className="text-sm text-gray-500 shrink-0">Full Name</span>
-              <span className="text-sm font-medium text-gray-900 text-right break-all">
-                {user.full_name || <span className="text-gray-300 italic">Not provided</span>}
-              </span>
-            </div>
-            <div className="flex justify-between items-center px-4 py-3 gap-4">
-              <span className="text-sm text-gray-500 shrink-0">Phone</span>
-              <span className="text-sm font-medium text-gray-900 text-right break-all">
-                {user.phone || <span className="text-gray-300 italic">Not provided</span>}
-              </span>
-            </div>
             <div className="flex justify-between items-center px-4 py-3 gap-4">
               <span className="text-sm text-gray-500 shrink-0">Signed Up</span>
               <span className="text-sm font-medium text-gray-900 text-right break-all">{fullDate}</span>
@@ -138,7 +124,7 @@ export default function ProfilesClient({ users, userName, userEmail, currentUser
     const q = search.trim().toLowerCase();
     return users.filter((u) => {
       if (roleFilter !== "all" && u.role !== roleFilter) return false;
-      if (q && !u.email.toLowerCase().includes(q) && !(u.full_name ?? "").toLowerCase().includes(q)) return false;
+      if (q && !u.email.toLowerCase().includes(q)) return false;
       return true;
     });
   }, [users, search, roleFilter]);
@@ -224,7 +210,6 @@ export default function ProfilesClient({ users, userName, userEmail, currentUser
                   <thead>
                     <tr className="bg-gray-50 border-b border-gray-100">
                       <th className="text-left px-5 py-3.5 font-semibold text-gray-500 text-xs uppercase tracking-wide">User</th>
-                      <th className="text-left px-5 py-3.5 font-semibold text-gray-500 text-xs uppercase tracking-wide">Phone</th>
                       <th className="text-left px-5 py-3.5 font-semibold text-gray-500 text-xs uppercase tracking-wide">Role</th>
                       <th className="text-left px-5 py-3.5 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden md:table-cell">Joined</th>
                       <th className="px-5 py-3.5 hidden lg:table-cell" />
@@ -245,18 +230,15 @@ export default function ProfilesClient({ users, userName, userEmail, currentUser
                         >
                           <td className="px-5 py-4">
                             <div className="flex items-center gap-3">
-                              <Avatar name={user.full_name || user.email} color={isAdmin ? "purple" : "blue"} />
+                              <Avatar name={user.email} color={isAdmin ? "purple" : "blue"} />
                               <div className="min-w-0">
                                 <p className="text-gray-800 font-medium text-sm truncate max-w-[200px]">
-                                  {user.full_name || <span className="text-gray-400 italic">No name</span>}
+                                  {user.email}
                                   {isSelf && <span className="ml-2 text-xs text-purple-600">(You)</span>}
                                 </p>
-                                <p className="text-gray-500 text-xs truncate max-w-[200px]">{user.email}</p>
+                                <p className="text-gray-500 text-xs font-mono truncate max-w-[200px]">{user.id}</p>
                               </div>
                             </div>
-                          </td>
-                          <td className="px-5 py-4 text-gray-600">
-                            {user.phone || <span className="text-gray-300 italic">—</span>}
                           </td>
                           <td className="px-5 py-4">
                             <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${isAdmin ? "bg-purple-100 text-purple-700" : "bg-gray-100 text-gray-600"}`}>

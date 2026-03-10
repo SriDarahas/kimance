@@ -6,8 +6,6 @@ import ProfilesClient from "./ProfilesClient";
 interface UserProfile {
   id: string;
   email: string;
-  full_name: string | null;
-  phone: string | null;
   role: string;
   created_at: string;
 }
@@ -34,15 +32,12 @@ export default async function AdminProfilesPage() {
   // Fetch all profiles with their data
   const { data: users, error } = await adminClient
     .from("profiles")
-    .select("id, role, created_at, email, full_name, phone")
+    .select("id, role, created_at, email")
     .order("created_at", { ascending: false });
 
-  // For any profiles missing email, try to get from auth.users via RPC or handle gracefully
   const combinedUsers: UserProfile[] = (users || []).map((u) => ({
     id: u.id,
     email: u.email || "",
-    full_name: u.full_name,
-    phone: u.phone,
     role: u.role,
     created_at: u.created_at,
   }));
