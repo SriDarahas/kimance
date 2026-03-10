@@ -7,6 +7,7 @@ import Sidebar from "@/app/components/Sidebar";
 interface PostListingClientProps {
   userName: string;
   userEmail: string;
+  isAdmin?: boolean;
 }
 
 const steps = [
@@ -26,7 +27,7 @@ const categories = [
   "Insurance",
 ];
 
-export default function PostListingClient({ userName, userEmail }: PostListingClientProps) {
+export default function PostListingClient({ userName, userEmail, isAdmin = false }: PostListingClientProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     productName: "",
@@ -52,7 +53,7 @@ export default function PostListingClient({ userName, userEmail }: PostListingCl
 
   return (
     <div className="bg-gray-100 text-gray-800 font-sans min-h-screen flex overflow-hidden">
-      <Sidebar userName={userName} userEmail={userEmail} />
+      <Sidebar userName={userName} userEmail={userEmail} isAdmin={isAdmin} />
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-hidden">

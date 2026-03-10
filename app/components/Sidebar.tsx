@@ -9,9 +9,10 @@ import SidebarNavigation from "@/app/components/SidebarNavigation";
 interface SidebarProps {
   userName: string;
   userEmail: string;
+  isAdmin?: boolean;
 }
 
-export default function Sidebar({ userName, userEmail }: SidebarProps) {
+export default function Sidebar({ userName, userEmail, isAdmin = false }: SidebarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const SidebarContent = () => (
@@ -22,11 +23,11 @@ export default function Sidebar({ userName, userEmail }: SidebarProps) {
           alt="Kimance Logo"
           width={140}
           height={40}
-          className="h-[44px] w-auto"
+          className="h-11 w-auto"
         />
       </div>
 
-      <SidebarNavigation onNavigate={() => setMobileMenuOpen(false)} />
+      <SidebarNavigation onNavigate={() => setMobileMenuOpen(false)} isAdmin={isAdmin} />
 
       <div className="p-4 border-t border-gray-200 space-y-3">
         <LanguageSwitcher />
@@ -61,7 +62,7 @@ export default function Sidebar({ userName, userEmail }: SidebarProps) {
           alt="Kimance Logo"
           width={110}
           height={32}
-          className="h-[34px] w-auto"
+          className="h-8.5 w-auto"
         />
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

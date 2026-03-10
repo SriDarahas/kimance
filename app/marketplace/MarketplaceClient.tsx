@@ -9,6 +9,7 @@ import { getTranslation } from "@/lib/i18n";
 interface MarketplaceClientProps {
   userName: string;
   userEmail: string;
+  isAdmin?: boolean;
 }
 
 const categories = [
@@ -165,7 +166,7 @@ const offers: Offer[] = [
   },
 ];
 
-export default function MarketplaceClient({ userName, userEmail }: MarketplaceClientProps) {
+export default function MarketplaceClient({ userName, userEmail, isAdmin = false }: MarketplaceClientProps) {
   const { language } = useLanguage();
   const t = (key: any, vars?: Record<string, string>) => getTranslation(language, key, vars);
   const [activeCategory, setActiveCategory] = useState("all");
@@ -180,7 +181,7 @@ export default function MarketplaceClient({ userName, userEmail }: MarketplaceCl
 
   return (
     <div className="bg-gray-100 text-gray-800 font-sans min-h-screen flex overflow-hidden">
-      <Sidebar userName={userName} userEmail={userEmail} />
+      <Sidebar userName={userName} userEmail={userEmail} isAdmin={isAdmin} />
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-y-auto">

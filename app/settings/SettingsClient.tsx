@@ -12,9 +12,10 @@ type SettingsTab = "profile" | "security" | "billing" | "notifications";
 interface SettingsClientProps {
   userName: string;
   userEmail: string;
+  isAdmin?: boolean;
 }
 
-export default function SettingsClient({ userName, userEmail }: SettingsClientProps) {
+export default function SettingsClient({ userName, userEmail, isAdmin = false }: SettingsClientProps) {
   const { language } = useLanguage();
   const t = (key: any, vars?: Record<string, string>) => getTranslation(language, key, vars);
   const [activeTab, setActiveTab] = useState<SettingsTab>("profile");
@@ -24,7 +25,7 @@ export default function SettingsClient({ userName, userEmail }: SettingsClientPr
 
   return (
     <div className="bg-gray-100 text-gray-800 font-sans min-h-screen flex overflow-hidden">
-      <Sidebar userName={userName} userEmail={userEmail} />
+      <Sidebar userName={userName} userEmail={userEmail} isAdmin={isAdmin} />
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-y-auto">

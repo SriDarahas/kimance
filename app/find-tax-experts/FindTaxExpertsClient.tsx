@@ -8,6 +8,7 @@ import { getTranslation } from "@/lib/i18n";
 interface FindTaxExpertsClientProps {
   userName: string;
   userEmail: string;
+  isAdmin?: boolean;
 }
 
 const serviceTypes = [
@@ -130,7 +131,7 @@ const taxExperts = [
   },
 ];
 
-export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExpertsClientProps) {
+export default function FindTaxExpertsClient({ userName, userEmail, isAdmin = false }: FindTaxExpertsClientProps) {
   const { language } = useLanguage();
   const t = (key: any, vars?: Record<string, string>) => getTranslation(language, key, vars);
   const [serviceType, setServiceType] = useState("personal");
@@ -175,7 +176,7 @@ export default function FindTaxExpertsClient({ userName, userEmail }: FindTaxExp
 
   return (
     <div className="bg-gray-100 text-gray-800 font-sans min-h-screen flex overflow-hidden">
-      <Sidebar userName={userName} userEmail={userEmail} />
+      <Sidebar userName={userName} userEmail={userEmail} isAdmin={isAdmin} />
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-y-auto">

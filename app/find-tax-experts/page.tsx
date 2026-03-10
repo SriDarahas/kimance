@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import FindTaxExpertsClient from "./FindTaxExpertsClient";
 
 export default async function FindTaxExpertsPage() {
@@ -10,8 +11,17 @@ export default async function FindTaxExpertsPage() {
     redirect('/login');
   }
 
+  const adminClient = createAdminClient();
+  const { data: profile } = await adminClient
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+
+  const isAdmin = profile?.role === 'admin';
+
   const userName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
   const userEmail = user.email || '';
 
-  return <FindTaxExpertsClient userName={userName} userEmail={userEmail} />;
+  return <FindTaxExpertsClient userName={userName} userEmail={userEmail} isAdmin={isAdmin} />;
 }

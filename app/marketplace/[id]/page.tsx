@@ -1,5 +1,6 @@
 import { redirect, notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import MarketplaceDetailClient from "./MarketplaceDetailClient";
 
 const offers = [
@@ -222,8 +223,17 @@ export default async function MarketplaceDetailPage({ params }: PageProps) {
     notFound();
   }
 
+  const adminClient = createAdminClient();
+  const { data: profile } = await adminClient
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+
+  const isAdmin = profile?.role === 'admin';
+
   const userName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
   const userEmail = user.email || '';
 
-  return <MarketplaceDetailClient userName={userName} userEmail={userEmail} offer={offer as any} />;
+  return <MarketplaceDetailClient userName={userName} userEmail={userEmail} offer={offer as any} isAdmin={isAdmin} />;
 }

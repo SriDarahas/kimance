@@ -48,15 +48,16 @@ interface MarketplaceDetailClientProps {
   userName: string;
   userEmail: string;
   offer: Offer;
+  isAdmin?: boolean;
 }
 
-export default function MarketplaceDetailClient({ userName, userEmail, offer }: MarketplaceDetailClientProps) {
+export default function MarketplaceDetailClient({ userName, userEmail, offer, isAdmin = false }: MarketplaceDetailClientProps) {
   const circumference = 2 * Math.PI * 70;
   const strokeDashoffset = circumference - (offer.aiScore / 100) * circumference;
 
   return (
     <div className="bg-gray-100 text-gray-800 font-sans min-h-screen flex overflow-hidden">
-      <Sidebar userName={userName} userEmail={userEmail} />
+      <Sidebar userName={userName} userEmail={userEmail} isAdmin={isAdmin} />
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-y-auto">

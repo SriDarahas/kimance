@@ -134,7 +134,7 @@ export default function WalletsPageClient({
 
             {/* Quick Stats */}
             <div className="space-y-4">
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-2xl p-4 border border-blue-200">
+                <div className="bg-linear-to-br from-blue-50 to-blue-100/50 rounded-2xl p-4 border border-blue-200">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center">
                     <span className="material-icons-outlined text-sm">wallet</span>
@@ -145,7 +145,7 @@ export default function WalletsPageClient({
                 <p className="text-xs text-gray-600 mt-1">{t('multiCurrencySetup')}</p>
               </div>
 
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100/50 rounded-2xl p-4 border border-purple-200">
+              <div className="bg-linear-to-br from-purple-50 to-purple-100/50 rounded-2xl p-4 border border-purple-200">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center">
                     <span className="material-icons-outlined text-sm">trending_up</span>
@@ -156,7 +156,7 @@ export default function WalletsPageClient({
                 <p className="text-xs text-gray-600 mt-1">{t('vsLastMonth')}</p>
               </div>
 
-              <div className="bg-gradient-to-br from-green-50 to-green-100/50 rounded-2xl p-4 border border-green-200">
+              <div className="bg-linear-to-br from-green-50 to-green-100/50 rounded-2xl p-4 border border-green-200">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center">
                     <span className="material-icons-outlined text-sm">check_circle</span>

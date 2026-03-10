@@ -13,7 +13,7 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { href: "/", icon: "dashboard", labelKey: "dashboard" },
+  { href: "/dashboard", icon: "dashboard", labelKey: "dashboard" },
   { href: "/wallets", icon: "account_balance_wallet", labelKey: "myWallets" },
   { href: "/send-money", icon: "send", labelKey: "sendMoney" },
   { href: "/marketplace", icon: "storefront", labelKey: "marketplace" },
@@ -21,14 +21,31 @@ const navItems: NavItem[] = [
   { href: "/settings", icon: "settings", labelKey: "settings" },
 ];
 
-export default function SidebarNavigation({ onNavigate }: { onNavigate?: () => void }) {
+const adminNavItem: NavItem = {
+  href: "/admin",
+  icon: "admin_panel_settings",
+  labelKey: "admin",
+};
+
+export default function SidebarNavigation({
+  onNavigate,
+  isAdmin = false,
+}: {
+  onNavigate?: () => void;
+  isAdmin?: boolean;
+}) {
   const pathname = usePathname();
   const { language } = useLanguage();
 
+  const items = isAdmin ? [...navItems, adminNavItem] : navItems;
+
   return (
     <nav className="flex-1 px-4 space-y-1 mt-2">
-      {navItems.map((item) => {
-        const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href) && item.href !== "#";
+      {items.map((item) => {
+        const isActive =
+          item.href === "/dashboard"
+            ? pathname === "/dashboard" || pathname === "/"
+            : pathname.startsWith(item.href) && item.href !== "#";
         return (
           <Link
             key={item.labelKey}
@@ -41,7 +58,9 @@ export default function SidebarNavigation({ onNavigate }: { onNavigate?: () => v
             }`}
           >
             <span className="material-icons-outlined text-xl">{item.icon}</span>
-            {getTranslation(language, item.labelKey as any)}
+            {item.labelKey === "admin"
+              ? "Admin"
+              : getTranslation(language, item.labelKey as any)}
             {item.badge && (
               <span className="ml-auto text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
                 {item.badge}

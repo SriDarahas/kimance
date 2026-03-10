@@ -52,7 +52,7 @@ export default function CurrencyDashboard() {
 
   useEffect(() => {
     loadRates();
-    const id = setInterval(loadRates, 30000);
+    const id = setInterval(loadRates, 5 * 60 * 1000); // poll every 5 min to match server cache TTL
     return () => clearInterval(id);
   }, []);
 
