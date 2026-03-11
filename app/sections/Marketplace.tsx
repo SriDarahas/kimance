@@ -144,7 +144,7 @@ export default function Marketplace() {
             Explore the Marketplace
             <ArrowRight className="w-5 h-5" />
           </Link>
-          <p className="text-base text-gray-500 mt-4">Sign up to unlock all services — free account, no card required.</p>
+          <p className="text-base text-white mt-4">Sign up to unlick all service — free account, no card required.</p>
         </div>
       </div>
     </section>

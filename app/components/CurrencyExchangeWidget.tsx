@@ -227,7 +227,7 @@ export default function CurrencyExchangeWidget({ compact = false, className = ""
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3 font-display">
             See how far your money goes
           </h2>
-          <p className="text-gray-500 max-w-xl mx-auto text-xl">
+          <p className="text-purple-600 max-w-xl mx-auto text-xl">
             Real-time rates. No hidden fees. Just honest, transparent transfers.
           </p>
         </div>

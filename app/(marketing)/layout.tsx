@@ -41,57 +41,57 @@ export default function MarketingLayout({
       <AnchorLinkHandler />
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/80 backdrop-blur-md">
-        <div className="flex h-24 w-full items-center justify-between">
+        <div className="flex h-16 w-full items-center justify-between">
           <div className="flex items-center pl-6">
             <Link href="/" className="flex items-center">
               <Image
                 src="/logo-transparent.png"
                 alt="Kimance"
-                width={280}
-                height={70}
-                className="h-[70px] w-auto object-contain"
+                width={200}
+                height={50}
+                className="h-[40px] w-auto object-contain"
                 priority
               />
             </Link>
           </div>
 
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-6">
+            <Link
+              href="#trust"
+              className="text-sm font-medium text-gray-600 hover:text-violet-600 transition-colors"
+            >
+              About
+            </Link>
             <Link
               href="#features"
-              className="text-lg font-medium text-gray-600 hover:text-violet-600 transition-colors"
+              className="text-sm font-medium text-gray-600 hover:text-violet-600 transition-colors"
             >
               Features
             </Link>
             <Link
               href="#pricing"
-              className="text-lg font-medium text-gray-600 hover:text-violet-600 transition-colors"
+              className="text-sm font-medium text-gray-600 hover:text-violet-600 transition-colors"
             >
               Pricing
             </Link>
             <Link
-              href="#trust"
-              className="text-lg font-medium text-gray-600 hover:text-violet-600 transition-colors"
-            >
-              About
-            </Link>
-            <Link
               href="#marketplace"
-              className="text-lg font-medium text-gray-600 hover:text-violet-600 transition-colors"
+              className="text-sm font-medium text-gray-600 hover:text-violet-600 transition-colors"
             >
               Marketplace
             </Link>
           </nav>
 
-          <div className="flex items-center gap-6 pr-4 lg:pr-8">
+          <div className="flex items-center gap-4 pr-4 lg:pr-8">
             <Link
               href="/login"
-              className="hidden text-lg font-medium text-gray-600 hover:text-violet-600 sm:block transition-colors"
+              className="hidden text-sm font-medium text-gray-600 hover:text-violet-600 sm:block transition-colors"
             >
               Log in
             </Link>
             <Link
               href="/register"
-              className="rounded-full bg-violet-500 px-6 py-3 text-lg font-medium text-white hover:bg-violet-600 transition-colors shadow-sm hover:shadow-md"
+              className="rounded-full bg-violet-500 px-5 py-2 text-sm font-medium text-white hover:bg-violet-600 transition-colors shadow-sm hover:shadow-md"
             >
               Get Started
             </Link>
@@ -105,7 +105,7 @@ export default function MarketingLayout({
       </SmoothScrollProvider>
 
       {/* Footer */}
-      <footer className="border-t border-gray-800 bg-gray-900 text-gray-300">
+      <footer className="border-t border-violet-800 bg-violet-900 text-violet-100">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
             {/* Column 1: Brand */}
@@ -158,8 +158,8 @@ export default function MarketingLayout({
                   <Facebook className="w-5 h-5" />
                 </a>
               </div>
-              <p className="text-sm text-gray-500 mt-6">
-                © {new Date().getFullYear()} Kimance. All rights reserved.
+              <p className="text-sm text-violet-300 mt-6">
+                © {new Date().getFullYear()} Kimance. All rights reserved. Powered by kimutu power.
               </p>
             </div>
           </div>

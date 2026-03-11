@@ -38,8 +38,8 @@ export default function Trust() {
       <div ref={sectionRef} className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Secure. Always.</h2>
-          <p className="text-gray-600 mt-4 max-w-2xl mx-auto text-xl leading-relaxed">
-            Your money deserves the highest protection. Kimance uses enterprise-grade security to keep every transaction, every wallet, and every piece of data completely secure.
+          <p className="text-black mt-4 max-w-2xl mx-auto text-xl leading-relaxed">
+            your money deserves the highest protection. Kimance uses enterprise-grade security to keep every transaction, every wallet, and every piece of data completely secure.
           </p>
         </div>
 

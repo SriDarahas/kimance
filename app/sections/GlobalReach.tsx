@@ -20,8 +20,8 @@ export default function GlobalReach() {
           <h2 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">
             Send Money Anywhere
           </h2>
-          <p className="text-gray-400 text-xl max-w-2xl mx-auto">
-            Connect with family and friends across the globe with our secure and fast transfer network.
+          <p className="text-white text-xl max-w-2xl mx-auto">
+            connect with familu across the globe with our secure and fast transfer network.
           </p>
         </div>
 

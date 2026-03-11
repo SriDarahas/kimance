@@ -71,10 +71,10 @@ export default function Testimonials() {
     <section id="testimonials" ref={sectionRef} className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 font-display">
+          <h2 className="text-3xl md:text-4xl font-bold text-black mb-4 font-display">
             Trusted by Global Users
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-black max-w-2xl mx-auto">
             Join thousands of users who trust Kimance for their financial freedom.
           </p>
         </div>
@@ -94,7 +94,7 @@ export default function Testimonials() {
               </div>
               
               {/* Quote */}
-              <blockquote className="text-lg text-gray-600 italic mb-6 flex-grow relative">
+              <blockquote className="text-lg text-black italic mb-6 flex-grow relative">
                 <span className="text-4xl text-violet-200 absolute -top-4 -left-2 font-serif">"</span>
                 <span className="relative z-10">{t.quote}</span>
               </blockquote>
@@ -115,7 +115,7 @@ export default function Testimonials() {
         
         {/* Logo marquee */}
         <div className="text-center pt-10 border-t border-gray-200">
-          <p className="text-base text-gray-500 mb-8 uppercase tracking-wider font-medium">Trusted by leading companies</p>
+          <p className="text-base text-black mb-8 uppercase tracking-wider font-medium">Trusted by leading companies</p>
           
           <div className="logos-marquee-container relative overflow-hidden">
             {/* Gradient masks for marquee edges */}

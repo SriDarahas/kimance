@@ -126,7 +126,7 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false }
             <h1 className="font-serif text-2xl font-bold text-gray-900">
               {t('sendMoneyTitle')}
             </h1>
-            <p className="text-sm text-gray-500">{t('fastSecureTransfers')}</p>
+            <p className="text-sm text-purple-600">{t('fastSecureTransfers')}</p>
           </div>
           <div className="flex items-center gap-3">
             <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:text-purple-600 transition-colors relative shadow-sm">
@@ -290,6 +290,27 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false }
                     <p className="text-sm text-gray-500 mt-2">
                       {t('available')}: <span className="font-medium text-purple-600">${balance.toFixed(2)}</span>
                     </p>
+                  )}
+                  
+                  {amount && parseFloat(amount) > 0 && (
+                    <div className="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-100 space-y-2 text-sm">
+                      <div className="flex justify-between text-gray-500">
+                        <span>Send amount</span>
+                        <span>${parseFloat(amount).toFixed(2)} USD</span>
+                      </div>
+                      <div className="flex justify-between text-gray-500 border-b border-gray-200 pb-2">
+                        <span>Kimance transfer fee (0.5%)</span>
+                        <span className="text-red-500">-${(parseFloat(amount) * 0.005).toFixed(2)} USD</span>
+                      </div>
+                      <div className="flex justify-between font-medium text-gray-900 pt-1">
+                        <span>Total to convert</span>
+                        <span>${(parseFloat(amount) * 0.995).toFixed(2)} USD</span>
+                      </div>
+                      <div className="flex justify-between font-bold text-purple-700 pt-2 border-t border-purple-100 mt-2">
+                        <span>Recipient gets (est. 0.92 EUR/USD)</span>
+                        <span>€{(parseFloat(amount) * 0.995 * 0.92).toFixed(2)} EUR</span>
+                      </div>
+                    </div>
                   )}
                 </div>
                 <div>

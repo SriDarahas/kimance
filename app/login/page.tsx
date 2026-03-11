@@ -118,12 +118,7 @@ export default function Login() {
       />
       <div className="absolute inset-0 bg-gradient-to-b from-[#1e1033]/60 via-[#1e1033]/40 to-[#1e1033]/80"></div>
 
-      {/* Logo centered at top — no white bg */}
-      <div className="relative z-10 flex justify-center pt-10">
-        <Link href="/">
-          <Image src="/logo-transparent.png" alt="Kimance Logo" width={220} height={60} className="h-16 w-auto drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]" />
-        </Link>
-      </div>
+      {/* Logo removed from here to form section as requested */}
 
       {/* #30: Hero text with updated messaging */}
       <div className="relative z-10 flex-1 flex items-center justify-center p-12">
@@ -281,19 +276,21 @@ export default function Login() {
         <LeftPanel />
 
         {/* Right Panel: Login Form */}
-        <div className="flex w-full lg:w-1/2 flex-col justify-center items-center bg-white px-4 sm:px-12 xl:px-24">
-          <div className="w-full max-w-[480px] flex flex-col gap-7">
-            {/* Mobile Logo */}
-            <Link href="/" className="lg:hidden flex justify-center mb-4">
-              <Image src="/logo-crop.png" alt="Kimance Logo" width={160} height={45} className="h-11 w-auto" />
-            </Link>
-
-            {/* #32: Decreased text size */}
-            <div className="flex flex-col gap-2">
-              <h2 className="text-gray-900 text-2xl font-bold leading-tight tracking-tight font-[family-name:var(--font-playfair)]">
-                Welcome Back
-              </h2>
-              <p className="text-gray-500 text-sm font-normal">
+        <div className="flex w-full lg:w-1/2 flex-col justify-center items-center bg-white px-4 sm:px-12 xl:px-24 py-12">
+          {/* Form in a square */}
+          <div className="w-full max-w-[480px] flex flex-col gap-7 p-8 sm:p-10 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100 bg-white">
+            
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                <Link href="/">
+                  <Image src="/logo-crop.png" alt="Kimance Logo" width={160} height={45} className="h-8 w-auto" />
+                </Link>
+                <div className="hidden sm:block h-6 w-px bg-gray-200"></div>
+                <h2 className="text-gray-900 text-2xl font-bold leading-tight tracking-tight font-[family-name:var(--font-playfair)]">
+                  Welcome Back
+                </h2>
+              </div>
+              <p className="text-purple-600 text-sm font-normal">
                 Enter your credentials to access your account.
               </p>
             </div>
