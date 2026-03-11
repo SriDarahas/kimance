@@ -32,7 +32,7 @@ export default async function AdminPage() {
       <Sidebar userName={userName} userEmail={userEmail} isAdmin />
 
       <main className="flex-1 flex flex-col h-screen overflow-y-auto">
-        <header className="h-20 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200 py-10">
+        <header className="h-20 px-6 hidden md:flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200 py-10">
           <div>
             <h1 className="font-serif text-2xl font-bold text-gray-900">Admin Dashboard</h1>
             <p className="text-sm text-gray-500">Welcome back, {userName}</p>
@@ -43,7 +43,7 @@ export default async function AdminPage() {
           </div>
         </header>
 
-        <div className="p-6 max-w-4xl mx-auto w-full">
+        <div className="p-6 max-w-4xl mx-auto w-full mt-15">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
             <Link
               href="/admin/transactions"

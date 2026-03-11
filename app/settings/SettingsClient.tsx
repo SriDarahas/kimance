@@ -30,7 +30,7 @@ export default function SettingsClient({ userName, userEmail, isAdmin = false }:
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-y-auto">
         {/* Header */}
-        <header className="h-20 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200 py-10">
+        <header className="h-20 px-6 hidden md:flex  items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200 py-10">
           <div>
             <h1 className="font-serif text-2xl font-bold text-gray-900">
               {t('settings')}
@@ -49,7 +49,7 @@ export default function SettingsClient({ userName, userEmail, isAdmin = false }:
         </header>
 
         {/* Settings Content */}
-        <div className="p-6 max-w-6xl mx-auto w-full">
+        <div className="p-6 max-w-6xl mx-auto w-full mt-15">
           <div className="flex flex-col lg:flex-row gap-6">
             {/* Settings Sidebar */}
             <aside className="lg:w-64 space-y-6">

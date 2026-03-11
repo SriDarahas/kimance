@@ -186,7 +186,7 @@ export default function MarketplaceClient({ userName, userEmail, isAdmin = false
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-y-auto">
         {/* Header */}
-        <header className="h-20 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200 py-10">
+        <header className="h-20 px-6 hidden md:flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200 py-10">
           <div>
             <h1 className="font-serif text-2xl font-bold text-gray-900">
               {t('marketplace')}
@@ -202,7 +202,7 @@ export default function MarketplaceClient({ userName, userEmail, isAdmin = false
         </header>
 
         {/* Marketplace Content */}
-        <div className="p-6 max-w-6xl mx-auto w-full space-y-8">
+        <div className="p-6 max-w-6xl mx-auto w-full space-y-8 mt-15">
           {/* Hero Search Section */}
           <div className="text-center max-w-3xl mx-auto">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-3 tracking-tight">

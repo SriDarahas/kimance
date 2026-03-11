@@ -62,7 +62,7 @@ export default function MarketplaceDetailClient({ userName, userEmail, offer, is
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-y-auto">
         {/* Header */}
-        <header className="h-16 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200">
+        <header className="h-16 px-6 hidden md:flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200">
           <div>
             <h1 className="font-serif text-xl font-semibold text-gray-900">
               Marketplace
@@ -81,7 +81,7 @@ export default function MarketplaceDetailClient({ userName, userEmail, offer, is
         </header>
 
         {/* Page Content */}
-        <div className="p-6 max-w-6xl mx-auto w-full">
+        <div className="p-6 max-w-6xl mx-auto w-full mt-15">
           {/* Breadcrumb */}
           <div className="flex items-center text-sm text-gray-500 mb-6">
             <Link href="/marketplace" className="hover:text-purple-600">Marketplace</Link>

@@ -36,7 +36,7 @@ export default function DashboardClient({
   return (
     <>
       {/* Header — #35: Bigger text */}
-      <header className="h-20 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200 py-10">
+      <header className="h-20 px-6 hidden md:flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200 py-10">
         <div>
           <h1 className="font-serif text-2xl font-bold text-gray-900">
             {t('welcome', { name: userName || 'Ethan' })}
@@ -55,7 +55,7 @@ export default function DashboardClient({
       </header>
 
       {/* Dashboard Content */}
-      <div className="p-6 max-w-6xl mx-auto w-full space-y-6">
+      <div className="p-6 max-w-6xl mx-auto w-full space-y-6 mt-15">
         {/* #34: REARRANGED — Row 1: Currency Rates (top-left) + Balance (top-right) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* #37: Currency Dashboard — Rate is now first/prominent */}

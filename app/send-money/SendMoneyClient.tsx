@@ -121,7 +121,7 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false }
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-y-auto">
         {/* Header */}
-        <header className="h-20 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200 py-10">
+        <header className="h-20 px-6 hidden md:flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200 py-10">
           <div>
             <h1 className="font-serif text-2xl font-bold text-gray-900">
               {t('sendMoneyTitle')}
@@ -140,7 +140,7 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false }
         </header>
 
         {/* Send Money Content */}
-        <div className="p-6 max-w-4xl mx-auto w-full space-y-6">
+        <div className="p-6 max-w-4xl mx-auto w-full space-y-6 mt-15">
           {/* Balance Card - matching dashboard style */}
           <div className="gradient-card h-40 rounded-2xl p-6 flex flex-col justify-between text-white shadow-xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-48 h-48 bg-purple-500/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>

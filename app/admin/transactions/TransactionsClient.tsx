@@ -221,7 +221,7 @@ export default function TransactionsClient({
 
       <main className="flex-1 flex flex-col h-screen overflow-y-auto">
         {/* Header */}
-        <header className="h-20 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200 py-10">
+        <header className="h-20 px-6 hidden md:flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200 py-10">
           <div>
             <h1 className="font-serif text-2xl font-bold text-gray-900">
               All Transactions
@@ -244,7 +244,7 @@ export default function TransactionsClient({
           </div>
         </header>
 
-        <div className="p-6 max-w-7xl mx-auto w-full space-y-4">
+        <div className="p-6 max-w-7xl mx-auto w-full space-y-4 mt-15">
           {/* Search + Date filters */}
           <div className="flex flex-col sm:flex-row gap-3">
             {/* Search */}

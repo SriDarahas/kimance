@@ -54,7 +54,7 @@ export default function WalletsPageClient({
         <WalletsPageHeader />
 
         {/* Wallets Content */}
-        <div className="p-6 max-w-6xl mx-auto w-full space-y-6">
+        <div className="p-6 max-w-6xl mx-auto w-full space-y-6 mt-15">
           
           {/* Total Balance Card */}
           <div className="gradient-card h-48 rounded-2xl p-6 flex flex-col justify-between text-white shadow-xl relative overflow-hidden ring-1 ring-black/5">

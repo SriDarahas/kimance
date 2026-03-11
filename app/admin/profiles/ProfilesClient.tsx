@@ -144,7 +144,7 @@ export default function ProfilesClient({ users, userName, userEmail, currentUser
       <Sidebar userName={userName} userEmail={userEmail} isAdmin />
 
       <main className="flex-1 flex flex-col h-screen overflow-y-auto">
-        <header className="h-20 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200 py-10">
+        <header className="hidden md:flex h-20 px-6 items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200 py-10">
           <div>
             <h1 className="font-serif text-2xl font-bold text-gray-900">User Profiles</h1>
             <p className="text-sm text-gray-500">
@@ -158,7 +158,7 @@ export default function ProfilesClient({ users, userName, userEmail, currentUser
           </div>
         </header>
 
-        <div className="p-6 max-w-7xl mx-auto w-full space-y-4">
+        <div className="p-6 max-w-7xl mx-auto w-full space-y-4 mt-15">
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
               <span className="absolute left-3.5 top-1/2 -translate-y-1/2 material-icons-outlined text-gray-400 text-[18px]">search</span>
