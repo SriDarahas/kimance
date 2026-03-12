@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/app/providers/LanguageProvider";
+import { LanguageProvider as KimanceLanguageProvider } from "@/app/providers/LanguageContext";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -41,7 +42,9 @@ export default function RootLayout({
         className={`${inter.variable} ${playfair.variable} antialiased`}
       >
         <LanguageProvider>
-          {children}
+          <KimanceLanguageProvider>
+            {children}
+          </KimanceLanguageProvider>
         </LanguageProvider>
       </body>
     </html>

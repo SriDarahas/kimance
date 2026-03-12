@@ -2,9 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useLang, type Lang } from "@/app/providers/LanguageContext";
 
 export default function ContactPage() {
   const router = useRouter();
+  const { t, lang, setLang } = useLang();
 
   return (
     <div className="font-(family-name:--font-inter) bg-gray-50 text-gray-900 min-h-screen">
@@ -16,10 +18,25 @@ export default function ContactPage() {
             className="flex items-center gap-2 text-gray-600 hover:text-primary transition-colors group"
           >
             <span className="material-icons-outlined text-xl group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
-            <span className="text-sm font-medium">Back</span>
+            <span className="text-sm font-medium">{t.contact.back}</span>
           </button>
           <Image src="/logo-crop.png" alt="Kimance Logo" width={120} height={36} className="h-9 w-auto" />
-          <div className="w-16" />
+          {/* Language toggle */}
+          <div className="flex items-center gap-1 bg-gray-100 rounded-full px-1 py-1">
+            {(["en", "fr"] as Lang[]).map((l) => (
+              <button
+                key={l}
+                onClick={() => setLang(l)}
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
+                  lang === l
+                    ? "bg-white text-violet-700 shadow-sm"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                {l.toUpperCase()}
+              </button>
+            ))}
+          </div>
         </div>
       </header>
 
@@ -27,10 +44,10 @@ export default function ContactPage() {
       <section className="bg-linear-to-br from-primary to-[#4C1D95] text-white py-20 px-6">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-5xl md:text-6xl font-black tracking-tight mb-4 font-(family-name:--font-playfair)">
-            Get in Touch
+            {t.contact.heading}
           </h1>
           <p className="text-white/80 text-lg md:text-xl font-medium leading-relaxed max-w-xl mx-auto">
-            Have a question or need support? We&apos;re here to help — reach out anytime.
+            {t.contact.subheading}
           </p>
         </div>
       </section>
@@ -44,7 +61,7 @@ export default function ContactPage() {
               <span className="material-icons-outlined text-primary text-3xl">email</span>
             </div>
             <div>
-              <h3 className="text-gray-900 text-xl font-bold mb-1">Customer Service</h3>
+              <h3 className="text-gray-900 text-xl font-bold mb-1">{t.contact.customerService}</h3>
               <a
                 href="mailto:contact@kimance.com"
                 className="text-primary hover:text-[#5A24B3] text-base font-semibold transition-colors break-all"
@@ -52,7 +69,7 @@ export default function ContactPage() {
                 contact@kimance.com
               </a>
             </div>
-            <p className="text-gray-400 text-sm">General inquiries &amp; account questions</p>
+            <p className="text-gray-400 text-sm">{t.contact.customerServiceDesc}</p>
           </div>
 
           {/* Support Email Card */}
@@ -61,7 +78,7 @@ export default function ContactPage() {
               <span className="material-icons-outlined text-primary text-3xl">support_agent</span>
             </div>
             <div>
-              <h3 className="text-gray-900 text-xl font-bold mb-1">Support &amp; Help</h3>
+              <h3 className="text-gray-900 text-xl font-bold mb-1">{t.contact.support}</h3>
               <a
                 href="mailto:support@kimance.com"
                 className="text-primary hover:text-[#5A24B3] text-base font-semibold transition-colors break-all"
@@ -69,7 +86,7 @@ export default function ContactPage() {
                 support@kimance.com
               </a>
             </div>
-            <p className="text-gray-400 text-sm">Technical issues &amp; troubleshooting</p>
+            <p className="text-gray-400 text-sm">{t.contact.supportDesc}</p>
           </div>
 
           {/* Phone Card */}
@@ -78,7 +95,7 @@ export default function ContactPage() {
               <span className="material-icons-outlined text-primary text-3xl">phone</span>
             </div>
             <div>
-              <h3 className="text-gray-900 text-xl font-bold mb-2">Call Us</h3>
+              <h3 className="text-gray-900 text-xl font-bold mb-2">{t.contact.callUs}</h3>
               <a
                 href="tel:+16132903200"
                 className="text-primary hover:text-[#5A24B3] text-base font-semibold transition-colors"
@@ -86,7 +103,7 @@ export default function ContactPage() {
                 (613) 290-3200
               </a>
             </div>
-            <p className="text-gray-400 text-sm">Mon–Fri, 9 AM – 5 PM EST</p>
+            <p className="text-gray-400 text-sm">{t.contact.callUsDesc}</p>
           </div>
         </div>
       </section>

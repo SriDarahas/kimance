@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { ArrowRightLeft, ChevronDown, TrendingUp } from "lucide-react";
 import { createPortal } from "react-dom";
+import { useLang } from "@/app/providers/LanguageContext";
 
 const CURRENCIES = [
   { code: "USD", name: "US Dollar",         countryCode: "us" },
@@ -168,6 +169,8 @@ function CurrencySelect({
 }
 
 export default function CurrencyExchangeWidget({ compact = false, className = "" }: CurrencyExchangeWidgetProps) {
+  const { t } = useLang();
+  const cx = t.currencyExchange;
   const [fromCurrency, setFromCurrency] = useState("USD");
   const [toCurrency, setToCurrency]     = useState("NGN");
   const [sendAmount, setSendAmount]     = useState("100");
@@ -195,7 +198,7 @@ export default function CurrencyExchangeWidget({ compact = false, className = ""
       const r = data.conversion_rates[to];
       setRate(r !== undefined ? r : null);
     } catch {
-      setError("Couldn't load rate. Try again.");
+      setError(cx.errorRate);
     } finally {
       setLoading(false);
     }
@@ -222,13 +225,13 @@ export default function CurrencyExchangeWidget({ compact = false, className = ""
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 bg-violet-50 text-violet-700 text-sm font-semibold px-4 py-1.5 rounded-full mb-4">
             <TrendingUp className="w-4 h-4" />
-            Live Exchange Rates
+            {cx.badge}
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3 font-display">
-            See how far your money goes
+            {cx.heading}
           </h2>
           <p className="text-purple-600 max-w-xl mx-auto text-xl">
-            Real-time rates. No hidden fees. Just honest, transparent transfers.
+            {cx.subheading}
           </p>
         </div>
       )}
@@ -236,10 +239,10 @@ export default function CurrencyExchangeWidget({ compact = false, className = ""
       <div className="bg-white rounded-2xl shadow-xl border border-gray-100 max-w-2xl mx-auto">
         {/* Rate banner */}
         <div className="bg-violet-600 px-6 py-3 flex items-center justify-between rounded-t-2xl">
-          <span className="text-violet-200 text-sm font-medium">Today&apos;s rate</span>
+          <span className="text-violet-200 text-sm font-medium">{cx.todaysRate}</span>
           <span className="text-white text-sm font-bold tracking-wide">
             {loading
-              ? "Loading..."
+              ? cx.loading
               : error
               ? "—"
               : rate !== null
@@ -252,7 +255,7 @@ export default function CurrencyExchangeWidget({ compact = false, className = ""
           {/* You send row */}
           <div className="mb-3">
             <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-              You send
+              {cx.youSend}
             </label>
             <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-3 border border-gray-200 focus-within:border-violet-400 focus-within:ring-2 focus-within:ring-violet-100 transition-all">
               <CurrencySelect
@@ -286,7 +289,7 @@ export default function CurrencyExchangeWidget({ compact = false, className = ""
           {/* They receive row */}
           <div className={compact ? "mb-3" : "mb-6"}>
             <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-              They receive
+              {cx.theyReceive}
             </label>
             <div className="flex items-center gap-3 bg-violet-50 rounded-xl p-3 border border-violet-100">
               <CurrencySelect
@@ -314,13 +317,13 @@ export default function CurrencyExchangeWidget({ compact = false, className = ""
             <div className="flex items-center justify-between gap-4 flex-wrap">
               <div className="flex items-center gap-2 text-sm text-gray-500">
                 <span className="w-2 h-2 rounded-full bg-green-400 inline-block" />
-                No hidden fees · Instant transfer
+                {cx.noHiddenFees}
               </div>
               <a
                 href="/register"
                 className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-violet-600 hover:bg-violet-700 text-white text-sm font-semibold transition-all shadow-sm hover:shadow-md"
               >
-                Send Now →
+                {cx.sendNow}
               </a>
             </div>
           )}
