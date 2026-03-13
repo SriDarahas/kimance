@@ -16,21 +16,6 @@ export default function AuthError() {
           {/* Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-[#6D28D9]/30 to-gray-900/90"></div>
 
-          {/* Logo Area */}
-          <div className="relative z-10 p-12">
-            <Link href="/" className="flex items-center gap-3">
-              <Image
-                src="/icon.png"
-                alt="Kimance Logo"
-                width={40}
-                height={40}
-                className="rounded"
-              />
-              <span className="text-white text-2xl font-bold tracking-tight font-[family-name:var(--font-playfair)]">
-                Kimance
-              </span>
-            </Link>
-          </div>
 
           {/* Hero Text Area */}
           <div className="relative z-10 p-12 max-w-[640px]">
@@ -69,7 +54,7 @@ export default function AuthError() {
               <h2 className="text-gray-900 text-3xl font-black leading-tight tracking-tight font-[family-name:var(--font-playfair)]">
                 Authentication Error
               </h2>
-              <p className="text-gray-500 text-base font-normal mt-2">
+              <p className="text-purple-600 text-sm font-normal mt-2">
                 Something went wrong during authentication.
               </p>
             </div>

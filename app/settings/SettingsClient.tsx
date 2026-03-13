@@ -205,7 +205,7 @@ export default function SettingsClient({ userName, userEmail, isAdmin = false }:
                         <span className="text-sm uppercase tracking-wider text-gray-500 font-semibold">
                           {t('currentPlan')}
                         </span>
-                        <h4 className="text-xl font-bold text-purple-600 mt-0.5">Kimance Gold</h4>
+                        <h4 className="text-xl font-bold text-purple-600 mt-0.5">Kimance Business</h4>
                       </div>
                       <div className="space-y-2 mb-4">
                         <div className="flex items-center gap-2 text-sm text-gray-600">

@@ -23,7 +23,7 @@ export const fr = {
       privacy: "Politique de confidentialité",
       terms: "Conditions d'utilisation",
     },
-    copyright: (year: number) => `© ${year} Kimance. Tous droits réservés. Propulsé par kimutu power.`,
+    copyright: (year: number) => `@${year} Kimance. Tous droits réservés. Propulsé par Kimuntu Power Inc.`,
   },
   hero: {
     verbs: "Envoyer. Stocker. Échanger. Protéger. Croître.",

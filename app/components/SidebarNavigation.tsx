@@ -19,6 +19,7 @@ const navItems: NavItem[] = [
   { href: "/marketplace", icon: "storefront", labelKey: "marketplace" },
   { href: "/find-tax-experts", icon: "person_search", labelKey: "findTaxExperts" },
   { href: "/settings", icon: "settings", labelKey: "settings" },
+  { href: "/contact", icon: "support_agent", labelKey: "support" },
 ];
 
 const adminNavItem: NavItem = {

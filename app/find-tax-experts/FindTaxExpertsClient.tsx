@@ -138,7 +138,7 @@ export default function FindTaxExpertsClient({ userName, userEmail, isAdmin = fa
   const mobileHeader = (
     <div className="flex flex-col">
       <span className="font-serif text-lg font-bold text-gray-900 leading-tight">{t('findTaxExperts')}</span>
-      <span className="text-xs text-gray-500">{t('browseQualified')}</span>
+      <span className="text-purple-600 text-xs font-normal">{t('browseQualified')}</span>
     </div>
   );
   const [serviceType, setServiceType] = useState("personal");
@@ -193,7 +193,7 @@ export default function FindTaxExpertsClient({ userName, userEmail, isAdmin = fa
             <h1 className="font-serif text-2xl font-bold text-gray-900">
               {t('findTaxExperts')}
             </h1>
-            <p className="text-sm text-gray-500">{t('browseQualified')}</p>
+            <p className="text-purple-600 text-sm font-normal">{t('browseQualified')}</p>
           </div>
           <div className="flex items-center gap-3">
             <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:text-purple-600 transition-colors relative shadow-sm">
@@ -206,15 +206,15 @@ export default function FindTaxExpertsClient({ userName, userEmail, isAdmin = fa
           </div>
         </header>
 
-        {/* Find Tax Experts Content */}
+        {/* Find Finance Experts Content */}
         <div className="p-6 max-w-6xl mx-auto w-full space-y-8 mt-15">
           {/* Hero Search Section */}
           <div className="text-center max-w-3xl mx-auto">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-3 tracking-tight">
-              Find the right tax expert
+              Find the right finance expert
             </h2>
-            <p className="text-base text-gray-500 mb-6">
-              Browse verified professionals for cross-border, business, and personal tax needs.
+            <p className="text-purple-600 text-sm font-normal mb-6">
+              Browse verified professionals for cross-border, business, and personal finance needs.
             </p>
             <div className="relative max-w-2xl mx-auto">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">

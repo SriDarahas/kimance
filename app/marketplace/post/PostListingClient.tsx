@@ -132,7 +132,7 @@ export default function PostListingClient({ userName, userEmail, isAdmin = false
                   <>
                     <div className="mb-8">
                       <h1 className="text-2xl font-bold text-gray-900 mb-2">Product Details</h1>
-                      <p className="text-gray-500">Enter the core information for your financial product. This will be the main display on the marketplace.</p>
+                      <p className="text-purple-600 text-sm font-normal">Enter the core information for your financial product. This will be the main display on the marketplace.</p>
                     </div>
 
                     <form className="space-y-6">
@@ -267,7 +267,7 @@ export default function PostListingClient({ userName, userEmail, isAdmin = false
                   <>
                     <div className="mb-8">
                       <h1 className="text-2xl font-bold text-gray-900 mb-2">Market Settings</h1>
-                      <p className="text-gray-500">Define your target audience and geographic availability.</p>
+                      <p className="text-purple-600 text-sm font-normal">Define your target audience and geographic availability.</p>
                     </div>
 
                     <form className="space-y-6">
@@ -317,7 +317,7 @@ export default function PostListingClient({ userName, userEmail, isAdmin = false
                   <>
                     <div className="mb-8">
                       <h1 className="text-2xl font-bold text-gray-900 mb-2">Commission Structure</h1>
-                      <p className="text-gray-500">Set up how you'd like to compensate for referrals.</p>
+                      <p className="text-purple-600 text-sm font-normal">Set up how you'd like to compensate for referrals.</p>
                     </div>
 
                     <form className="space-y-6">
@@ -379,7 +379,7 @@ export default function PostListingClient({ userName, userEmail, isAdmin = false
                   <>
                     <div className="mb-8">
                       <h1 className="text-2xl font-bold text-gray-900 mb-2">Compliance & Terms</h1>
-                      <p className="text-gray-500">Upload required documents and agree to listing terms.</p>
+                      <p className="text-purple-600 text-sm font-normal">Upload required documents and agree to listing terms.</p>
                     </div>
 
                     <form className="space-y-6">

@@ -198,7 +198,7 @@ export default function Login() {
                 <h2 className="text-gray-900 text-2xl font-bold leading-tight tracking-tight font-[family-name:var(--font-playfair)] mb-2">
                   Enter verification code
                 </h2>
-                <p className="text-gray-500 text-base">
+                <p className="text-purple-600 text-sm font-normal">
                   We sent a 6-digit code to <span className="font-semibold text-gray-700">{phone}</span>
                 </p>
               </div>

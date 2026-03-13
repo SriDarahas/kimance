@@ -98,29 +98,29 @@ export default function DashboardClient({
 
         {/* #34: Quick Actions — now underneath as a full-width row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <Link href="#" className="flex flex-col items-center justify-center gap-3 p-5 rounded-2xl bg-blue-100 hover:bg-blue-200 transition-colors group border border-blue-200">
-            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-gray-900 group-hover:scale-110 transition-transform shadow-sm">
+          <Link href="#" className="flex flex-col items-center justify-center gap-3 p-5 rounded-2xl bg-blue-500 hover:bg-blue-600 transition-colors group border border-blue-600 shadow-lg shadow-blue-200">
+            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform shadow-sm">
               <span className="material-icons-outlined text-2xl">add</span>
             </div>
-            <span className="font-semibold text-gray-800 text-sm">{t('addFunds')}</span>
+            <span className="font-semibold text-white text-sm">{t('addFunds')}</span>
           </Link>
-          <Link href="/send-money" className="flex flex-col items-center justify-center gap-3 p-5 rounded-2xl bg-purple-100 hover:bg-purple-200 transition-colors group border border-purple-200">
-            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-gray-900 group-hover:scale-110 transition-transform shadow-sm">
+          <Link href="/send-money" className="flex flex-col items-center justify-center gap-3 p-5 rounded-2xl bg-purple-600 hover:bg-purple-700 transition-colors group border border-purple-700 shadow-lg shadow-purple-200">
+            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-purple-600 group-hover:scale-110 transition-transform shadow-sm">
               <span className="material-icons-outlined text-2xl">arrow_forward</span>
             </div>
-            <span className="font-semibold text-gray-800 text-sm">{t('sendMoney')}</span>
+            <span className="font-semibold text-white text-sm">{t('sendMoney')}</span>
           </Link>
-          <Link href="/exchange-rate" className="flex flex-col items-center justify-center gap-3 p-5 rounded-2xl bg-orange-100 hover:bg-orange-200 transition-colors group border border-orange-200">
-            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-gray-900 group-hover:scale-110 transition-transform shadow-sm">
-              <span className="material-icons-outlined text-2xl">currency_exchange</span>
+          <Link href="#" className="flex flex-col items-center justify-center gap-3 p-5 rounded-2xl bg-orange-500 hover:bg-orange-600 transition-colors group border border-orange-600 shadow-lg shadow-orange-200">
+            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-orange-600 group-hover:scale-110 transition-transform shadow-sm">
+              <span className="material-icons-outlined text-2xl">account_balance</span>
             </div>
-            <span className="font-semibold text-gray-800 text-sm">{t('exchange')}</span>
+            <span className="font-semibold text-white text-sm">{t('deposit')}</span>
           </Link>
-          <Link href="#" className="flex flex-col items-center justify-center gap-3 p-5 rounded-2xl bg-green-100 hover:bg-green-200 transition-colors group border border-green-200">
-            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-gray-900 group-hover:scale-110 transition-transform shadow-sm">
+          <Link href="#" className="flex flex-col items-center justify-center gap-3 p-5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 transition-colors group border border-emerald-600 shadow-lg shadow-green-200">
+            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform shadow-sm">
               <span className="material-icons-outlined text-2xl">currency_bitcoin</span>
             </div>
-            <span className="font-semibold text-gray-800 text-sm">{t('crypto')}</span>
+            <span className="font-semibold text-white text-sm">{t('crypto')}</span>
           </Link>
         </div>
 

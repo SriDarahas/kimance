@@ -28,11 +28,8 @@ export default async function DashboardLayout({
   const userName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
   const userEmail = user.email || '';
   const mobileHeader = (
-    <div className="flex flex-col">
-      <span className="font-serif text-lg font-bold text-gray-900 leading-tight">
-        Welcome, {userName}
-      </span>
-      <span className="text-xs text-purple-600">Welcome back</span>
+    <div className="flex items-center justify-center w-full">
+      <img src="/logo-transparent.png" alt="Kimance" className="h-9 w-auto" />
     </div>
   );
 

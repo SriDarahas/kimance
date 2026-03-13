@@ -29,7 +29,7 @@ export default async function AdminPage() {
   const mobileHeader = (
     <div className="flex flex-col">
       <span className="font-serif text-lg font-bold text-gray-900 leading-tight">Admin Dashboard</span>
-      <span className="text-xs text-gray-500">Welcome back, {userName}</span>
+      <span className="text-purple-600 text-xs font-normal">Welcome back, {userName}</span>
     </div>
   );
 
@@ -41,7 +41,7 @@ export default async function AdminPage() {
         <header className="h-20 px-6 hidden md:flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200 py-10">
           <div>
             <h1 className="font-serif text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-            <p className="text-sm text-gray-500">Welcome back, {userName}</p>
+            <p className="text-purple-600 text-sm font-normal">Welcome back, {userName}</p>
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 bg-purple-600/10 text-purple-700 rounded-full text-xs font-semibold">
             <span className="material-icons-outlined text-sm">admin_panel_settings</span>

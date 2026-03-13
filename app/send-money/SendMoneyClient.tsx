@@ -53,23 +53,11 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false }
     if (result.error) {
       setError(result.error);
     } else {
-      setStep(2);
+      setStep(3);
     }
     setLoading(false);
   };
 
-  const handleStep2 = () => {
-    if (parseFloat(amount) <= 0) {
-      setError(t('amountMustBeGreater'));
-      return;
-    }
-    if (balance !== null && parseFloat(amount) > balance) {
-      setError(t('insufficientBalance'));
-      return;
-    }
-    setError(null);
-    setStep(3);
-  };
 
   const discountPercent = appliedPromo && PROMO_CODES[appliedPromo] ? PROMO_CODES[appliedPromo].discount : 0;
   const originalAmount = parseFloat(amount) || 0;
@@ -171,8 +159,8 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false }
                   style={{ width: `${((step - 1) / 2) * 100}%` }}
                 ></div>
                 {[
-                  { num: 1, label: t('recipient'), icon: "person" },
-                  { num: 2, label: t('amount'), icon: "attach_money" },
+                  { num: 1, label: t('exchange'), icon: "currency_exchange" },
+                  { num: 2, label: t('recipient'), icon: "person" },
                   { num: 3, label: t('review'), icon: "check_circle" },
                 ].map((s) => (
                   <div key={s.num} className="flex flex-col items-center">
@@ -232,10 +220,23 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false }
               </div>
             )}
 
-            {/* Step 1: Recipient */}
+            {/* Step 1: Check Exchange Rates */}
             {!success && step === 1 && (
               <div className="space-y-6">
                 <CurrencyExchangeWidget />
+                <button
+                  onClick={() => setStep(2)}
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-purple-200 transition-all flex items-center justify-center gap-2"
+                >
+                  <span className="material-icons-outlined">send</span>
+                  {t('sendMoney')}
+                </button>
+              </div>
+            )}
+
+            {/* Step 2: Recipient */}
+            {!success && step === 2 && (
+              <div className="space-y-6">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-3">
                     {t('whoAreYouSendingTo')}
@@ -253,28 +254,37 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false }
                     />
                   </div>
                 </div>
-                <button
-                  onClick={handleStep1}
-                  disabled={loading || !recipientEmail}
-                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-purple-200 transition-all disabled:opacity-50 disabled:shadow-none flex items-center justify-center gap-2"
-                >
-                  {loading ? (
-                    <>
-                      <span className="material-icons-outlined animate-spin">refresh</span>
-                      {t('checking')}
-                    </>
-                  ) : (
-                    <>
-                      {t('continue')}
-                      <span className="material-icons-outlined">arrow_forward</span>
-                    </>
-                  )}
-                </button>
+                <div className="flex gap-3">
+                  <button 
+                    onClick={() => setStep(1)} 
+                    className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-4 rounded-xl transition-colors flex items-center justify-center gap-2"
+                  >
+                    <span className="material-icons-outlined">arrow_back</span>
+                    {t('back')}
+                  </button>
+                  <button
+                    onClick={handleStep1}
+                    disabled={loading || !recipientEmail}
+                    className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-purple-200 transition-all disabled:opacity-50 disabled:shadow-none flex items-center justify-center gap-2"
+                  >
+                    {loading ? (
+                      <>
+                        <span className="material-icons-outlined animate-spin">refresh</span>
+                        {t('checking')}
+                      </>
+                    ) : (
+                      <>
+                        {t('continue')}
+                        <span className="material-icons-outlined">arrow_forward</span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             )}
 
-            {/* Step 2: Amount & Note */}
-            {!success && step === 2 && (
+            {/* Step 3: Amount, Note & Review */}
+            {!success && step === 3 && (
               <div className="space-y-6">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-3">
@@ -299,27 +309,6 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false }
                       {t('available')}: <span className="font-medium text-purple-600">${balance.toFixed(2)}</span>
                     </p>
                   )}
-                  
-                  {amount && parseFloat(amount) > 0 && (
-                    <div className="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-100 space-y-2 text-sm">
-                      <div className="flex justify-between text-gray-500">
-                        <span>Send amount</span>
-                        <span>${parseFloat(amount).toFixed(2)} USD</span>
-                      </div>
-                      <div className="flex justify-between text-gray-500 border-b border-gray-200 pb-2">
-                        <span>Kimance transfer fee (0.5%)</span>
-                        <span className="text-red-500">-${(parseFloat(amount) * 0.005).toFixed(2)} USD</span>
-                      </div>
-                      <div className="flex justify-between font-medium text-gray-900 pt-1">
-                        <span>Total to convert</span>
-                        <span>${(parseFloat(amount) * 0.995).toFixed(2)} USD</span>
-                      </div>
-                      <div className="flex justify-between font-bold text-purple-700 pt-2 border-t border-purple-100 mt-2">
-                        <span>Recipient gets (est. 0.92 EUR/USD)</span>
-                        <span>€{(parseFloat(amount) * 0.995 * 0.92).toFixed(2)} EUR</span>
-                      </div>
-                    </div>
-                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-3">
@@ -338,60 +327,41 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false }
                     />
                   </div>
                 </div>
-                <div className="flex gap-3">
-                  <button 
-                    onClick={() => setStep(1)} 
-                    className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-4 rounded-xl transition-colors flex items-center justify-center gap-2"
-                  >
-                    <span className="material-icons-outlined">arrow_back</span>
-                    {t('back')}
-                  </button>
-                  <button 
-                    onClick={handleStep2} 
-                    disabled={!amount || parseFloat(amount) <= 0} 
-                    className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-purple-200 transition-all disabled:opacity-50 disabled:shadow-none flex items-center justify-center gap-2"
-                  >
-                    {t('continue')}
-                    <span className="material-icons-outlined">arrow_forward</span>
-                  </button>
-                </div>
-              </div>
-            )}
 
-            {/* Step 3: Review */}
-            {!success && step === 3 && (
-              <div className="space-y-6">
-                <div className="bg-gray-50 rounded-2xl p-6 space-y-4">
-                  <div className="flex justify-between items-center py-2 border-b border-gray-200">
-                    <span className="text-gray-500 text-sm">{t('recipient')}</span>
-                    <span className="font-medium text-gray-900">{recipientEmail}</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 border-b border-gray-200">
-                    <span className="text-gray-500 text-sm">{t('amount')}</span>
-                    <span className="font-bold text-2xl text-purple-600">${originalAmount.toFixed(2)}</span>
-                  </div>
-                  {appliedPromo && (
-                    <>
-                      <div className="flex justify-between items-center py-2 border-b border-gray-200">
-                        <span className="text-gray-500 text-sm flex items-center gap-1.5">
-                          <span className="material-icons-outlined text-green-500 text-base">local_offer</span>
-                          Promo ({PROMO_CODES[appliedPromo].label})
-                        </span>
-                        <span className="font-semibold text-green-600">-${discountAmount.toFixed(2)} savings</span>
-                      </div>
-                      <div className="flex justify-between items-center py-2 border-b border-gray-200">
-                        <span className="text-gray-500 text-sm font-medium">Deducted from you</span>
-                        <span className="font-bold text-lg text-green-600">${finalAmount.toFixed(2)}</span>
-                      </div>
-                    </>
-                  )}
-                  {note && (
-                    <div className="flex justify-between items-center py-2">
-                      <span className="text-gray-500 text-sm">{t('note')}</span>
-                      <span className="font-medium text-gray-900">{note}</span>
+                {/* Review Summary */}
+                {amount && parseFloat(amount) > 0 && (
+                  <div className="bg-gray-50 rounded-2xl p-6 space-y-4">
+                    <div className="flex justify-between items-center py-2 border-b border-gray-200">
+                      <span className="text-gray-500 text-sm">{t('recipient')}</span>
+                      <span className="font-medium text-gray-900">{recipientEmail}</span>
                     </div>
-                  )}
-                </div>
+                    <div className="flex justify-between items-center py-2 border-b border-gray-200">
+                      <span className="text-gray-500 text-sm">{t('amount')}</span>
+                      <span className="font-bold text-2xl text-purple-600">${originalAmount.toFixed(2)}</span>
+                    </div>
+                    {appliedPromo && (
+                      <>
+                        <div className="flex justify-between items-center py-2 border-b border-gray-200">
+                          <span className="text-gray-500 text-sm flex items-center gap-1.5">
+                            <span className="material-icons-outlined text-green-500 text-base">local_offer</span>
+                            Promo ({PROMO_CODES[appliedPromo].label})
+                          </span>
+                          <span className="font-semibold text-green-600">-${discountAmount.toFixed(2)} savings</span>
+                        </div>
+                        <div className="flex justify-between items-center py-2 border-b border-gray-200">
+                          <span className="text-gray-500 text-sm font-medium">Deducted from you</span>
+                          <span className="font-bold text-lg text-green-600">${finalAmount.toFixed(2)}</span>
+                        </div>
+                      </>
+                    )}
+                    {note && (
+                      <div className="flex justify-between items-center py-2">
+                        <span className="text-gray-500 text-sm">{t('note')}</span>
+                        <span className="font-medium text-gray-900">{note}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* Promo Code */}
                 <div className="bg-gray-50 rounded-2xl p-5 space-y-3">
@@ -456,8 +426,18 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false }
                     {t('back')}
                   </button>
                   <button 
-                    onClick={handleSend} 
-                    disabled={loading} 
+                    onClick={() => {
+                      if (!amount || parseFloat(amount) <= 0) {
+                        setError(t('amountMustBeGreater'));
+                        return;
+                      }
+                      if (balance !== null && parseFloat(amount) > balance) {
+                        setError(t('insufficientBalance'));
+                        return;
+                      }
+                      handleSend();
+                    }} 
+                    disabled={loading || !amount || parseFloat(amount) <= 0} 
                     className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-purple-200 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                   >
                     {loading ? (

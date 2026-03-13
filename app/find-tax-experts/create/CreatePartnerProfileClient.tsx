@@ -48,7 +48,7 @@ export default function CreatePartnerProfileClient({
   const mobileHeader = (
     <div className="flex flex-col">
       <span className="font-serif text-lg font-bold text-gray-900 leading-tight">Create Partner Profile</span>
-      <span className="text-xs text-gray-500">Tax Expert Finder</span>
+      <span className="text-xs text-gray-500">Finance Expert Finder</span>
     </div>
   );
 
@@ -75,18 +75,18 @@ export default function CreatePartnerProfileClient({
         <header className="h-16 px-6 hidden md:flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200">
           <div className="flex items-center gap-2 text-sm text-gray-500">
             <Link href="/find-tax-experts" className="hover:text-purple-600 transition-colors">
-              Find Tax Experts
+              Find Finance Experts
             </Link>
             <span className="material-icons-outlined text-xs">chevron_right</span>
             <span className="text-purple-600 font-medium">Create Partner Profile</span>
           </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto p-4 md:p-8">
+        <div className="flex-1 overflow-y-auto p-4 md:p-8 mt-14 sm:mt-0">
           <div className="max-w-5xl mx-auto space-y-6">
-            <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100">
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">Create your tax expert profile</h1>
-              <p className="text-gray-500">
+            <div className="bg-white rounded-2xl p-4 sm:p-6 md:p-8 shadow-sm border border-gray-100">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Create your finance expert profile</h1>
+              <p className="text-purple-600 text-sm font-normal">
                 Share your expertise and get discovered by global clients. This form is for display only.
               </p>
             </div>
@@ -102,7 +102,7 @@ export default function CreatePartnerProfileClient({
                   href="/find-tax-experts"
                   className="inline-flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white px-5 py-2.5 rounded-xl font-semibold transition-colors"
                 >
-                  Back to Tax Experts
+                  Back to Finance Experts
                 </Link>
               </div>
             ) : (

@@ -49,18 +49,6 @@ export default function ResetPasswordPage() {
           {/* Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-[#6D28D9]/30 to-gray-900/90"></div>
 
-          {/* Logo Area */}
-          <div className="relative z-10 p-12">
-            <Link href="/" className="inline-block bg-white/95 backdrop-blur-sm px-4 py-2 rounded-xl shadow-lg">
-              <Image
-                src="/logo-transparent-new.png"
-                alt="Kimance Logo"
-                width={400}
-                height={114}
-                className="h-[126px] w-auto"
-              />
-            </Link>
-          </div>
 
           {/* Hero Text Area */}
           <div className="relative z-10 p-12 max-w-[640px]">
@@ -92,7 +80,7 @@ export default function ResetPasswordPage() {
               <h2 className="text-gray-900 text-4xl font-black leading-tight tracking-tight font-[family-name:var(--font-playfair)]">
                 New Password
               </h2>
-              <p className="text-gray-500 text-base font-normal">
+              <p className="text-purple-600 text-sm font-normal">
                 Enter your new password below.
               </p>
             </div>

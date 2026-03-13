@@ -66,9 +66,8 @@ export default function Hero() {
             <span className="relative z-10">{t.hero.cta}</span>
           </Link>
           <Link
-            href="#features"
+            href="/about"
             className="group px-8 py-4 border border-white/30 hover:border-white text-white font-medium rounded-full transition-all hover:bg-white/10 backdrop-blur-sm"
-            onClick={(e) => { e.preventDefault(); document.querySelector("#features")?.scrollIntoView({ behavior: "smooth" }); }}
           >
             {t.hero.learnMore}
           </Link>

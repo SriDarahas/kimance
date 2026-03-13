@@ -172,7 +172,7 @@ export default function MarketplaceClient({ userName, userEmail, isAdmin = false
   const mobileHeader = (
     <div className="flex flex-col">
       <span className="font-serif text-lg font-bold text-gray-900 leading-tight">{t('marketplace')}</span>
-      <span className="text-xs text-gray-500">{t('exploreFinancialTools')}</span>
+      <span className="text-purple-600 text-xs font-normal">{t('exploreFinancialTools')}</span>
     </div>
   );
   const [activeCategory, setActiveCategory] = useState("all");
@@ -197,7 +197,7 @@ export default function MarketplaceClient({ userName, userEmail, isAdmin = false
             <h1 className="font-serif text-2xl font-bold text-gray-900">
               {t('marketplace')}
             </h1>
-            <p className="text-sm text-gray-500">{t('exploreFinancialTools')}</p>
+            <p className="text-purple-600 text-sm font-normal">{t('exploreFinancialTools')}</p>
           </div>
           <div className="flex items-center gap-3">
             <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:text-purple-600 transition-colors relative shadow-sm">
@@ -214,7 +214,7 @@ export default function MarketplaceClient({ userName, userEmail, isAdmin = false
             <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-3 tracking-tight">
               {t('findBestTools')}
             </h2>
-            <p className="text-base text-gray-500 mb-6">
+            <p className="text-purple-600 text-sm font-normal mb-6">
               {t('exploreTailored')}
             </p>
             <div className="relative max-w-2xl mx-auto">

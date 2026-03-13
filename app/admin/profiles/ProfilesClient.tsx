@@ -34,6 +34,8 @@ function Avatar({ name, color }: { name: string; color: "blue" | "green" | "purp
 
 function UserModal({ user, currentUserId, onClose, onRoleChange }: { user: User; currentUserId: string; onClose: () => void; onRoleChange: (newRole: string) => void }) {
   const [loading, setLoading] = useState(false);
+  const [verifying, setVerifying] = useState(false);
+  const [verified, setVerified] = useState(false);
   const date = new Date(user.created_at);
   const fullDate = date.toLocaleString("en-US", {
     weekday: "long",
@@ -48,23 +50,40 @@ function UserModal({ user, currentUserId, onClose, onRoleChange }: { user: User;
   const isAdmin = user.role === "admin";
   const isSelf = user.id === currentUserId;
 
+  // Derive user info (in a real app these would come from profile data)
+  const emailParts = user.email.split("@");
+  const firstName = emailParts[0].charAt(0).toUpperCase() + emailParts[0].slice(1);
+  const lastName = "—";
+  const contactNumber = "—";
+  const address = "—";
+  const city = "—";
+  const country = "—";
+
   const handleRoleChange = async () => {
     setLoading(true);
     await onRoleChange(isAdmin ? "user" : "admin");
     setLoading(false);
   };
 
+  const handleVerify = () => {
+    setVerifying(true);
+    setTimeout(() => {
+      setVerifying(false);
+      setVerified(true);
+    }, 1500);
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         <div className="gradient-card px-6 py-5 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
           <div className="relative z-10 flex items-start justify-between">
             <div>
               <p className="text-purple-200 text-xs font-semibold uppercase tracking-widest mb-1">User Profile</p>
               <p className="text-white text-2xl font-serif font-bold truncate max-w-[280px]">
-                {user.email}
+                {firstName}
               </p>
             </div>
             <button onClick={onClose} className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
@@ -73,7 +92,8 @@ function UserModal({ user, currentUserId, onClose, onRoleChange }: { user: User;
           </div>
         </div>
 
-        <div className="p-6 space-y-4">
+        <div className="p-6 space-y-5">
+          {/* Avatar + Basic Info */}
           <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
             <Avatar name={user.email} color={isAdmin ? "purple" : "blue"} />
             <div className="flex-1 min-w-0">
@@ -85,13 +105,110 @@ function UserModal({ user, currentUserId, onClose, onRoleChange }: { user: User;
             </span>
           </div>
 
-          <div className="divide-y divide-gray-50 border border-gray-100 rounded-xl overflow-hidden">
-            <div className="flex justify-between items-center px-4 py-3 gap-4">
-              <span className="text-sm text-gray-500 shrink-0">Signed Up</span>
-              <span className="text-sm font-medium text-gray-900 text-right break-all">{fullDate}</span>
+          {/* Personal Information */}
+          <div>
+            <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <span className="material-icons-outlined text-purple-500 text-base">person</span>
+              Personal Information
+            </h3>
+            <div className="divide-y divide-gray-50 border border-gray-100 rounded-xl overflow-hidden">
+              <div className="flex justify-between items-center px-4 py-3 gap-4">
+                <span className="text-sm text-gray-500 shrink-0">First Name</span>
+                <span className="text-sm font-medium text-gray-900 text-right">{firstName}</span>
+              </div>
+              <div className="flex justify-between items-center px-4 py-3 gap-4">
+                <span className="text-sm text-gray-500 shrink-0">Last Name</span>
+                <span className="text-sm font-medium text-gray-400 text-right">{lastName}</span>
+              </div>
+              <div className="flex justify-between items-center px-4 py-3 gap-4">
+                <span className="text-sm text-gray-500 shrink-0">Email</span>
+                <span className="text-sm font-medium text-gray-900 text-right break-all">{user.email}</span>
+              </div>
+              <div className="flex justify-between items-center px-4 py-3 gap-4">
+                <span className="text-sm text-gray-500 shrink-0">Contact Number</span>
+                <span className="text-sm font-medium text-gray-400 text-right">{contactNumber}</span>
+              </div>
+              <div className="flex justify-between items-center px-4 py-3 gap-4">
+                <span className="text-sm text-gray-500 shrink-0">Address</span>
+                <span className="text-sm font-medium text-gray-400 text-right">{address}</span>
+              </div>
+              <div className="flex justify-between items-center px-4 py-3 gap-4">
+                <span className="text-sm text-gray-500 shrink-0">City</span>
+                <span className="text-sm font-medium text-gray-400 text-right">{city}</span>
+              </div>
+              <div className="flex justify-between items-center px-4 py-3 gap-4">
+                <span className="text-sm text-gray-500 shrink-0">Country</span>
+                <span className="text-sm font-medium text-gray-400 text-right">{country}</span>
+              </div>
+              <div className="flex justify-between items-center px-4 py-3 gap-4">
+                <span className="text-sm text-gray-500 shrink-0">Signed Up</span>
+                <span className="text-sm font-medium text-gray-900 text-right break-all">{fullDate}</span>
+              </div>
             </div>
           </div>
 
+          {/* Payment Methods (Hidden Info) */}
+          <div>
+            <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <span className="material-icons-outlined text-purple-500 text-base">credit_card</span>
+              Payment Methods
+            </h3>
+            <div className="divide-y divide-gray-50 border border-gray-100 rounded-xl overflow-hidden">
+              <div className="flex justify-between items-center px-4 py-3 gap-4">
+                <div className="flex items-center gap-2">
+                  <span className="material-icons-outlined text-gray-400 text-base">credit_card</span>
+                  <span className="text-sm text-gray-500">Debit Card</span>
+                </div>
+                <span className="text-sm font-medium text-gray-400 font-mono">•••• •••• •••• ••••</span>
+              </div>
+              <div className="flex justify-between items-center px-4 py-3 gap-4">
+                <div className="flex items-center gap-2">
+                  <span className="material-icons-outlined text-gray-400 text-base">credit_score</span>
+                  <span className="text-sm text-gray-500">Credit Card</span>
+                </div>
+                <span className="text-sm font-medium text-gray-400 font-mono">•••• •••• •••• ••••</span>
+              </div>
+              <div className="flex justify-between items-center px-4 py-3 gap-4">
+                <div className="flex items-center gap-2">
+                  <span className="material-icons-outlined text-gray-400 text-base">account_balance</span>
+                  <span className="text-sm text-gray-500">Bank Account</span>
+                </div>
+                <span className="text-sm font-medium text-gray-400 font-mono">•••••••••</span>
+              </div>
+            </div>
+            <p className="text-xs text-gray-400 mt-2 ml-1 flex items-center gap-1">
+              <span className="material-icons-outlined text-xs">lock</span>
+              Sensitive information is hidden for security
+            </p>
+          </div>
+
+          {/* Verification */}
+          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+            <div className="flex items-center gap-3">
+              <span className={`material-icons-outlined text-lg ${verified ? "text-green-500" : "text-gray-400"}`}>
+                {verified ? "verified" : "gpp_maybe"}
+              </span>
+              <div>
+                <span className="text-sm font-medium text-gray-700">Account Verification</span>
+                <p className="text-xs text-gray-400">{verified ? "Identity verified" : "Not yet verified"}</p>
+              </div>
+            </div>
+            <button
+              onClick={handleVerify}
+              disabled={verifying || verified}
+              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+                verified
+                  ? "bg-green-100 text-green-700 cursor-default"
+                  : verifying
+                    ? "bg-gray-100 text-gray-400 cursor-wait"
+                    : "bg-purple-600 hover:bg-purple-700 text-white shadow-lg shadow-purple-200"
+              }`}
+            >
+              {verified ? "✓ Verified" : verifying ? "Verifying..." : "Verify Account"}
+            </button>
+          </div>
+
+          {/* Change Role */}
           <div className="flex items-center justify-between pt-2">
             <span className="text-sm font-medium text-gray-700">Change Role</span>
             <button

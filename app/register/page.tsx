@@ -152,13 +152,7 @@ export default function Register() {
       <Image src="/login-hero.png" alt="Kimance - Global Finance" fill className="object-cover" priority />
       <div className="absolute inset-0 bg-linear-to-b from-[#1e1033]/60 via-[#1e1033]/40 to-[#1e1033]/80"></div>
 
-      <div className="relative z-10 flex justify-center pt-10">
-        <Link href="/">
-          <Image src="/logo-transparent.png" alt="Kimance Logo" width={220} height={60} className="h-16 w-auto drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]" />
-        </Link>
-      </div>
-
-      <div className="relative z-10 flex-1 flex items-center justify-center p-12">
+      <div className="relative z-10 flex-1 flex items-center justify-center p-12 mt-10">
         <div className="text-center max-w-135" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>
           <h1 className="text-white text-4xl font-bold leading-tight mb-4 tracking-tight font-(family-name:--font-playfair)">
             Send. Store. Exchange.
@@ -310,18 +304,18 @@ export default function Register() {
 
         {/* Right Panel: Register Form */}
         <div className="flex w-full lg:w-1/2 flex-col justify-center items-center bg-white px-4 sm:px-12 xl:px-24 py-12">
-          <div className="w-full max-w-120 flex flex-col gap-6">
-            {/* Mobile Logo */}
-            <Link href="/" className="lg:hidden flex justify-center mb-4">
-              <Image src="/logo-transparent.png" alt="Kimance Logo" width={140} height={40} className="h-11 w-auto" />
-            </Link>
-
-            {/* Header */}
-            <div className="flex flex-col gap-2">
-              <h2 className="text-gray-900 text-2xl font-bold leading-tight tracking-tight font-(family-name:--font-playfair)">
-                Create Account
-              </h2>
-              <p className="text-gray-500 text-base font-normal">
+          <div className="w-full max-w-120 flex flex-col gap-6 p-8 sm:p-10 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100 bg-white">
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                <Link href="/">
+                  <Image src="/logo-crop.png" alt="Kimance Logo" width={160} height={45} className="h-8 w-auto" />
+                </Link>
+                <div className="hidden sm:block h-6 w-px bg-gray-200"></div>
+                <h2 className="text-gray-900 text-2xl font-bold leading-tight tracking-tight font-[family-name:var(--font-playfair)]">
+                  Create Account
+                </h2>
+              </div>
+              <p className="text-purple-600 text-sm font-normal">
                 Fill in your details to get started with Kimance.
               </p>
             </div>
