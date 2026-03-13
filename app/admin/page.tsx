@@ -26,10 +26,16 @@ export default async function AdminPage() {
   const userName =
     user.user_metadata?.full_name || user.email?.split("@")[0] || "Admin";
   const userEmail = user.email || "";
+  const mobileHeader = (
+    <div className="flex flex-col">
+      <span className="font-serif text-lg font-bold text-gray-900 leading-tight">Admin Dashboard</span>
+      <span className="text-xs text-gray-500">Welcome back, {userName}</span>
+    </div>
+  );
 
   return (
     <div className="bg-gray-100 text-gray-800 font-sans min-h-screen flex overflow-hidden">
-      <Sidebar userName={userName} userEmail={userEmail} isAdmin />
+      <Sidebar userName={userName} userEmail={userEmail} isAdmin mobileHeader={mobileHeader} />
 
       <main className="flex-1 flex flex-col h-screen overflow-y-auto">
         <header className="h-20 px-6 hidden md:flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200 py-10">

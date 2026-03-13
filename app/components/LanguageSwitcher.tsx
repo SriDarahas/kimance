@@ -7,7 +7,8 @@ export default function LanguageSwitcher() {
   const { language, setLanguage } = useLanguage();
 
   return (
-    <div className="flex items-center gap-1 bg-white/50 backdrop-blur rounded-full p-1 border border-gray-200">
+    <div className="flex w-full items-center justify-center">
+      <div className="flex items-center gap-1 bg-white/50 backdrop-blur rounded-full p-1 border border-gray-200">
       {(Object.keys(languages) as Language[]).map((lang) => (
         <button
           key={lang}
@@ -21,6 +22,7 @@ export default function LanguageSwitcher() {
           {languages[lang]}
         </button>
       ))}
+      </div>
     </div>
   );
 }

@@ -18,6 +18,12 @@ interface SettingsClientProps {
 export default function SettingsClient({ userName, userEmail, isAdmin = false }: SettingsClientProps) {
   const { language } = useLanguage();
   const t = (key: any, vars?: Record<string, string>) => getTranslation(language, key, vars);
+  const mobileHeader = (
+    <div className="flex flex-col">
+      <span className="font-serif text-lg font-bold text-gray-900 leading-tight">{t('settings')}</span>
+      <span className="text-xs text-purple-600">{t('manageAccount')}</span>
+    </div>
+  );
   const [activeTab, setActiveTab] = useState<SettingsTab>("profile");
   const [smartBudgeting, setSmartBudgeting] = useState(true);
   const [investmentTips, setInvestmentTips] = useState(false);
@@ -25,7 +31,7 @@ export default function SettingsClient({ userName, userEmail, isAdmin = false }:
 
   return (
     <div className="bg-gray-100 text-gray-800 font-sans min-h-screen flex overflow-hidden">
-      <Sidebar userName={userName} userEmail={userEmail} isAdmin={isAdmin} />
+      <Sidebar userName={userName} userEmail={userEmail} isAdmin={isAdmin} mobileHeader={mobileHeader} />
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-y-auto">

@@ -45,9 +45,15 @@ export default function WalletsPageClient({
 }: WalletsPageClientProps) {
   const { language } = useLanguage();
   const t = (key: any, vars?: Record<string, string>) => getTranslation(language, key, vars);
+  const mobileHeader = (
+    <div className="flex flex-col">
+      <span className="font-serif text-lg font-bold text-gray-900 leading-tight">{t('myWallets')}</span>
+      <span className="text-xs text-purple-600">{t('manageWallets')}</span>
+    </div>
+  );
   return (
     <div className="bg-gray-100 text-gray-800 font-sans min-h-screen flex overflow-hidden">
-      <Sidebar userName={userName} userEmail={userEmail} />
+      <Sidebar userName={userName} userEmail={userEmail} mobileHeader={mobileHeader} />
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-y-auto">

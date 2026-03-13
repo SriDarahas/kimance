@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { ReactNode } from "react";
 import Image from "next/image";
 import { logout } from "@/app/auth/actions";
 import LanguageSwitcher from "@/app/components/LanguageSwitcher";
@@ -10,9 +11,10 @@ interface SidebarProps {
   userName: string;
   userEmail: string;
   isAdmin?: boolean;
+  mobileHeader?: ReactNode;
 }
 
-export default function Sidebar({ userName, userEmail, isAdmin = false }: SidebarProps) {
+export default function Sidebar({ userName, userEmail, isAdmin = false, mobileHeader }: SidebarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const SidebarContent = () => (
@@ -57,13 +59,17 @@ export default function Sidebar({ userName, userEmail, isAdmin = false }: Sideba
     <>
       {/* Mobile Header */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4">
-        <Image
-          src="/logo-transparent.png"
-          alt="Kimance Logo"
-          width={110}
-          height={32}
-          className="h-8.5 w-auto"
-        />
+        <div className="min-w-0 flex-1">
+          {mobileHeader ?? (
+            <Image
+              src="/logo-transparent.png"
+              alt="Kimance Logo"
+              width={110}
+              height={32}
+              className="h-8.5 w-auto"
+            />
+          )}
+        </div>
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { sendMoney, getBalance, checkRecipient } from "./actions";
 import Sidebar from "@/app/components/Sidebar";
+import CurrencyExchangeWidget from "@/app/components/CurrencyExchangeWidget";
 import { useLanguage } from "@/app/providers/LanguageProvider";
 import { getTranslation } from "@/lib/i18n";
 
@@ -32,6 +33,12 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false }
   const [promoError, setPromoError] = useState<string | null>(null);
   const { language } = useLanguage();
   const t = (key: any, vars?: Record<string, string>) => getTranslation(language, key, vars);
+  const mobileHeader = (
+    <div className="flex flex-col">
+      <span className="font-serif text-lg font-bold text-gray-900 leading-tight">{t('sendMoneyTitle')}</span>
+      <span className="text-xs text-purple-600">{t('fastSecureTransfers')}</span>
+    </div>
+  );
 
   useEffect(() => {
     getBalance().then(res => {
@@ -116,7 +123,7 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false }
 
   return (
     <div className="bg-gray-100 text-gray-800 font-sans min-h-screen flex overflow-hidden">
-      <Sidebar userName={userName} userEmail={userEmail} isAdmin={isAdmin} />
+      <Sidebar userName={userName} userEmail={userEmail} isAdmin={isAdmin} mobileHeader={mobileHeader} />
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-y-auto">
@@ -228,6 +235,7 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false }
             {/* Step 1: Recipient */}
             {!success && step === 1 && (
               <div className="space-y-6">
+                <CurrencyExchangeWidget />
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-3">
                     {t('whoAreYouSendingTo')}

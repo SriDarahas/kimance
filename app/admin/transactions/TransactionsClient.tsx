@@ -207,6 +207,20 @@ export default function TransactionsClient({
     () => filtered.reduce((s, tx) => s + Number(tx.amount), 0),
     [filtered]
   );
+  const mobileHeader = (
+    <div className="flex flex-col">
+      <span className="font-serif text-lg font-bold text-gray-900 leading-tight">All Transactions</span>
+      <span className="text-xs text-gray-500">
+        {filtered.length} of {transactions.length} transaction
+        {transactions.length !== 1 ? "s" : ""}
+        {filtered.length > 0 && (
+          <span className="ml-1 text-purple-600 font-medium">
+            · ${totalAmount.toFixed(2)} total
+          </span>
+        )}
+      </span>
+    </div>
+  );
 
   const dateFilterLabels: { id: DateFilter; label: string }[] = [
     { id: "all", label: "All time" },
@@ -217,7 +231,7 @@ export default function TransactionsClient({
 
   return (
     <div className="bg-gray-100 text-gray-800 font-sans min-h-screen flex overflow-hidden">
-      <Sidebar userName={userName} userEmail={userEmail} isAdmin />
+      <Sidebar userName={userName} userEmail={userEmail} isAdmin mobileHeader={mobileHeader} />
 
       <main className="flex-1 flex flex-col h-screen overflow-y-auto">
         {/* Header */}

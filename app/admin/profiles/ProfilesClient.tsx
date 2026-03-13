@@ -131,6 +131,15 @@ export default function ProfilesClient({ users, userName, userEmail, currentUser
 
   const adminCount = users.filter((u) => u.role === "admin").length;
   const userCount = users.filter((u) => u.role === "user").length;
+  const mobileHeader = (
+    <div className="flex flex-col">
+      <span className="font-serif text-lg font-bold text-gray-900 leading-tight">User Profiles</span>
+      <span className="text-xs text-gray-500">
+        {filtered.length} of {users.length} users
+        {adminCount > 0 && <span className="ml-2 text-purple-600">· {adminCount} admins</span>}
+      </span>
+    </div>
+  );
 
   const handleRoleChange = async (userId: string, newRole: string) => {
     const result = await updateUserRole(userId, newRole);
@@ -141,7 +150,7 @@ export default function ProfilesClient({ users, userName, userEmail, currentUser
 
   return (
     <div className="bg-gray-100 text-gray-800 font-sans min-h-screen flex overflow-hidden">
-      <Sidebar userName={userName} userEmail={userEmail} isAdmin />
+      <Sidebar userName={userName} userEmail={userEmail} isAdmin mobileHeader={mobileHeader} />
 
       <main className="flex-1 flex flex-col h-screen overflow-y-auto">
         <header className="hidden md:flex h-20 px-6 items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200 py-10">

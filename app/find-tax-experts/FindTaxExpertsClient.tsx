@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import Sidebar from "@/app/components/Sidebar";
 import { useLanguage } from "@/app/providers/LanguageProvider";
 import { getTranslation } from "@/lib/i18n";
@@ -134,6 +135,12 @@ const taxExperts = [
 export default function FindTaxExpertsClient({ userName, userEmail, isAdmin = false }: FindTaxExpertsClientProps) {
   const { language } = useLanguage();
   const t = (key: any, vars?: Record<string, string>) => getTranslation(language, key, vars);
+  const mobileHeader = (
+    <div className="flex flex-col">
+      <span className="font-serif text-lg font-bold text-gray-900 leading-tight">{t('findTaxExperts')}</span>
+      <span className="text-xs text-gray-500">{t('browseQualified')}</span>
+    </div>
+  );
   const [serviceType, setServiceType] = useState("personal");
   const [selectedExpertise, setSelectedExpertise] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
@@ -176,7 +183,7 @@ export default function FindTaxExpertsClient({ userName, userEmail, isAdmin = fa
 
   return (
     <div className="bg-gray-100 text-gray-800 font-sans min-h-screen flex overflow-hidden">
-      <Sidebar userName={userName} userEmail={userEmail} isAdmin={isAdmin} />
+      <Sidebar userName={userName} userEmail={userEmail} isAdmin={isAdmin} mobileHeader={mobileHeader} />
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-y-auto">
@@ -200,79 +207,94 @@ export default function FindTaxExpertsClient({ userName, userEmail, isAdmin = fa
         </header>
 
         {/* Find Tax Experts Content */}
-        <div className="p-6 max-w-6xl mx-auto w-full space-y-6 mt-15">
-          {/* Horizontal Filter Bar */}
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-            <div className="flex flex-wrap items-center gap-4">
-              {/* Service Type Toggle */}
-              <div className="flex bg-gray-100 p-1 rounded-full">
+        <div className="p-6 max-w-6xl mx-auto w-full space-y-8 mt-15">
+          {/* Hero Search Section */}
+          <div className="text-center max-w-3xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-3 tracking-tight">
+              Find the right tax expert
+            </h2>
+            <p className="text-base text-gray-500 mb-6">
+              Browse verified professionals for cross-border, business, and personal tax needs.
+            </p>
+            <div className="relative max-w-2xl mx-auto">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <span className="material-icons-outlined text-gray-400">search</span>
+              </div>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="block w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 shadow-lg shadow-purple-500/5 focus:ring-2 focus:ring-purple-600 focus:border-transparent bg-white text-gray-900 placeholder:text-gray-400"
+                placeholder="Search experts, specialties, or firms"
+              />
+            </div>
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl mx-auto">
+              <div className="relative">
+                <span className="material-icons-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-base">public</span>
+                <select className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all">
+                  <option>{t('canada')}</option>
+                  <option>{t('unitedStates')}</option>
+                  <option>{t('unitedKingdom')}</option>
+                </select>
+              </div>
+              <div className="relative">
+                <span className="material-icons-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-base">location_city</span>
+                <input
+                  type="text"
+                  value={locationQuery ?? ""}
+                  onChange={(e) => setLocationQuery(e.target.value)}
+                  className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all placeholder-gray-400"
+                  placeholder={t('cityOrPostal')}
+                />
+              </div>
+            </div>
+            <div className="mt-4 flex items-center justify-center">
+              <button
+                onClick={resetFilters}
+                className="text-sm text-purple-600 font-medium hover:underline"
+              >
+                {t('reset')}
+              </button>
+            </div>
+          </div>
+
+          {/* Filter Navigation */}
+          <div className="space-y-4">
+            <div>
+              <p className="text-sm font-semibold text-gray-700 mb-2">Service Type</p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                 {serviceTypes.map((type) => (
                   <button
                     key={type.id}
                     onClick={() => setServiceType(type.id)}
-                    className={`py-2 px-4 rounded-full text-base font-medium transition-all ${
+                    className={`w-full px-4 py-3 rounded-xl font-semibold text-sm transition-all text-center ${
                       serviceType === type.id
-                        ? "bg-white text-gray-900 shadow-sm"
-                        : "text-gray-500 hover:text-gray-900"
+                        ? "bg-purple-600 text-white shadow-md shadow-purple-500/20"
+                        : "bg-white border border-gray-200 text-gray-600 hover:border-purple-300 hover:text-purple-600"
                     }`}
                   >
                     {t(type.key)}
                   </button>
                 ))}
               </div>
-
-              {/* Divider */}
-              <div className="h-8 w-px bg-gray-200 hidden sm:block"></div>
-
-              {/* Location */}
-              <div className="flex items-center gap-2">
-                <div className="relative">
-                  <span className="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">public</span>
-                  <select className="pl-10 pr-4 py-2 bg-gray-100 border-none rounded-xl text-base focus:ring-2 focus:ring-purple-600 text-gray-700">
-                    <option>{t('canada')}</option>
-                    <option>{t('unitedStates')}</option>
-                    <option>{t('unitedKingdom')}</option>
-                  </select>
-                </div>
-                <div className="relative">
-                  <span className="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">location_city</span>
-                  <input
-                    type="text"
-                    value={locationQuery ?? ""}
-                    onChange={(e) => setLocationQuery(e.target.value)}
-                    className="pl-10 pr-4 py-2 bg-gray-100 border-none rounded-xl text-base focus:ring-2 focus:ring-purple-600 text-gray-700 placeholder-gray-400 w-40"
-                    placeholder={t('cityOrPostal')}
-                  />
-                </div>
-              </div>
-
-              {/* Divider */}
-              <div className="h-8 w-px bg-gray-200 hidden lg:block"></div>
-
-              {/* Expertise Tags */}
-              <div className="flex flex-wrap gap-2">
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-gray-700 mb-2">Expertise</p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                 {expertiseOptions.map((expertise) => (
                   <button
                     key={expertise.id}
                     onClick={() => toggleExpertise(expertise.id)}
-                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                    className={`w-full px-4 py-3 rounded-xl font-semibold text-sm transition-all text-center ${
                       selectedExpertise.includes(expertise.id)
-                        ? "bg-purple-100 text-purple-600 border border-purple-200"
-                        : "bg-gray-100 text-gray-600 border border-transparent hover:bg-purple-50 hover:text-purple-600 hover:border-purple-200"
+                        ? "bg-purple-600 text-white shadow-md shadow-purple-500/20"
+                        : "bg-white border border-gray-200 text-gray-600 hover:border-purple-300 hover:text-purple-600"
                     }`}
                   >
                     {t(expertise.key)}
                   </button>
                 ))}
               </div>
-
-              {/* Reset */}
-              <button 
-                onClick={resetFilters}
-                className="text-sm text-purple-600 font-medium hover:underline ml-auto"
-              >
-                {t('reset')}
-              </button>
             </div>
           </div>
 
@@ -283,6 +305,12 @@ export default function FindTaxExpertsClient({ userName, userEmail, isAdmin = fa
               <p className="text-gray-500">{t(filteredExperts.length !== 1 ? 'showingExpertsPlural' : 'showingExperts', { count: filteredExperts.length.toString() })}</p>
             </div>
             <div className="flex items-center gap-3">
+              <Link
+                href="/find-tax-experts/create"
+                className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-md shadow-purple-500/20"
+              >
+                Create Partner Profile
+              </Link>
               <div className="flex bg-white p-1 rounded-full border border-gray-200 shadow-sm">
                 <button
                   onClick={() => setViewMode("list")}
