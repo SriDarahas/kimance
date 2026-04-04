@@ -98,7 +98,7 @@ export default function DashboardClient({
 
         {/* #34: Quick Actions — now underneath as a full-width row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <Link href="#" className="flex flex-col items-center justify-center gap-3 p-5 rounded-2xl bg-blue-500 hover:bg-blue-600 transition-colors group border border-blue-600 shadow-lg shadow-blue-200">
+          <Link href="/add-funds" className="flex flex-col items-center justify-center gap-3 p-5 rounded-2xl bg-blue-500 hover:bg-blue-600 transition-colors group border border-blue-600 shadow-lg shadow-blue-200">
             <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform shadow-sm">
               <span className="material-icons-outlined text-2xl">add</span>
             </div>
@@ -116,7 +116,7 @@ export default function DashboardClient({
             </div>
             <span className="font-semibold text-white text-sm">{t('deposit')}</span>
           </Link>
-          <Link href="#" className="flex flex-col items-center justify-center gap-3 p-5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 transition-colors group border border-emerald-600 shadow-lg shadow-green-200">
+          <Link href="/dashboard/crypto" className="flex flex-col items-center justify-center gap-3 p-5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 transition-colors group border border-emerald-600 shadow-lg shadow-green-200">
             <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform shadow-sm">
               <span className="material-icons-outlined text-2xl">currency_bitcoin</span>
             </div>

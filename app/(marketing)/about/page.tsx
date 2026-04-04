@@ -5,17 +5,14 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import {
-  Globe, Wallet, ArrowLeftRight, Brain, Store, Shield, Lock, Fingerprint,
-  Activity, CreditCard, Zap, Target, Eye, CheckCircle2, ArrowRight,
-  Building2, TrendingUp, Receipt, Cloud, Cpu, Handshake, BadgeCheck,
+  Globe, Wallet, ArrowLeftRight, Store, CreditCard, Zap, Target, Eye, CheckCircle2,
+  TrendingUp, Receipt,
 } from "lucide-react";
 import { useFadeIn } from "@/app/hooks/useFadeIn";
 import { useStaggerReveal } from "@/app/hooks/useStaggerReveal";
 import { useLang } from "@/app/providers/LanguageContext";
 
 const featureIcons = [CreditCard, Store, Receipt, TrendingUp, Wallet, ArrowLeftRight];
-const techIcons = [Brain, Shield, Activity, Cloud, Cpu];
-const trustIcons = [Shield, Lock, Fingerprint, Activity];
 
 // ─── Sections ─────────────────────────────────────────────────────────────────
 
@@ -227,46 +224,6 @@ function PlatformFeatures() {
   );
 }
 
-function Technology() {
-  const headerRef = useFadeIn({ delay: 0.1, y: 30 });
-  const gridRef = useStaggerReveal({ stagger: 0.12, duration: 0.7, selector: ".tech-item" });
-  const { t } = useLang();
-  const tech = t.about.technology;
-
-  return (
-    <section className="py-24 bg-gradient-to-br from-slate-50 via-violet-50/40 to-white relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 bg-violet-50 border border-violet-200 text-violet-600 text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
-            <Cpu className="w-4 h-4" />{tech.badge}
-          </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight mb-4">
-            {tech.heading} <span className="text-violet-600">{tech.headingHighlight}</span>
-          </h2>
-          <p className="text-xl text-gray-500 leading-relaxed">{tech.subheading}</p>
-        </div>
-        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {tech.items.map((item, i) => {
-            const Icon = techIcons[i];
-            return (
-              <div key={i} className="tech-item flex items-start gap-4 bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:border-violet-200 transition-all duration-300">
-                <div className="w-12 h-12 bg-violet-500 rounded-xl flex items-center justify-center shrink-0 shadow-md shadow-violet-200">
-                  <Icon className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1">{item.title}</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed">{item.description}</p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        <p className="text-center text-gray-500 mt-10 max-w-2xl mx-auto text-base leading-relaxed">{tech.footer}</p>
-      </div>
-    </section>
-  );
-}
-
 function GlobalImpact() {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
@@ -308,118 +265,6 @@ function GlobalImpact() {
               </div>
             ))}
           </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function TrustSecurity() {
-  const headerRef = useFadeIn({ delay: 0.1, y: 30 });
-  const gridRef = useStaggerReveal({ stagger: 0.12, duration: 0.7, selector: ".trust-item" });
-  const { t } = useLang();
-  const ts = t.about.trustSecurity;
-
-  return (
-    <section className="py-24 bg-gradient-to-br from-slate-50 via-violet-50/40 to-white relative overflow-hidden">
-      <div className="absolute inset-0 opacity-[0.025] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, #7c3aed 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 bg-violet-50 border border-violet-200 text-violet-600 text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
-            <Shield className="w-4 h-4" />{ts.badge}
-          </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight mb-4">
-            {ts.heading} <span className="text-violet-600">{ts.headingHighlight}</span>
-          </h2>
-          <p className="text-xl text-gray-500 leading-relaxed">{ts.subheading}</p>
-        </div>
-        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {ts.items.map((item, i) => {
-            const Icon = trustIcons[i];
-            return (
-              <div key={i} className="trust-item flex items-start gap-5 bg-white rounded-2xl p-7 shadow-sm border border-gray-100 hover:shadow-md hover:border-violet-200 transition-all duration-300">
-                <div className="w-14 h-14 bg-violet-500 rounded-xl flex items-center justify-center shrink-0 shadow-md shadow-violet-200">
-                  <Icon className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h3>
-                  <p className="text-gray-500 leading-relaxed">{item.description}</p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        <div className="text-center mt-12">
-          <div className="inline-flex items-center gap-6 bg-white rounded-2xl px-8 py-4 shadow-sm border border-gray-100">
-            <span className="flex items-center gap-2 text-sm font-semibold text-gray-600"><BadgeCheck className="w-5 h-5 text-violet-500" />{ts.badge1}</span>
-            <div className="w-px h-5 bg-gray-200" />
-            <span className="flex items-center gap-2 text-sm font-semibold text-gray-600"><BadgeCheck className="w-5 h-5 text-violet-500" />{ts.badge2}</span>
-            <div className="w-px h-5 bg-gray-200" />
-            <span className="flex items-center gap-2 text-sm font-semibold text-gray-600"><BadgeCheck className="w-5 h-5 text-violet-500" />{ts.badge3}</span>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function InvestorsPartners() {
-  const headerRef = useFadeIn({ delay: 0.1, y: 30 });
-  const sectorRef = useStaggerReveal({ stagger: 0.1, duration: 0.6, selector: ".sector-item" });
-  const cardsRef = useStaggerReveal({ stagger: 0.15, duration: 0.7, selector: ".partner-card" });
-  const { t } = useLang();
-  const p = t.about.partners;
-
-  return (
-    <section className="py-24 bg-gradient-to-b from-slate-950 to-slate-900 text-white relative overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-blue-600/8 rounded-full blur-3xl" />
-      </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/20 text-violet-300 text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
-            <Handshake className="w-4 h-4" />{p.badge}
-          </div>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
-            {p.heading} <span className="text-violet-400">{p.headingHighlight}</span>
-          </h2>
-          <p className="text-gray-400 text-xl leading-relaxed">{p.subheading}</p>
-        </div>
-
-        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          {[
-            { icon: Building2, title: p.card1Title, desc: p.card1Desc },
-            { icon: Store, title: p.card2Title, desc: p.card2Desc },
-            { icon: TrendingUp, title: p.card3Title, desc: p.card3Desc },
-          ].map((card, i) => (
-            <div key={i} className="partner-card bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 hover:border-violet-500/40 transition-all duration-300 hover:-translate-y-1">
-              <div className="w-12 h-12 bg-violet-500/20 rounded-xl flex items-center justify-center mb-5">
-                <card.icon className="w-6 h-6 text-violet-400" />
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-3">{card.title}</h3>
-              <p className="text-gray-400 leading-relaxed text-sm">{card.desc}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="text-center mb-12">
-          <p className="text-gray-400 text-sm mb-6 uppercase tracking-wider font-medium">{p.sectorsLabel}</p>
-          <div ref={sectorRef} className="flex flex-wrap justify-center gap-3">
-            {p.sectors.map((sector, i) => (
-              <span key={i} className="sector-item inline-flex items-center gap-2 bg-white/5 border border-white/10 text-gray-300 text-sm font-medium px-5 py-2.5 rounded-full hover:bg-violet-500/10 hover:border-violet-500/30 transition-all duration-200">
-                <CheckCircle2 className="w-3.5 h-3.5 text-violet-400" />{sector}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="text-center bg-gradient-to-r from-violet-600/20 to-violet-800/20 border border-violet-500/20 rounded-3xl p-10">
-          <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">{p.ctaTitle}</h3>
-          <p className="text-gray-400 text-lg leading-relaxed max-w-2xl mx-auto mb-8">{p.ctaDesc}</p>
-          <Link href="/contact" className="inline-flex items-center gap-2 bg-violet-500 hover:bg-violet-400 text-white font-semibold px-8 py-4 rounded-full transition-all duration-200 hover:shadow-lg hover:shadow-violet-500/30 hover:-translate-y-0.5">
-            {p.ctaBtn}<ArrowRight className="w-5 h-5" />
-          </Link>
         </div>
       </div>
     </section>
@@ -468,10 +313,7 @@ export default function AboutPage() {
       <MissionVision />
       <WhyKimance />
       <PlatformFeatures />
-      <Technology />
       <GlobalImpact />
-      <TrustSecurity />
-      <InvestorsPartners />
       <AboutCTA />
     </div>
   );

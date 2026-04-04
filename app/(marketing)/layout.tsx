@@ -191,11 +191,23 @@ function Footer() {
   return (
     <footer className="border-t border-violet-800 bg-violet-900 text-violet-100">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
           {/* Brand */}
           <div className="md:col-span-1">
             <Image src="/logo-transparent.png" alt="Kimance" width={140} height={48} className="h-12 w-auto object-contain brightness-0 invert mb-4" />
             <p className="text-base text-gray-400 leading-relaxed">{f.tagline}</p>
+          </div>
+
+          {/* Company */}
+          <div>
+            <h4 className="text-base font-semibold text-white uppercase tracking-wider mb-4">{f.company}</h4>
+            <ul className="space-y-3">
+              <li><Link href="/about" className="text-base text-gray-400 hover:text-white transition-colors">{f.links.about}</Link></li>
+              <li><Link href="/contact" className="text-base text-gray-400 hover:text-white transition-colors">{f.links.contact}</Link></li>
+              <li><Link href="/faq" className="text-base text-gray-400 hover:text-white transition-colors">{f.links.faq}</Link></li>
+              <li><Link href="/privacy-policy" className="text-base text-gray-400 hover:text-white transition-colors">{f.links.privacy}</Link></li>
+              <li><Link href="/terms" className="text-base text-gray-400 hover:text-white transition-colors">{f.links.terms}</Link></li>
+            </ul>
           </div>
 
           {/* Product */}
@@ -209,15 +221,13 @@ function Footer() {
             </ul>
           </div>
 
-          {/* Company */}
+          {/* Platform & Trust */}
           <div>
-            <h4 className="text-base font-semibold text-white uppercase tracking-wider mb-4">{f.company}</h4>
+            <h4 className="text-base font-semibold text-white uppercase tracking-wider mb-4">PLATFORM & TRUST</h4>
             <ul className="space-y-3">
-              <li><Link href="/about" className="text-base text-gray-400 hover:text-white transition-colors">{f.links.about}</Link></li>
-              <li><Link href="/contact" className="text-base text-gray-400 hover:text-white transition-colors">{f.links.contact}</Link></li>
-              <li><Link href="/faq" className="text-base text-gray-400 hover:text-white transition-colors">{f.links.faq}</Link></li>
-              <li><Link href="/privacy-policy" className="text-base text-gray-400 hover:text-white transition-colors">{f.links.privacy}</Link></li>
-              <li><Link href="/terms" className="text-base text-gray-400 hover:text-white transition-colors">{f.links.terms}</Link></li>
+              <li><Link href="/technology" className="text-base text-gray-400 hover:text-white transition-colors">Our Technology</Link></li>
+              <li><Link href="/trust-security" className="text-base text-gray-400 hover:text-white transition-colors">Trust & Security</Link></li>
+              <li><Link href="/investors-partners" className="text-base text-gray-400 hover:text-white transition-colors">Investors & Partners</Link></li>
             </ul>
           </div>
 
