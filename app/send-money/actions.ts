@@ -42,13 +42,9 @@ export async function checkRecipient(email: string) {
   if (!user) return { error: 'Not authenticated', exists: false }
   if (email === user.email) return { error: 'Cannot send money to yourself', exists: false }
 
-  const { data: existingUser } = await supabase
-    .from('users')
-    .select('id, email')
-    .eq('email', email)
-    .single()
+  const { data: recipientId } = await supabase.rpc('get_user_id_by_email', { email_input: email })
 
-  if (!existingUser) {
+  if (!recipientId) {
     return { error: 'Recipient not found. They must have an account first.', exists: false }
   }
 
@@ -99,18 +95,13 @@ export async function sendMoney(
 
   if (senderError) return { error: 'Failed to deduct balance', success: false }
 
-  const { data: recipientUser } = await supabase
-    .from('users')
-    .select('id, email')
-    .eq('email', recipientEmail)
-    .single()
+  const { data: recipientId } = await supabase.rpc('get_user_id_by_email', { email_input: recipientEmail })
 
-  if (recipientUser) {
-    // Find or create USD wallet for recipient
+  if (recipientId) {
     const { data: recipientUsdWallet } = await supabase
       .from('wallets')
       .select('id, balance')
-      .eq('user_id', recipientUser.id)
+      .eq('user_id', recipientId)
       .eq('currency', 'USD')
       .single()
 
@@ -119,13 +110,12 @@ export async function sendMoney(
         .from('wallets')
         .update({ balance: Number(recipientUsdWallet.balance) + amountInUSD })
         .eq('id', recipientUsdWallet.id)
-        .eq('user_id', recipientUser.id)
+        .eq('user_id', recipientId)
     } else {
-      // Create USD wallet for recipient
       await supabase
         .from('wallets')
         .insert({
-          user_id: recipientUser.id,
+          user_id: recipientId,
           currency: 'USD',
           balance: amountInUSD,
           type: 'fiat'
@@ -136,7 +126,7 @@ export async function sendMoney(
   const { error: txError } = await supabase.from('transactions').insert({
     sender_id: user.id,
     sender_email: user.email,
-    recipient_id: recipientUser?.id || null,
+    recipient_id: recipientId || null,
     recipient_email: recipientEmail,
     amount: amountInUSD,
     note: note || null,
@@ -154,13 +144,13 @@ export async function sendMoney(
 export async function getTransactions() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  
+
   if (!user) return { transactions: [] }
 
   const { data: transactions } = await supabase
     .from('transactions')
     .select('*')
-    .or(`sender_id.eq.${user.id},recipient_id.eq.${user.id}`)
+    .or(`sender_id.eq.${user.id},recipient_email.eq.${user.email}`)
     .order('created_at', { ascending: false })
     .limit(10)
 

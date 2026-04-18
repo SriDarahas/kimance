@@ -27,11 +27,11 @@ async function getUserTotalBalance(supabase: Awaited<ReturnType<typeof createCli
   }, 0);
 }
 
-async function getTransactions(supabase: Awaited<ReturnType<typeof createClient>>, userId: string) {
+async function getTransactions(supabase: Awaited<ReturnType<typeof createClient>>, userId: string, userEmail: string) {
   const { data } = await supabase
     .from('transactions')
     .select('*')
-    .or(`sender_id.eq.${userId},recipient_id.eq.${userId}`)
+    .or(`sender_id.eq.${userId},recipient_email.eq.${userEmail}`)
     .order('created_at', { ascending: false })
     .limit(10);
   return data || [];
@@ -44,7 +44,7 @@ export default async function DashboardPage() {
   const userName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User';
   const userEmail = user?.email || '';
   const balance = await getUserTotalBalance(supabase, user!.id);
-  const transactions = await getTransactions(supabase, user!.id);
+  const transactions = await getTransactions(supabase, user!.id, userEmail);
 
   return (
     <DashboardClient 

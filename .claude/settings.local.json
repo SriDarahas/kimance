@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(npx next *)",
-      "Bash(tail -20 C:\\\\\\\\Users\\\\\\\\srida\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp\\\\\\\\claude\\\\\\\\C--Users-srida-kimance-main\\\\\\\\2e1e8912-1548-47ff-8929-2cbbd98aa7d5\\\\\\\\tasks\\\\\\\\bczuxys4f.output)"
+      "Bash(tail -20 C:\\\\\\\\Users\\\\\\\\srida\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp\\\\\\\\claude\\\\\\\\C--Users-srida-kimance-main\\\\\\\\2e1e8912-1548-47ff-8929-2cbbd98aa7d5\\\\\\\\tasks\\\\\\\\bczuxys4f.output)",
+      "Bash(xargs grep *)"
     ]
   }
 }

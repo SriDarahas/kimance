@@ -18,6 +18,14 @@ const SUPPORTED_CURRENCIES: Record<CurrencyCode, { symbol: string; name: string;
   AUD: { symbol: "A$", name: "Australian Dollar", rateToUSD: 0.66 },
 };
 
+const COUNTRY_TO_CURRENCY: Record<string, CurrencyCode> = {
+  US: 'USD',
+  CA: 'CAD',
+  UK: 'GBP',
+  EU: 'EUR',
+  AU: 'AUD',
+};
+
 const TRANSFER_REASONS = [
   { value: "family_support", label: "Family support" },
   { value: "gift", label: "Gift" },
@@ -58,9 +66,10 @@ interface SendMoneyClientProps {
   userName: string;
   userEmail: string;
   isAdmin?: boolean;
+  primaryCurrency?: string;
 }
 
-export default function SendMoneyClient({ userName, userEmail, isAdmin = false }: SendMoneyClientProps) {
+export default function SendMoneyClient({ userName, userEmail, isAdmin = false, primaryCurrency = 'USD' }: SendMoneyClientProps) {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [destinationCountry, setDestinationCountry] = useState("");
@@ -71,7 +80,7 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false }
   const [selectedRecipientCountry, setSelectedRecipientCountry] = useState("");
   const [selectedRecipientPostalCode, setSelectedRecipientPostalCode] = useState("");
   const [amount, setAmount] = useState("");
-  const [sourceCurrency, setSourceCurrency] = useState<CurrencyCode>("CAD");
+  const [sourceCurrency, setSourceCurrency] = useState<CurrencyCode>((primaryCurrency as CurrencyCode) in SUPPORTED_CURRENCIES ? primaryCurrency as CurrencyCode : 'USD');
   const [destinationCurrency, setDestinationCurrency] = useState<CurrencyCode>("USD");
   const [note, setNote] = useState("");
   const [transferReason, setTransferReason] = useState("");
@@ -201,6 +210,11 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false }
     }
   }, [isAfrica]);
 
+  useEffect(() => {
+    const mapped = COUNTRY_TO_CURRENCY[destinationCountry];
+    if (mapped) setDestinationCurrency(mapped);
+  }, [destinationCountry]);
+
   const handleStep1Next = () => {
     if (!destinationCountry) {
       setError("Please select destination country");
@@ -283,7 +297,7 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false }
     setAmount("");
     setNote("");
     setTransferReason("");
-    setSourceCurrency("CAD");
+    setSourceCurrency((primaryCurrency as CurrencyCode) in SUPPORTED_CURRENCIES ? primaryCurrency as CurrencyCode : 'USD');
     setDestinationCurrency("USD");
     setError(null);
     setSuccess(false);
