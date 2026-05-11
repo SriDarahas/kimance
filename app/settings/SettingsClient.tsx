@@ -6,6 +6,8 @@ import { useState } from "react";
 import Sidebar from "@/app/components/Sidebar";
 import { useLanguage } from "@/app/providers/LanguageProvider";
 import { getTranslation } from "@/lib/i18n";
+import NotificationBell from "@/app/components/NotificationBell";
+import { createClient } from "@/lib/supabase/client";
 
 type SettingsTab = "profile" | "security" | "billing" | "notifications";
 
@@ -28,6 +30,29 @@ export default function SettingsClient({ userName, userEmail, isAdmin = false }:
   const [smartBudgeting, setSmartBudgeting] = useState(true);
   const [investmentTips, setInvestmentTips] = useState(false);
   const [autoSave, setAutoSave] = useState(true);
+  const [fullName, setFullName] = useState(userName);
+  const [phone, setPhone] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  const handleSave = async () => {
+    setSaving(true);
+    setSaveSuccess(false);
+    setSaveError(null);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.updateUser({
+        data: { full_name: fullName }
+      });
+      if (error) throw error;
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 3000);
+    } catch (e: any) {
+      setSaveError(e.message || 'Failed to save changes');
+    }
+    setSaving(false);
+  };
 
   return (
     <div className="bg-gray-100 text-gray-800 font-sans min-h-screen flex overflow-hidden">
@@ -44,10 +69,7 @@ export default function SettingsClient({ userName, userEmail, isAdmin = false }:
             <p className="text-sm text-purple-600">{t('manageAccount')}</p>
           </div>
           <div className="flex items-center gap-3">
-            <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:text-purple-600 transition-colors relative shadow-sm">
-              <span className="material-icons-outlined text-xl">notifications</span>
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
-            </button>
+            <NotificationBell />
             <button className="md:hidden w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500">
               <span className="material-icons-outlined text-xl">menu</span>
             </button>
@@ -148,11 +170,29 @@ export default function SettingsClient({ userName, userEmail, isAdmin = false }:
                   <button className="px-4 py-2 border border-gray-200 rounded-lg text-base font-medium hover:bg-gray-50 transition-colors">
                     {t('cancel')}
                   </button>
-                  <button className="px-5 py-2 bg-purple-600 text-white rounded-lg text-base font-medium hover:bg-purple-700 shadow-lg shadow-purple-200 transition-all">
-                    {t('saveChanges')}
+                  <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="px-5 py-2 bg-purple-600 text-white rounded-lg text-base font-medium hover:bg-purple-700 shadow-lg shadow-purple-200 transition-all disabled:opacity-50 flex items-center gap-2"
+                  >
+                    {saving && <span className="material-icons-outlined animate-spin text-sm">refresh</span>}
+                    {saving ? 'Saving...' : saveSuccess ? '✓ Saved!' : t('saveChanges')}
                   </button>
                 </div>
               </div>
+
+              {saveSuccess && (
+                <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 flex items-center gap-2">
+                  <span className="material-icons-outlined text-green-600">check_circle</span>
+                  <p className="text-sm text-green-700 font-medium">Profile updated successfully!</p>
+                </div>
+              )}
+              {saveError && (
+                <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 flex items-center gap-2">
+                  <span className="material-icons-outlined text-red-600">error</span>
+                  <p className="text-sm text-red-700">{saveError}</p>
+                </div>
+              )}
 
               {/* Profile Card */}
               <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm flex flex-col md:flex-row items-start md:items-center gap-5">
@@ -169,7 +209,13 @@ export default function SettingsClient({ userName, userEmail, isAdmin = false }:
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-bold text-gray-900 mb-0.5">{userName}</h3>
+                  <input
+                    type="text"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="text-lg font-bold text-gray-900 mb-0.5 border-b border-transparent hover:border-gray-300 focus:border-purple-500 focus:outline-none bg-transparent w-full"
+                    placeholder="Your name"
+                  />
                   <p className="text-base text-gray-500 mb-3">{userEmail}</p>
                   <div className="flex flex-wrap gap-2">
                     <span className="px-2.5 py-1 bg-green-100 text-green-700 text-sm font-semibold rounded-full border border-green-200 flex items-center gap-1">

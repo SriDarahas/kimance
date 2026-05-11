@@ -2,6 +2,7 @@
 
 import { useLanguage } from "@/app/providers/LanguageProvider";
 import { getTranslation } from "@/lib/i18n";
+import NotificationBell from "@/app/components/NotificationBell";
 
 export default function WalletsPageHeader() {
   const { language } = useLanguage();
@@ -14,13 +15,7 @@ export default function WalletsPageHeader() {
         <p className="text-sm text-purple-600">{t('manageWallets')}</p>
       </div>
       <div className="flex items-center gap-3">
-        <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:text-purple-600 transition-colors relative shadow-sm">
-          <span className="material-icons-outlined text-xl">notifications</span>
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
-        </button>
-        <button className="md:hidden w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500">
-          <span className="material-icons-outlined text-xl">menu</span>
-        </button>
+        <NotificationBell />
       </div>
     </header>
   );

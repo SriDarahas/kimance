@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useLanguage } from "@/app/providers/LanguageProvider";
 import { getTranslation } from "@/lib/i18n";
 import CurrencyDashboard from "@/app/components/CurrencyDashboard";
+import NotificationBell from "@/app/components/NotificationBell";
 
 interface Transaction {
   id: string;
@@ -21,6 +22,7 @@ interface DashboardClientProps {
   balance: number;
   transactions: Transaction[];
   userId: string;
+  notifications: { id: string; title: string; body: string; time: string; unread: boolean }[];
 }
 
 export default function DashboardClient({ 
@@ -28,7 +30,7 @@ export default function DashboardClient({
   userEmail, 
   balance, 
   transactions,
-  userId 
+  userId
 }: DashboardClientProps) {
   const { language } = useLanguage();
   const t = (key: any, vars?: Record<string, string>) => getTranslation(language, key, vars);
@@ -44,10 +46,7 @@ export default function DashboardClient({
           <p className="text-sm text-purple-600">{t('welcomeBack')}</p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:text-purple-600 transition-colors relative shadow-sm">
-            <span className="material-icons-outlined text-xl">notifications</span>
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
-          </button>
+          <NotificationBell />
           <button className="md:hidden w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500">
             <span className="material-icons-outlined text-xl">menu</span>
           </button>

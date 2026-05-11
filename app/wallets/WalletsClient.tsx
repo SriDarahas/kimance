@@ -59,20 +59,26 @@ export default function WalletsClient({ initialWallets, userId }: WalletsClientP
   const router = useRouter();
   const [wallets, setWallets] = useState<Wallet[]>(initialWallets);
   const [isAddingWallet, setIsAddingWallet] = useState(false);
-  const [selectedCurrency, setSelectedCurrency] = useState('USD');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { language } = useLanguage();
   const t = (key: any, vars?: Record<string, string>) => getTranslation(language, key, vars);
 
-  const availableCurrencies = ['USD', 'EUR', 'GBP', 'BTC', 'ETH', 'CAD'];
+  const availableCurrencies = [
+    'USD', 'CAD', 'GBP', 'EUR', 'AUD',
+    'NGN', 'KES', 'GHS', 'TZS', 'ZAR', 'UGX', 'RWF', 'XOF', 'MAD', 'EGP',
+    'BTC', 'ETH', 'USDC', 'USDT', 'DAI',
+  ];
   const existingCurrencies = wallets.map(w => w.currency);
-  const unusedCurrencies = availableCurrencies.filter(c => !existingCurrencies.includes(c));
+  const [selectedCurrency, setSelectedCurrency] = useState(
+    availableCurrencies.find(c => !existingCurrencies.includes(c)) || availableCurrencies[0]
+  );
+  const unusedCurrencies = availableCurrencies;
   
   // Debug: Log wallet filtering
-  console.log('🔍 DEBUG WalletsClient - wallets:', wallets);
-  console.log('🔍 DEBUG WalletsClient - existingCurrencies:', existingCurrencies);
-  console.log('🔍 DEBUG WalletsClient - unusedCurrencies:', unusedCurrencies);
+  console.log('Ã°Å¸â€Â DEBUG WalletsClient - wallets:', wallets);
+  console.log('Ã°Å¸â€Â DEBUG WalletsClient - existingCurrencies:', existingCurrencies);
+  console.log('Ã°Å¸â€Â DEBUG WalletsClient - unusedCurrencies:', unusedCurrencies);
 
   const handleAddWallet = async () => {
     if (!selectedCurrency) return;
@@ -165,7 +171,7 @@ export default function WalletsClient({ initialWallets, userId }: WalletsClientP
       <div>
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-serif text-xl font-semibold text-gray-900">{t('myWalletsSection')}</h2>
-          {unusedCurrencies.length > 0 ? (
+          {availableCurrencies.filter(c => !existingCurrencies.includes(c)).length > 0 ? (
             <button
               onClick={() => { setError(null); setSelectedCurrency(unusedCurrencies[0]); setIsAddingWallet(true); }}
               disabled={isLoading}
@@ -176,13 +182,13 @@ export default function WalletsClient({ initialWallets, userId }: WalletsClientP
             </button>
           ) : (
             <div className="text-sm text-gray-600 font-medium">
-              You have wallets for all available currencies
+              All {availableCurrencies.length} currencies added
             </div>
           )}
         </div>
 
         {/* Add Wallet Form */}
-        {isAddingWallet && unusedCurrencies.length > 0 && (
+        {isAddingWallet && availableCurrencies.filter(c => !existingCurrencies.includes(c)).length > 0 && (
           <div className="bg-gray-50 rounded-2xl border border-gray-200 p-5 mb-4">
             <h3 className="font-semibold text-gray-900 mb-4">{t('addWallet')}</h3>
             <div className="flex gap-3 flex-wrap">
@@ -193,11 +199,47 @@ export default function WalletsClient({ initialWallets, userId }: WalletsClientP
                   onChange={(e) => setSelectedCurrency(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
                 >
-                  {unusedCurrencies.map(currency => (
-                    <option key={currency} value={currency}>
-                      {currency}
-                    </option>
-                  ))}
+                  <optgroup label="North America / Europe">
+                    {[
+                      ['USD','United States (USD)'],
+                      ['CAD','Canada (CAD)'],
+                      ['GBP','United Kingdom (GBP)'],
+                      ['EUR','Europe (EUR)'],
+                      ['AUD','Australia (AUD)'],
+                    ].map(([c, label]) => {
+                      const has = existingCurrencies.includes(c);
+                      return <option key={c} value={c} disabled={has}>{label}{has ? ' âœ“' : ''}</option>;
+                    })}
+                  </optgroup>
+                  <optgroup label="Africa - Mobile Money">
+                    {[
+                      ['NGN','Nigeria (NGN)'],
+                      ['KES','Kenya (KES)'],
+                      ['GHS','Ghana (GHS)'],
+                      ['TZS','Tanzania (TZS)'],
+                      ['ZAR','South Africa (ZAR)'],
+                      ['UGX','Uganda (UGX)'],
+                      ['RWF','Rwanda (RWF)'],
+                      ['XOF','West Africa CFA (XOF)'],
+                      ['MAD','Morocco (MAD)'],
+                      ['EGP','Egypt (EGP)'],
+                    ].map(([c, label]) => {
+                      const has = existingCurrencies.includes(c);
+                      return <option key={c} value={c} disabled={has}>{label}{has ? ' âœ“' : ''}</option>;
+                    })}
+                  </optgroup>
+                  <optgroup label="Crypto">
+                    {[
+                      ['BTC','Bitcoin (BTC)'],
+                      ['ETH','Ethereum (ETH)'],
+                      ['USDC','USD Coin (USDC)'],
+                      ['USDT','Tether (USDT)'],
+                      ['DAI','Dai (DAI)'],
+                    ].map(([c, label]) => {
+                      const has = existingCurrencies.includes(c);
+                      return <option key={c} value={c} disabled={has}>{label}{has ? ' âœ“' : ''}</option>;
+                    })}
+                  </optgroup>
                 </select>
               </div>
               <div className="flex gap-2 items-end">
@@ -259,7 +301,7 @@ export default function WalletsClient({ initialWallets, userId }: WalletsClientP
                   <p className="text-2xl font-bold text-gray-900">
                     {Number(wallet.balance).toFixed(2)} {wallet.currency}
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">≈ ${usdValue.toFixed(2)} {t('USD')}</p>
+                  <p className="text-xs text-gray-500 mt-1">≈ ${getBalanceInUSD(wallet.balance, wallet.currency).toFixed(2)} USD</p>
                 </div>
 
                 {/* Status Badge */}
@@ -288,10 +330,6 @@ export default function WalletsClient({ initialWallets, userId }: WalletsClientP
                   </button>
                 </div>
 
-                {/* View Details Link */}
-                <button className="w-full mt-3 py-2 text-purple-600 font-medium text-sm rounded-lg hover:bg-purple-50 transition-colors">
-                  {t('viewDetails')} →
-                </button>
               </div>
             );
           })}

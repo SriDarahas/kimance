@@ -7,6 +7,38 @@ import { logout } from "@/app/auth/actions";
 import LanguageSwitcher from "@/app/components/LanguageSwitcher";
 import SidebarNavigation from "@/app/components/SidebarNavigation";
 
+interface Notification {
+  id: number;
+  title: string;
+  body: string;
+  time: string;
+  unread: boolean;
+}
+
+const NOTIFICATIONS: Notification[] = [
+  {
+    id: 1,
+    title: "Transfer Received",
+    body: "You received $250.00 from John Doe.",
+    time: "2 min ago",
+    unread: true,
+  },
+  {
+    id: 2,
+    title: "Wallet Funded",
+    body: "Your USD wallet was topped up with $500.",
+    time: "1 hr ago",
+    unread: true,
+  },
+  {
+    id: 3,
+    title: "Exchange Complete",
+    body: "Your EUR → GBP exchange was completed successfully.",
+    time: "Yesterday",
+    unread: false,
+  },
+];
+
 interface SidebarProps {
   userName: string;
   userEmail: string;
@@ -16,6 +48,65 @@ interface SidebarProps {
 
 export default function Sidebar({ userName, userEmail, isAdmin = false, mobileHeader }: SidebarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [notifications, setNotifications] = useState<Notification[]>(NOTIFICATIONS);
+
+  const unreadCount = notifications.filter((n) => n.unread).length;
+
+  const markAllRead = () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })));
+  };
+
+  const NotificationBell = () => (
+    <div className="relative">
+      {notifOpen && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setNotifOpen(false)}
+        />
+      )}
+      <button
+        onClick={() => setNotifOpen((o) => !o)}
+        className="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+        aria-label="Notifications"
+      >
+        <span className="material-icons-outlined text-2xl text-gray-600">
+          notifications
+        </span>
+        {unreadCount > 0 && (
+          <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-purple-600 rounded-full" />
+        )}
+      </button>
+
+      {notifOpen && (
+        <div className="absolute right-0 top-12 w-80 bg-white rounded-2xl shadow-xl border border-gray-200 z-50 overflow-hidden">
+          <div className="px-4 py-3 border-b border-gray-100">
+            <h3 className="font-semibold text-gray-900 text-sm">Notifications</h3>
+          </div>
+          <div className="divide-y divide-gray-100 max-h-72 overflow-y-auto">
+            {notifications.map((n) => (
+              <div
+                key={n.id}
+                className={`px-4 py-3 ${n.unread ? "bg-purple-50" : "bg-white"}`}
+              >
+                <p className="text-sm font-semibold text-gray-900">{n.title}</p>
+                <p className="text-sm text-gray-600 mt-0.5">{n.body}</p>
+                <p className="text-xs text-gray-400 mt-1">{n.time}</p>
+              </div>
+            ))}
+          </div>
+          <div className="px-3 py-2 border-t border-gray-100">
+            <button
+              onClick={markAllRead}
+              className="w-full text-sm text-purple-600 hover:text-purple-700 font-medium py-1.5 rounded-lg hover:bg-purple-50 transition-colors"
+            >
+              Mark all as read
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
   const SidebarContent = () => (
     <>
@@ -70,26 +161,29 @@ export default function Sidebar({ userName, userEmail, isAdmin = false, mobileHe
             />
           )}
         </div>
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
-        >
-          <span className="material-icons-outlined text-2xl text-gray-600">
-            {mobileMenuOpen ? "close" : "menu"}
-          </span>
-        </button>
+        <div className="flex items-center gap-1">
+          {NotificationBell()}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+          >
+            <span className="material-icons-outlined text-2xl text-gray-600">
+              {mobileMenuOpen ? "close" : "menu"}
+            </span>
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
-        <div 
+        <div
           className="md:hidden fixed inset-0 bg-black/50 z-30"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
 
       {/* Mobile Sidebar */}
-      <aside 
+      <aside
         className={`md:hidden fixed top-0 left-0 w-72 bg-white h-full z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
