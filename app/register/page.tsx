@@ -92,7 +92,7 @@ export default function Register() {
           const ref = new URLSearchParams(window.location.search).get('ref');
           if (ref) {
             const { data: referrer } = await supabase
-              .from('users')
+              .from('balances')
               .select('id')
               .eq('referral_code', ref)
               .single();
@@ -135,7 +135,7 @@ export default function Register() {
           const ref = new URLSearchParams(window.location.search).get('ref');
           if (ref) {
             const { data: referrer } = await supabase
-              .from('users')
+              .from('balances')
               .select('id')
               .eq('referral_code', ref)
               .single();
