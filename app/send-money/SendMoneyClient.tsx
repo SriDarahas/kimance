@@ -69,6 +69,22 @@ interface SendMoneyClientProps {
   primaryCurrency?: string;
 }
 
+const countryFlags: Record<string, string> = {
+  US: "🇺🇸",
+  CA: "🇨🇦",
+  UK: "🇬🇧",
+  EU: "🇪🇺",
+  AU: "🇦🇺",
+  DRC: "🇨🇩",
+  NGA: "🇳🇬",
+  COG: "🇨🇬",
+  TZA: "🇹🇿",
+  KEN: "🇰🇪",
+  GHA: "🇬🇭",
+  SEN: "🇸🇳",
+  CMR: "🇨🇲",
+};
+
 export default function SendMoneyClient({ userName, userEmail, isAdmin = false, primaryCurrency = 'USD' }: SendMoneyClientProps) {
   const router = useRouter();
   const [step, setStep] = useState(1);
@@ -259,8 +275,15 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false, 
         setConfirmSent(true);
         const balanceRes = await getMobileMoneyBalance();
         if (balanceRes.balance !== undefined) setBalance(balanceRes.balance);
-        // Refresh transactions list and balance
         router.refresh();
+        
+        if (amountInUSD >= 100) {
+          await fetch('/api/referral', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'qualify', amount: amountInUSD })
+          });
+        }
       } else {
         setError(result.error || "Failed to send");
       }
@@ -275,8 +298,15 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false, 
         setSuccess(true);
         if (result.newBalance !== undefined) setBalance(result.newBalance);
         setConfirmSent(true);
-        // Refresh transactions list and balance
         router.refresh();
+        
+        if (amountInUSD >= 100) {
+          await fetch('/api/referral', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'qualify', amount: amountInUSD })
+          });
+        }
       } else {
         setError(result.error || "Failed to send");
       }
@@ -393,15 +423,23 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false, 
                   >
                     <option value="">Select country</option>
                     <optgroup label="North America / Europe">
-                      <option value="US">United States (USD)</option>
-                      <option value="CA">Canada (CAD)</option>
-                      <option value="UK">United Kingdom (GBP)</option>
-                      <option value="EU">Europe (EUR)</option>
-                      <option value="AU">Australia (AUD)</option>
+                      {[
+                        { code: "US", name: "United States (USD)", flag: "🇺🇸" },
+                        { code: "CA", name: "Canada (CAD)", flag: "🇨🇦" },
+                        { code: "UK", name: "United Kingdom (GBP)", flag: "🇬🇧" },
+                        { code: "EU", name: "Europe (EUR)", flag: "🇪🇺" },
+                        { code: "AU", name: "Australia (AUD)", flag: "🇦🇺" },
+                      ].map((c) => (
+                        <option key={c.code} value={c.code}>
+                          {c.flag} {c.name}
+                        </option>
+                      ))}
                     </optgroup>
                     <optgroup label="Africa - Mobile Money">
                       {MOBILE_MONEY_COUNTRIES.map((country) => (
-                        <option key={country.code} value={country.code}>{country.name} ({country.currency})</option>
+                        <option key={country.code} value={country.code}>
+                          {countryFlags[country.code] || "🌍"} {country.name} ({country.currency})
+                        </option>
                       ))}
                     </optgroup>
                   </select>
@@ -424,7 +462,9 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false, 
                         onChange={(e) => setSourceCurrency(e.target.value as CurrencyCode)}
                         className="px-4 py-3 border border-gray-200 rounded-xl bg-white"
                       >
-                        {Object.keys(SUPPORTED_CURRENCIES).map((code) => (<option key={code}>{code}</option>))}
+                        {Object.keys(SUPPORTED_CURRENCIES).map((code) => (
+                          <option key={code}>{code}</option>
+                        ))}
                       </select>
                       <input
                         type="number"
@@ -443,7 +483,9 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false, 
                         onChange={(e) => setDestinationCurrency(e.target.value as CurrencyCode)}
                         className="px-4 py-3 border border-gray-200 rounded-xl bg-white"
                       >
-                        {Object.keys(SUPPORTED_CURRENCIES).map((code) => (<option key={code}>{code}</option>))}
+                        {Object.keys(SUPPORTED_CURRENCIES).map((code) => (
+                          <option key={code}>{code}</option>
+                        ))}
                       </select>
                       <input
                         type="text"
@@ -741,8 +783,23 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false, 
                     <div>
                       <label className="block text-sm font-semibold mb-3">Select payment method</label>
                       <div className="grid grid-cols-2 gap-3">
-                        {["wallet", "debit_card", "credit_card", "paypal", "bank_account"].map((m) => (
-                          <button key={m} onClick={() => setPaymentMethod(m)} className={`p-3 rounded-xl border-2 ${paymentMethod === m ? "border-purple-600 bg-purple-50" : "border-gray-200"}`}>{m.replace("_", " ")}</button>
+                        {[
+                          { id: "wallet", label: "Wallet", icon: "account_balance_wallet" },
+                          { id: "debit_card", label: "Debit Card", icon: "credit_card" },
+                          { id: "credit_card", label: "Credit Card", icon: "credit_card" },
+                          { id: "paypal", label: "PayPal", icon: "paypal" },
+                          { id: "bank_account", label: "Bank Account", icon: "account_balance" }
+                        ].map((m) => (
+                          <button
+                            key={m.id}
+                            onClick={() => setPaymentMethod(m.id)}
+                            className={`p-3 rounded-xl border-2 flex items-center justify-center gap-2 ${
+                              paymentMethod === m.id ? "border-purple-600 bg-purple-50" : "border-gray-200"
+                            }`}
+                          >
+                            <span className="material-icons-outlined text-xl">{m.icon}</span>
+                            <span>{m.label}</span>
+                          </button>
                         ))}
                       </div>
                     </div>
