@@ -7,6 +7,7 @@ import { sendMoney, getBalance } from "./actions";
 import { sendMobileMoney, getMobileMoneyBalance, getSavedRecipients, saveRecipient, type SavedRecipient } from "../mobile-money-actions";
 import { MOBILE_MONEY_COUNTRIES } from '../mobile-money-data';
 import Sidebar from "@/app/components/Sidebar";
+import { createClient } from "@/lib/supabase/client";
 
 type CurrencyCode = 'USD' | 'CAD' | 'EUR' | 'GBP' | 'AUD';
 
@@ -87,6 +88,7 @@ const countryFlags: Record<string, string> = {
 
 export default function SendMoneyClient({ userName, userEmail, isAdmin = false, primaryCurrency = 'USD' }: SendMoneyClientProps) {
   const router = useRouter();
+  const supabase = createClient();
   const [step, setStep] = useState(1);
   const [destinationCountry, setDestinationCountry] = useState("");
   const [selectedRecipientId, setSelectedRecipientId] = useState<string>("");
@@ -278,11 +280,20 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false, 
         router.refresh();
         
         if (amountInUSD >= 100) {
-          await fetch('/api/referral', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'qualify', amount: amountInUSD })
-          });
+          const { data: referral } = await supabase
+            .from('referrals')
+            .select('id, referrer_id')
+            .eq('referee_id', user.id)
+            .eq('status', 'REGISTERED')
+            .single();
+          
+          if (referral) {
+            await supabase.from('referrals').update({ status: 'QUALIFIED' }).eq('id', referral.id);
+            await supabase.from('rewards').insert([
+              { user_id: referral.referrer_id, referral_id: referral.id, amount: 10, status: 'CREDITED', type: 'REFERRAL' },
+              { user_id: user.id, referral_id: referral.id, amount: 10, status: 'CREDITED', type: 'REFERRAL_BONUS' }
+            ]);
+          }
         }
       } else {
         setError(result.error || "Failed to send");
@@ -301,11 +312,20 @@ export default function SendMoneyClient({ userName, userEmail, isAdmin = false, 
         router.refresh();
         
         if (amountInUSD >= 100) {
-          await fetch('/api/referral', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'qualify', amount: amountInUSD })
-          });
+          const { data: referral } = await supabase
+            .from('referrals')
+            .select('id, referrer_id')
+            .eq('referee_id', user.id)
+            .eq('status', 'REGISTERED')
+            .single();
+          
+          if (referral) {
+            await supabase.from('referrals').update({ status: 'QUALIFIED' }).eq('id', referral.id);
+            await supabase.from('rewards').insert([
+              { user_id: referral.referrer_id, referral_id: referral.id, amount: 10, status: 'CREDITED', type: 'REFERRAL' },
+              { user_id: user.id, referral_id: referral.id, amount: 10, status: 'CREDITED', type: 'REFERRAL_BONUS' }
+            ]);
+          }
         }
       } else {
         setError(result.error || "Failed to send");
