@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { signup, signupWithPhone, verifyPhoneOtp } from "@/app/auth/actions";
+import { createClient } from "@/lib/supabase/client";
 
 type Rate = { code: string; value: number };
 type RatesResponse = { data?: Record<string, Rate>; error?: string };
@@ -26,19 +27,26 @@ export default function Register() {
   const [otpSent, setOtpSent] = useState(false);
   const [otpCode, setOtpCode] = useState("");
   const [rates, setRates] = useState<Record<string, Rate> | null>(null);
+  const [referralCode, setReferralCode] = useState<string | null>(null);
 
-  // Fetch exchange rates for ticker
   useEffect(() => {
     async function loadRates() {
       try {
         const res = await fetch(`/api/currency?base=USD&symbols=${TICKER_CURRENCIES.join(",")}`);
         const json = (await res.json()) as RatesResponse;
         if (json.data) setRates(json.data);
-      } catch { /* silent fail */ }
+      } catch {}
     }
     loadRates();
     const id = setInterval(loadRates, 30000);
     return () => clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    const ref = new URLSearchParams(window.location.search).get('ref');
+    if (ref) {
+      setReferralCode(ref);
+    }
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -76,6 +84,28 @@ export default function Register() {
         setError(result.error);
       } else if (result?.success) {
         setSuccess(result.success);
+        
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (user) {
+          const ref = new URLSearchParams(window.location.search).get('ref');
+          if (ref) {
+            const { data: referrer } = await supabase
+              .from('users')
+              .select('id')
+              .eq('referral_code', ref)
+              .single();
+            
+            if (referrer && referrer.id !== user.id) {
+              await supabase.from('referrals').insert({
+                referrer_id: referrer.id,
+                referee_id: user.id,
+                status: 'REGISTERED'
+              });
+            }
+          }
+        }
       }
     } else {
       if (!phone.startsWith("+")) {
@@ -97,6 +127,28 @@ export default function Register() {
       } else if (result?.success) {
         setOtpSent(true);
         setSuccess(result.success);
+        
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (user) {
+          const ref = new URLSearchParams(window.location.search).get('ref');
+          if (ref) {
+            const { data: referrer } = await supabase
+              .from('users')
+              .select('id')
+              .eq('referral_code', ref)
+              .single();
+            
+            if (referrer && referrer.id !== user.id) {
+              await supabase.from('referrals').insert({
+                referrer_id: referrer.id,
+                referee_id: user.id,
+                status: 'REGISTERED'
+              });
+            }
+          }
+        }
       }
     }
   };
@@ -127,7 +179,6 @@ export default function Register() {
       : rate.value.toFixed(4);
   };
 
-  // Shared ticker bar
   const TickerBar = () => (
     <div className="w-full bg-[#1e1033] text-white overflow-hidden h-10 flex items-center relative z-50">
       <div className="flex animate-ticker whitespace-nowrap">
@@ -146,7 +197,6 @@ export default function Register() {
     </div>
   );
 
-  // Shared left panel
   const LeftPanel = () => (
     <div className="hidden lg:flex w-1/2 relative flex-col justify-between overflow-hidden">
       <Image src="/login-hero.png" alt="Kimance - Global Finance" fill className="object-cover" priority />
@@ -195,7 +245,6 @@ export default function Register() {
     </div>
   );
 
-  // Phone OTP verification state
   if (otpSent && authMethod === "phone") {
     return (
       <div className="font-(family-name:--font-inter) bg-white text-gray-900 min-h-screen flex flex-col">
@@ -266,7 +315,6 @@ export default function Register() {
     );
   }
 
-  // Success state — email confirmation
   if (success && authMethod === "email") {
     return (
       <div className="font-(family-name:--font-inter) bg-white text-gray-900 min-h-screen flex flex-col">
@@ -295,14 +343,12 @@ export default function Register() {
     );
   }
 
-  // Main registration form
   return (
     <div className="font-(family-name:--font-inter) bg-white text-gray-900 min-h-screen flex flex-col">
       <TickerBar />
       <div className="flex flex-1 w-full flex-row">
         <LeftPanel />
 
-        {/* Right Panel: Register Form */}
         <div className="flex w-full lg:w-1/2 flex-col justify-center items-center bg-white px-4 sm:px-12 xl:px-24 py-12">
           <div className="w-full max-w-120 flex flex-col gap-6 p-8 sm:p-10 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100 bg-white">
             <div className="flex flex-col gap-4">
@@ -320,7 +366,17 @@ export default function Register() {
               </p>
             </div>
 
-            {/* Auth Method Toggle */}
+            {referralCode && (
+              <div className="mb-2 p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                <p className="text-sm text-purple-700">
+                  🎉 You were invited! Code: <span className="font-mono font-bold">{referralCode}</span>
+                </p>
+                <p className="text-xs text-purple-500 mt-1">
+                  Complete KYC and send first $100+ to earn $10 reward!
+                </p>
+              </div>
+            )}
+
             <div className="flex bg-gray-100 rounded-full p-1">
               <button
                 type="button"
@@ -348,7 +404,6 @@ export default function Register() {
               </button>
             </div>
 
-            {/* Error Message */}
             {error && (
               <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
                 <span className="material-icons-outlined text-red-500 mt-0.5">error_outline</span>
@@ -356,15 +411,12 @@ export default function Register() {
               </div>
             )}
 
-            {/* Form */}
             <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-              {/* Full Name */}
               <label className="flex flex-col gap-2">
                 <span className="text-gray-900 text-sm font-semibold ml-1">Full Name</span>
                 <input className="flex w-full h-14 px-5 rounded-full border border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all text-base font-medium" placeholder="John Doe" type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} required disabled={isLoading} />
               </label>
 
-              {/* Email / Phone */}
               {authMethod === "email" ? (
                 <label className="flex flex-col gap-2">
                   <span className="text-gray-900 text-sm font-semibold ml-1">Email Address</span>
@@ -382,7 +434,6 @@ export default function Register() {
                 </label>
               )}
 
-              {/* Password */}
               <label className="flex flex-col gap-2">
                 <span className="text-gray-900 text-sm font-semibold ml-1">Password</span>
                 <div className="relative w-full">
@@ -393,7 +444,6 @@ export default function Register() {
                 </div>
               </label>
 
-              {/* Confirm Password */}
               <label className="flex flex-col gap-2">
                 <span className="text-gray-900 text-sm font-semibold ml-1">Confirm Password</span>
                 <div className="relative w-full">
@@ -404,7 +454,6 @@ export default function Register() {
                 </div>
               </label>
 
-              {/* Terms */}
               <label className="flex items-start gap-3 mt-2">
                 <input type="checkbox" checked={agreeTerms} onChange={(e) => setAgreeTerms(e.target.checked)} className="mt-1 w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary" required disabled={isLoading} />
                 <span className="text-sm text-gray-500">
@@ -415,7 +464,6 @@ export default function Register() {
                 </span>
               </label>
 
-              {/* Create Account Button */}
               <button
                 type="submit"
                 disabled={isLoading}
@@ -430,7 +478,6 @@ export default function Register() {
               </button>
             </form>
 
-            {/* Footer */}
             <div className="flex items-center justify-center gap-1 mt-4">
               <p className="text-gray-500 text-base font-medium">Already have an account?</p>
               <Link href="/login" className="text-primary hover:text-[#5A24B3] text-base font-bold transition-colors">Sign in</Link>
