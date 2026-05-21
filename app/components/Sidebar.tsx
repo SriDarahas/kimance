@@ -34,7 +34,7 @@ export default function Sidebar({ userName, userEmail, isAdmin = false, mobileHe
 
       <div className="px-4 py-2">
         <Link
-          href="/dashboard/referral"
+          href="/referral"
           onClick={() => setMobileMenuOpen(false)}
           className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-colors w-full"
         >
