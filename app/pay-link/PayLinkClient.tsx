@@ -288,7 +288,7 @@ export default function PayLinkClient({
           ...link,
           payload: {
             ...link.payload,
-            status: "canceled",
+            status: "canceled" as const,
             canceledAt: new Date().toISOString(),
           },
         };
