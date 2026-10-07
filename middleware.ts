@@ -2,6 +2,19 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
+  const isPayLinkPath =
+    request.nextUrl.pathname === '/pay-link' ||
+    request.nextUrl.pathname.startsWith('/pay-link/') ||
+    request.nextUrl.pathname.startsWith('/pay/')
+
+  if (
+    isPayLinkPath &&
+    (!process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY)
+  ) {
+    return NextResponse.next({ request })
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   })
@@ -43,7 +56,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Protected routes - redirect to login if not authenticated
-  const protectedPaths = ['/dashboard', '/send-money', '/settings', '/admin']
+  const protectedPaths = ['/dashboard', '/send-money', '/pay-link', '/settings', '/admin']
   const isProtectedPath = protectedPaths.some(
     (path) =>
       request.nextUrl.pathname === path ||
