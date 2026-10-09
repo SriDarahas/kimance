@@ -19,9 +19,17 @@ export default async function SettingsPage() {
     .single();
 
   const isAdmin = profile?.role === 'admin';
+  const stripeConfigured = Boolean(process.env.STRIPE_SECRET_KEY?.trim());
 
   const userName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
   const userEmail = user.email || '';
 
-  return <SettingsClient userName={userName} userEmail={userEmail} isAdmin={isAdmin} />;
+  return (
+    <SettingsClient
+      userName={userName}
+      userEmail={userEmail}
+      isAdmin={isAdmin}
+      stripeConfigured={stripeConfigured}
+    />
+  );
 }

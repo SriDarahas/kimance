@@ -2,18 +2,39 @@ import "server-only";
 
 import { createHmac, timingSafeEqual } from "node:crypto";
 
-const STRIPE_API_URL = "https://api.stripe.com/v1";
+const STRIPE_API_URL = "https://api.stripe.com";
+const STRIPE_V2_API_VERSION = "2026-09-30.endive";
 
 type StripeAccount = {
   id: string;
-  charges_enabled: boolean;
-  payouts_enabled: boolean;
-  details_submitted: boolean;
+  configuration?: {
+    merchant?: {
+      capabilities?: {
+        card_payments?: { status: string };
+        stripe_balance?: { payouts?: { status: string } };
+      };
+    };
+  };
+  requirements?: {
+    entries?: Array<{
+      awaiting_action_from: "stripe" | "user";
+      minimum_deadline?: {
+        status: "currently_due" | "eventually_due" | "past_due";
+      };
+    }>;
+  };
 };
 
 type StripeAccountLink = {
   url: string;
   expires_at: number;
+};
+
+type StripeAccountUpdate = {
+  id: string;
+  charges_enabled: boolean;
+  payouts_enabled: boolean;
+  details_submitted: boolean;
 };
 
 type StripeErrorResponse = {
@@ -35,7 +56,9 @@ async function stripeRequest<T>(
   options: {
     method?: "GET" | "POST";
     form?: URLSearchParams;
+    json?: unknown;
     idempotencyKey?: string;
+    apiVersion?: string;
   } = {}
 ) {
   const secretKey = process.env.STRIPE_SECRET_KEY;
@@ -50,11 +73,15 @@ async function stripeRequest<T>(
       ...(options.form
         ? { "Content-Type": "application/x-www-form-urlencoded" }
         : {}),
+      ...(options.json ? { "Content-Type": "application/json" } : {}),
       ...(options.idempotencyKey
         ? { "Idempotency-Key": options.idempotencyKey }
         : {}),
+      ...(options.apiVersion
+        ? { "Stripe-Version": options.apiVersion }
+        : {}),
     },
-    body: options.form,
+    body: options.json ? JSON.stringify(options.json) : options.form,
     cache: "no-store",
   });
 
@@ -70,18 +97,29 @@ export async function createStripeConnectedAccount(input: {
   email?: string;
   kimanceUserId: string;
 }) {
-  const form = new URLSearchParams();
-  appendFormValue(form, "type", "express");
-  appendFormValue(form, "country", "CA");
-  appendFormValue(form, "email", input.email);
-  appendFormValue(form, "capabilities[card_payments][requested]", true);
-  appendFormValue(form, "capabilities[transfers][requested]", true);
-  appendFormValue(form, "metadata[kimance_user_id]", input.kimanceUserId);
-
-  return stripeRequest<StripeAccount>("/accounts", {
+  return stripeRequest<StripeAccount>("/v2/core/accounts", {
     method: "POST",
-    form,
+    json: {
+      contact_email: input.email,
+      display_name: input.email?.split("@")[0] || "Kimance merchant",
+      identity: { country: "ca" },
+      configuration: {
+        merchant: {
+          capabilities: { card_payments: { requested: true } },
+        },
+      },
+      defaults: {
+        responsibilities: {
+          fees_collector: "stripe",
+          losses_collector: "stripe",
+        },
+      },
+      dashboard: "full",
+      metadata: { kimance_user_id: input.kimanceUserId },
+      include: ["configuration.merchant", "defaults", "requirements"],
+    },
     idempotencyKey: `kimance-connect-${input.kimanceUserId}`,
+    apiVersion: STRIPE_V2_API_VERSION,
   });
 }
 
@@ -96,14 +134,38 @@ export async function createStripeAccountLink(input: {
   appendFormValue(form, "return_url", input.returnUrl);
   appendFormValue(form, "type", "account_onboarding");
 
-  return stripeRequest<StripeAccountLink>("/account_links", {
+  return stripeRequest<StripeAccountLink>("/v1/account_links", {
     method: "POST",
     form,
   });
 }
 
 export async function getStripeConnectedAccount(accountId: string) {
-  return stripeRequest<StripeAccount>(`/accounts/${accountId}`);
+  const include = new URLSearchParams();
+  include.append("include[0]", "configuration.merchant");
+  include.append("include[1]", "requirements");
+
+  const account = await stripeRequest<StripeAccount>(
+    `/v2/core/accounts/${accountId}?${include.toString()}`,
+    { apiVersion: STRIPE_V2_API_VERSION }
+  );
+  const cardStatus =
+    account.configuration?.merchant?.capabilities?.card_payments?.status;
+  const payoutStatus =
+    account.configuration?.merchant?.capabilities?.stripe_balance?.payouts
+      ?.status;
+  const hasOutstandingUserRequirements = account.requirements?.entries?.some(
+    (entry) =>
+      entry.awaiting_action_from === "user" &&
+      entry.minimum_deadline?.status !== "eventually_due"
+  );
+
+  return {
+    id: account.id,
+    charges_enabled: cardStatus === "active",
+    payouts_enabled: payoutStatus === "active",
+    details_submitted: !hasOutstandingUserRequirements,
+  };
 }
 
 function signaturesMatch(expected: string, received: string) {
@@ -149,6 +211,6 @@ export function verifyStripeWebhook(rawBody: string, signatureHeader: string) {
   return JSON.parse(rawBody) as {
     id: string;
     type: string;
-    data: { object: StripeAccount };
+    data: { object: StripeAccountUpdate };
   };
 }

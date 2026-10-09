@@ -4,6 +4,7 @@ import {
   createStripeConnectedAccount,
   getStripeConnectedAccount,
 } from "@/lib/integrations/stripe";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 
 type IntegrationAccountRecord = {
@@ -49,7 +50,11 @@ export async function GET() {
     const account = await getStripeConnectedAccount(record.provider_account_id);
     return NextResponse.json({
       connected: true,
-      status: account.details_submitted ? "submitted" : record.status,
+      status: account.payouts_enabled
+        ? "active"
+        : account.details_submitted
+          ? "submitted"
+          : record.status,
       chargesEnabled: account.charges_enabled,
       payoutsEnabled: account.payouts_enabled,
       detailsSubmitted: account.details_submitted,
@@ -76,7 +81,8 @@ export async function POST(request: NextRequest) {
         kimanceUserId: user.id,
       });
 
-      const { data, error } = await supabase
+      const adminClient = createAdminClient();
+      const { data, error } = await adminClient
         .from("integration_accounts")
         .insert({
           user_id: user.id,

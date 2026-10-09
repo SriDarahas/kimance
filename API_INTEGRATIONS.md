@@ -22,7 +22,7 @@
 - Users cannot directly update provider status or capabilities; verified server webhooks use the Supabase service role.
 - Stripe connected-account creation uses a stable idempotency key to prevent duplicate accounts during retries.
 - Provider account IDs are stored in `integration_accounts`; secret keys are never stored in Supabase rows.
-- The migration enables row-level security so users can access only their own provider mappings.
+- The migration enables row-level security so users can read only their own provider mappings. Provider mappings are created by authenticated server routes using the service role.
 
 ## Stripe Connect setup
 
@@ -32,6 +32,8 @@
 4. Call `POST /api/integrations/stripe/connect` as an authenticated Kimance user to create or resume onboarding.
 5. Verify onboarding status with `GET /api/integrations/stripe/connect`.
 6. Promote the same configuration to Production only after test-mode validation.
+
+The Settings page shows Stripe connection readiness and launches Stripe-hosted onboarding. Account creation uses Accounts v2 with direct charges, Stripe-hosted verification, and Stripe responsibility for processing fees and connected-account losses. Onboarding requires `STRIPE_SECRET_KEY`; webhook processing remains unavailable until `STRIPE_WEBHOOK_SECRET` is configured.
 
 ## Provider readiness endpoint
 

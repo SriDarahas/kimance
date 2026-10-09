@@ -19,10 +19,5 @@ create policy "Users can view their own integration accounts"
   for select
   using (auth.uid() = user_id);
 
-create policy "Users can create their own integration accounts"
-  on public.integration_accounts
-  for insert
-  with check (auth.uid() = user_id);
-
 create index if not exists integration_accounts_user_provider_idx
   on public.integration_accounts (user_id, provider);
