@@ -5,6 +5,7 @@ import { useLanguage } from "@/app/providers/LanguageProvider";
 import { getTranslation } from "@/lib/i18n";
 import CurrencyDashboard from "@/app/components/CurrencyDashboard";
 import NotificationBell from "@/app/components/NotificationBell";
+import TransactionInsights from "./TransactionInsights";
 
 interface Transaction {
   id: string;
@@ -18,7 +19,6 @@ interface Transaction {
 
 interface DashboardClientProps {
   userName: string;
-  userEmail: string;
   balance: number;
   transactions: Transaction[];
   userId: string;
@@ -27,13 +27,15 @@ interface DashboardClientProps {
 
 export default function DashboardClient({ 
   userName, 
-  userEmail, 
   balance, 
   transactions,
   userId
 }: DashboardClientProps) {
   const { language } = useLanguage();
-  const t = (key: any, vars?: Record<string, string>) => getTranslation(language, key, vars);
+  const t = (
+    key: Parameters<typeof getTranslation>[1],
+    vars?: Record<string, string>
+  ) => getTranslation(language, key, vars);
 
   return (
     <>
@@ -169,35 +171,7 @@ export default function DashboardClient({
 
           {/* Right Column - Insights + Exchange Widget — #35: Bigger titles */}
           <div className="lg:col-span-1 space-y-4">
-            {/* AI Insights */}
-            <div className="bg-linear-to-br from-purple-600/10 to-blue-500/10 rounded-2xl p-4 border border-purple-600/20 relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-3 opacity-10">
-                <span className="material-icons-outlined text-5xl text-purple-600">psychology</span>
-              </div>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="bg-purple-600 text-white text-xs font-bold px-2 py-0.5 rounded">AI</span>
-                <h3 className="font-serif text-lg font-bold text-gray-900">
-                  {t('smartInsights')}
-                </h3>
-              </div>
-              <div className="space-y-2">
-                <div className="bg-white p-3 rounded-xl shadow-sm border border-gray-100">
-                  <p className="text-xs text-gray-600 leading-relaxed">
-                    <span className="font-semibold text-purple-600">{t('goodJob')}</span> {t('youSpent')}{" "}
-                    <span className="font-semibold text-green-600">15% {t('lessOnDiningOut')}</span>
-                  </p>
-                </div>
-                <div className="bg-white p-3 rounded-xl shadow-sm border border-gray-100 opacity-80">
-                  <p className="text-xs text-gray-600 leading-relaxed">
-                    {t('projectedSavings')}{" "}
-                    <span className="font-semibold text-gray-900">$450.00</span> {t('basedOnCurrentTrends')}
-                  </p>
-                </div>
-              </div>
-              <button className="mt-3 w-full py-2 bg-white text-purple-600 font-medium text-xs rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                {t('viewFullReport')}
-              </button>
-            </div>
+            <TransactionInsights language={language} />
 
             {/* Quick Convert Link */}
             <Link href="/exchange-rate" className="block bg-linear-to-r from-purple-600 to-violet-600 rounded-2xl p-4 text-white hover:shadow-lg transition-shadow">
