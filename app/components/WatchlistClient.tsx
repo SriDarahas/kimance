@@ -1,20 +1,26 @@
-"use client"
-import React, { useEffect, useState } from 'react'
-import { useLanguage } from '@/app/providers/LanguageProvider'
-import { getTranslation } from '@/lib/i18n'
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { useLanguage } from "@/app/providers/LanguageProvider";
+import { getTranslation } from "@/lib/i18n";
 
 type Rate = {
-  code: string
-  value: number
-}
+  code: string;
+  value: number;
+};
 
 type RatesResponse = {
-  data?: Record<string, Rate>
-  meta?: any
-  error?: string
-}
+  data?: Record<string, Rate>;
+  meta?: unknown;
+  error?: string;
+};
 
-const WATCHLIST_CURRENCIES: { code: string; flag: string; name: string; color: string }[] = [
+const WATCHLIST_CURRENCIES: {
+  code: string;
+  flag: string;
+  name: string;
+  color: string;
+}[] = [
   { code: "USD", flag: "🇺🇸", name: "US Dollar", color: "bg-gray-800" },
   { code: "CAD", flag: "🇨🇦", name: "Canadian Dollar", color: "bg-red-600" },
   { code: "EUR", flag: "🇪🇺", name: "Euro", color: "bg-blue-600" },
@@ -35,72 +41,163 @@ const WATCHLIST_CURRENCIES: { code: string; flag: string; name: string; color: s
   { code: "EGP", flag: "🇪🇬", name: "Egyptian Pound", color: "bg-amber-600" },
   { code: "MZN", flag: "🇲🇿", name: "Mozambican Metical", color: "bg-teal-600" },
   { code: "AOA", flag: "🇦🇴", name: "Angolan Kwanza", color: "bg-red-800" },
-]
+];
 
-const ALL_CODES = WATCHLIST_CURRENCIES.map(c => c.code)
+const ALL_CODES = WATCHLIST_CURRENCIES.map(
+  (currency) => currency.code
+);
 
-export default function WatchlistClient() {
-  const { language } = useLanguage()
-  const t = (key: any, vars?: Record<string, string>) => getTranslation(language, key, vars)
-  const [rates, setRates] = useState<Record<string, Rate> | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  async function load() {
-    try {
-      setLoading(true)
-      setError(null)
-      const res = await fetch(`/api/currency?base=USD&symbols=${ALL_CODES.join(",")}`)
-      const json = (await res.json()) as RatesResponse
-      if (!res.ok) throw new Error(json?.error || 'Failed to load rates')
-      setRates(json.data ?? null)
-    } catch (err: any) {
-      setError(err?.message ?? String(err))
-    } finally {
-      setLoading(false)
-    }
+function formatRate(value: number): string {
+  if (!Number.isFinite(value)) {
+    return "—";
   }
 
+  const options =
+    value > 100
+      ? {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }
+      : {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 4,
+        };
+
+  return value.toLocaleString("en-US", options);
+}
+
+export default function WatchlistClient() {
+  const { language } = useLanguage();
+
+  const t = (
+    key: Parameters<typeof getTranslation>[1],
+    vars?: Record<string, string>
+  ) => getTranslation(language, key, vars);
+
+  const [rates, setRates] = useState<
+    Record<string, Rate> | null
+  >(null);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
-    load()
-    const id = setInterval(load, 10000)
-    return () => clearInterval(id)
-  }, [])
+    let active = true;
+
+    async function load() {
+      try {
+        const res = await fetch(
+          `/api/currency?base=USD&symbols=${ALL_CODES.join(",")}`,
+          { cache: "no-store" }
+        );
+
+        const json = (await res.json()) as RatesResponse;
+
+        if (!res.ok) {
+          throw new Error(
+            json.error || "Failed to load rates"
+          );
+        }
+
+        if (!active) return;
+
+        setRates(json.data ?? null);
+        setError(null);
+      } catch (err) {
+        if (!active) return;
+
+        setError(
+          err instanceof Error
+            ? err.message
+            : String(err)
+        );
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
+      }
+    }
+
+    load();
+
+    const id = setInterval(load, 10000);
+
+    return () => {
+      active = false;
+      clearInterval(id);
+    };
+  }, []);
 
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-serif text-lg font-bold text-gray-900">{t('watchlist')}</h3>
-        <span className="text-[10px] text-gray-400 font-medium">{WATCHLIST_CURRENCIES.length} currencies</span>
+        <h3 className="font-serif text-lg font-bold text-gray-900">
+          {t("watchlist")}
+        </h3>
+
+        <span className="text-[10px] text-gray-400 font-medium">
+          {WATCHLIST_CURRENCIES.length} currencies
+        </span>
       </div>
-      
-      {loading && <p className="text-xs text-gray-500">{t('loadingRates')}</p>}
-      {error && <p className="text-xs text-red-500">{error}</p>}
+
+      {loading && (
+        <p className="text-xs text-gray-500">
+          {t("loadingRates")}
+        </p>
+      )}
+
+      {error && (
+        <p className="text-xs text-red-500">
+          {error}
+        </p>
+      )}
 
       {!loading && !error && (
         <div className="max-h-[260px] overflow-y-auto space-y-1 pr-1">
           {WATCHLIST_CURRENCIES.map((curr) => {
-            const rate = rates?.[curr.code]
+            const rate = rates?.[curr.code];
+
+            const hasRate =
+              typeof rate?.value === "number" &&
+              Number.isFinite(rate.value);
+
             return (
-              <div key={curr.code} className="w-full flex items-center justify-between hover:bg-purple-50 rounded-lg p-2 transition-colors">
+              <div
+                key={curr.code}
+                className="w-full flex items-center justify-between hover:bg-purple-50 rounded-lg p-2 transition-colors"
+              >
                 <div className="flex items-center gap-2.5">
-                  <span className="text-lg">{curr.flag}</span>
+                  <span className="text-lg">
+                    {curr.flag}
+                  </span>
+
                   <div>
-                    <span className="text-xs font-bold text-gray-900">{curr.code}</span>
-                    <span className="text-[10px] text-gray-400 block leading-tight">{curr.name}</span>
+                    <span className="text-xs font-bold text-gray-900">
+                      {curr.code}
+                    </span>
+
+                    <span className="text-[10px] text-gray-400 block leading-tight">
+                      {curr.name}
+                    </span>
                   </div>
                 </div>
+
                 <div className="text-right">
                   <span className="text-xs font-bold text-gray-900">
-                    {rate ? rate.value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: rate.value > 100 ? 0 : 4 }) : '—'}
+                    {hasRate
+                      ? formatRate(rate!.value)
+                      : "—"}
                   </span>
-                  <span className="text-[10px] text-gray-400 block">per USD</span>
+
+                  <span className="text-[10px] text-gray-400 block">
+                    per USD
+                  </span>
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       )}
     </div>
-  )
+  );
 }
