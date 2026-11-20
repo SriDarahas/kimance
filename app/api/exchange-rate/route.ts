@@ -1,46 +1,86 @@
+
 import { NextResponse } from "next/server";
+
+const demoUsdRates: Record<string, number> = {
+  USD: 1,
+  CAD: 1.38,
+  EUR: 0.92,
+  GBP: 0.79,
+  NGN: 1450,
+  KES: 130,
+  GHS: 15.5,
+};
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const from = searchParams.get("from") || "USD";
+  const from = (searchParams.get("from") || "USD").toUpperCase();
 
-  try {
-    const apiKey = process.env.EXCHANGE_RATE_API_KEY;
-    if (!apiKey) {
+  const apiKey = process.env.EXCHANGE_RATE_API_KEY?.trim();
+
+  // DEMO MODE: No sponsor API key yet
+  if (!apiKey) {
+    const baseRate = demoUsdRates[from];
+
+    if (!baseRate) {
       return NextResponse.json(
-        { error: "API key not configured" },
-        { status: 500 }
+        { error: "Unsupported demo currency" },
+        { status: 400 }
       );
     }
 
-    const res = await fetch(
-      `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${from}`
+    const conversion_rates = Object.fromEntries(
+      Object.entries(demoUsdRates).map(([currency, usdRate]) => [
+        currency,
+        usdRate / baseRate,
+      ])
     );
 
-    if (!res.ok) {
+    return NextResponse.json({
+      result: "success",
+      mode: "demo",
+      base_code: from,
+      conversion_rates,
+      notice: "Demonstration rates, not live market data",
+    });
+  }
+
+  // LIVE MODE: Sponsor API key is configured
+  try {
+    const response = await fetch(
+      `https://v6.exchangerate-api.com/v6/${encodeURIComponent(apiKey)}/latest/${encodeURIComponent(from)}`,
+      { cache: "no-store" }
+    );
+
+    if (!response.ok) {
       return NextResponse.json(
-        { error: "Failed to fetch rates" },
-        { status: res.status }
+        { error: "Exchange rate provider unavailable" },
+        { status: 502 }
       );
     }
 
-    const data = await res.json();
+    const data = await response.json();
 
-    if (data.result !== "success") {
+    if (
+      data.result !== "success" ||
+      !data.conversion_rates
+    ) {
       return NextResponse.json(
-        { error: "API error" },
-        { status: 500 }
+        { error: "Invalid exchange rate response" },
+        { status: 502 }
       );
     }
 
     return NextResponse.json({
-      result: data.result,
+      result: "success",
+      mode: "live",
+      base_code: from,
       conversion_rates: data.conversion_rates,
+      last_update_utc: data.time_last_update_utc,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
+      { error: "Unable to connect to exchange rate provider" },
+      { status: 502 }
     );
   }
 }
