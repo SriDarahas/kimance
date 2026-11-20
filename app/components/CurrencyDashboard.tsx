@@ -1,13 +1,26 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/app/providers/LanguageProvider";
 import { getTranslation } from "@/lib/i18n";
 
-type Rate = { code: string; value: number };
-type RatesResponse = { data?: Record<string, Rate>; error?: string };
+type RatesResponse = {
+  result?: string;
+  mode?: "demo" | "live";
+  base_code?: string;
+  conversion_rates?: Record<string, number>;
+  error?: string;
+};
 
-const CURRENCY_INFO: { code: string; name: string; flag: string; region: string }[] = [
+type DisplayMode = "loading" | "demo" | "live" | "error";
+
+const CURRENCY_INFO: {
+  code: string;
+  name: string;
+  flag: string;
+  region: string;
+}[] = [
   { code: "CAD", name: "Canadian Dollar", flag: "🇨🇦", region: "North America" },
   { code: "EUR", name: "Euro", flag: "🇪🇺", region: "Europe" },
   { code: "GBP", name: "British Pound", flag: "🇬🇧", region: "Europe" },
@@ -29,50 +42,112 @@ const CURRENCY_INFO: { code: string; name: string; flag: string; region: string 
   { code: "AOA", name: "Angolan Kwanza", flag: "🇦🇴", region: "Africa" },
 ];
 
-const ALL_CODES = CURRENCY_INFO.map((c) => c.code);
-
 export default function CurrencyDashboard() {
   const { language } = useLanguage();
-  const t = (key: any, vars?: Record<string, string>) => getTranslation(language, key, vars);
-  const [rates, setRates] = useState<Record<string, Rate> | null>(null);
+
+  const [rates, setRates] = useState<Record<string, number>>({});
+  const [mode, setMode] = useState<DisplayMode>("loading");
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("all");
 
-  async function loadRates() {
-    try {
-      const res = await fetch(`/api/currency?base=USD&symbols=${ALL_CODES.join(",")}`);
-      const json = (await res.json()) as RatesResponse;
-      if (res.ok && json.data) setRates(json.data);
-    } catch {
-      /* silent — we still show cards without rates */
-    } finally {
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
+    let active = true;
+
+    async function loadRates() {
+      try {
+        const response = await fetch(
+          "/api/exchange-rate?from=USD",
+          { cache: "no-store" }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch exchange rates");
+        }
+
+        const data = (await response.json()) as RatesResponse;
+
+        if (
+          data.result !== "success" ||
+          !data.conversion_rates
+        ) {
+          throw new Error(
+            data.error || "Invalid exchange rate response"
+          );
+        }
+
+        if (!active) return;
+
+        setRates(data.conversion_rates);
+        setMode(data.mode === "live" ? "live" : "demo");
+      } catch (error) {
+        console.error("Exchange rate error:", error);
+
+        if (!active) return;
+
+        setRates({});
+        setMode("error");
+      } finally {
+        if (active) setLoading(false);
+      }
+    }
+
     loadRates();
-    const id = setInterval(loadRates, 5 * 60 * 1000); // poll every 5 min to match server cache TTL
-    return () => clearInterval(id);
+
+    const interval = setInterval(loadRates, 5 * 60 * 1000);
+
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
   }, []);
 
-  const filtered = CURRENCY_INFO.filter((c) => {
+  const filtered = CURRENCY_INFO.filter((currency) => {
     if (filter === "all") return true;
-    return c.region === filter;
+    return currency.region === filter;
   });
+
+  const statusText =
+    mode === "live"
+      ? "LIVE"
+      : mode === "demo"
+      ? "DEMO"
+      : mode === "error"
+      ? "UNAVAILABLE"
+      : "LOADING";
+
+  const statusColor =
+    mode === "live"
+      ? "bg-green-400"
+      : mode === "demo"
+      ? "bg-amber-400"
+      : mode === "error"
+      ? "bg-red-400"
+      : "bg-gray-300";
 
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm h-64 flex flex-col">
+      {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <span className="material-icons-outlined text-purple-600">currency_exchange</span>
+          <span className="material-icons-outlined text-purple-600">
+            currency_exchange
+          </span>
+
           <h3 className="font-serif text-xl font-bold text-gray-900">
             Today&apos;s Rates
           </h3>
         </div>
+
         <div className="flex items-center gap-1.5">
-          <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-          <span className="text-xs text-gray-400 font-medium">LIVE</span>
+          <span
+            className={`w-2 h-2 rounded-full ${statusColor} ${
+              mode === "live" ? "animate-pulse" : ""
+            }`}
+          />
+
+          <span className="text-xs text-gray-400 font-medium">
+            {statusText}
+          </span>
         </div>
       </div>
 
@@ -83,50 +158,85 @@ export default function CurrencyDashboard() {
           { id: "Africa", label: "Africa" },
           { id: "Europe", label: "Europe" },
           { id: "North America", label: "Americas" },
-        ].map((f) => (
+        ].map((item) => (
           <button
-            key={f.id}
-            onClick={() => setFilter(f.id)}
+            key={item.id}
+            onClick={() => setFilter(item.id)}
             className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
-              filter === f.id
+              filter === item.id
                 ? "bg-purple-600 text-white shadow-md"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
-            {f.label}
+            {item.label}
           </button>
         ))}
       </div>
 
-      {/* Horizontal scrollable currency cards */}
-      <div className="flex gap-3 overflow-x-auto pb-2" style={{ scrollbarWidth: "thin" }}>
+      {/* Horizontal Currency Cards */}
+      <div
+        className="flex gap-3 overflow-x-auto pb-2"
+        style={{ scrollbarWidth: "thin" }}
+      >
         {loading ? (
-          <p className="text-xs text-gray-400 py-4 w-full text-center">Loading rates…</p>
+          <p className="text-xs text-gray-400 py-4 w-full text-center">
+            Loading rates…
+          </p>
         ) : (
-          filtered.map((curr) => {
-            const rate = rates?.[curr.code];
+          filtered.map((currency) => {
+            const rate = rates[currency.code];
+
+            const hasRate =
+              typeof rate === "number" &&
+              Number.isFinite(rate);
+
             return (
               <div
-                key={curr.code}
+                key={currency.code}
                 className="shrink-0 w-30 flex flex-col items-center gap-1 p-3 rounded-xl border border-gray-100 hover:border-purple-200 hover:bg-purple-50 transition-colors"
               >
-                <span className="text-2xl">{curr.flag}</span>
-                <span className="text-sm font-bold text-gray-900">{curr.code}</span>
-                <span className="text-[10px] text-gray-400 leading-tight text-center truncate w-full">{curr.name}</span>
+                <span className="text-2xl">
+                  {currency.flag}
+                </span>
+
+                <span className="text-sm font-bold text-gray-900">
+                  {currency.code}
+                </span>
+
+                <span className="text-[10px] text-gray-400 leading-tight text-center truncate w-full">
+                  {currency.name}
+                </span>
+
                 <span className="text-sm font-bold text-purple-700 mt-1">
-                  {rate
-                    ? rate.value.toLocaleString(undefined, {
+                  {hasRate
+                    ? rate.toLocaleString(undefined, {
                         minimumFractionDigits: 2,
-                        maximumFractionDigits: rate.value > 100 ? 0 : 4,
+                        maximumFractionDigits:
+                          rate > 100 ? 0 : 4,
                       })
                     : "—"}
                 </span>
-                <span className="text-[10px] text-gray-400">per USD</span>
+
+                <span className="text-[10px] text-gray-400">
+                  per USD
+                </span>
               </div>
             );
           })
         )}
       </div>
+
+      {mode === "demo" && (
+        <p className="text-[10px] text-amber-600 mt-1">
+          Demo rates for demonstration only.
+        </p>
+      )}
+
+      {mode === "error" && (
+        <p className="text-[10px] text-red-500 mt-1">
+          Exchange rates are temporarily unavailable.
+        </p>
+      )}
     </div>
   );
 }
