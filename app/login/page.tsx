@@ -5,8 +5,12 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { login, loginWithPhone, sendPhoneOtp, verifyPhoneOtp } from "@/app/auth/actions";
 
-type Rate = { code: string; value: number };
-type RatesResponse = { data?: Record<string, Rate>; error?: string };
+type RatesResponse = {
+  result?: string;
+  mode?: "demo" | "live";
+  conversion_rates?: Record<string, number>;
+  error?: string;
+};
 
 const TICKER_CURRENCIES = ["USD", "CAD", "EUR", "GBP", "CDF", "XAF", "XOF", "KES", "NGN", "RWF", "BIF", "TZS", "UGX"];
 
@@ -21,20 +25,40 @@ export default function Login() {
   const [otpSent, setOtpSent] = useState(false);
   const [otpCode, setOtpCode] = useState("");
   const [phoneAuthMode, setPhoneAuthMode] = useState<"password" | "otp">("password");
-  const [rates, setRates] = useState<Record<string, Rate> | null>(null);
+  const [rates, setRates] = useState<Record<string, number> | null>(null);
+  const [rateMode, setRateMode] = useState<"loading" | "demo" | "live" | "error">("loading");
 
-  // #27/#31: Fetch exchange rates for ticker
+  const formatRate = (code: string) => {
+    const value = rates?.[code];
+    if (typeof value !== "number" || !Number.isFinite(value)) return "—";
+    const decimals = ["CDF", "BIF", "UGX", "TZS", "KES", "NGN", "XAF", "XOF", "RWF"].includes(code) ? 2 : 4;
+    return value.toFixed(decimals);
+  };
+
+  // Shared exchange-rate endpoint: demo without a key, live with a valid key.
   useEffect(() => {
+    let active = true;
     async function loadRates() {
       try {
-        const res = await fetch(`/api/currency?base=USD&symbols=${TICKER_CURRENCIES.join(",")}`);
+        const res = await fetch("/api/exchange-rate?from=USD", { cache: "no-store" });
+        if (!res.ok) throw new Error(`Exchange rate request failed (${res.status})`);
         const json = (await res.json()) as RatesResponse;
-        if (json.data) setRates(json.data);
-      } catch { /* silent fail */ }
+        if (json.result !== "success" || !json.conversion_rates) {
+          throw new Error(json.error || "Invalid exchange rate response");
+        }
+        if (!active) return;
+        setRates(json.conversion_rates);
+        setRateMode(json.mode === "live" ? "live" : "demo");
+      } catch (err) {
+        console.error("Login exchange rates:", err);
+        if (!active) return;
+        setRates(null);
+        setRateMode("error");
+      }
     }
-    loadRates();
-    const id = setInterval(loadRates, 30000);
-    return () => clearInterval(id);
+    void loadRates();
+    const id = setInterval(() => { void loadRates(); }, 5 * 60 * 1000);
+    return () => { active = false; clearInterval(id); };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -144,11 +168,11 @@ export default function Login() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="material-icons-outlined text-purple-300 text-lg">currency_exchange</span>
-              <span className="text-white/70 text-xs font-medium">Live Rates</span>
+              <span className="text-white/70 text-xs font-medium">{rateMode === "live" ? "Live Rates" : rateMode === "demo" ? "Demo Rates" : "Exchange Rates"}</span>
             </div>
-            <span className="text-green-400 text-[10px] flex items-center gap-1">
-              <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
-              LIVE
+            <span className={`text-[10px] flex items-center gap-1 ${rateMode === "live" ? "text-green-400" : rateMode === "error" ? "text-red-300" : "text-amber-300"}`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${rateMode === "live" ? "bg-green-400 animate-pulse" : rateMode === "error" ? "bg-red-300" : "bg-amber-300"}`}></span>
+              {rateMode.toUpperCase()}
             </span>
           </div>
           <div className="grid grid-cols-3 gap-3 mt-3">
@@ -156,7 +180,7 @@ export default function Login() {
               <div key={code} className="text-center">
                 <span className="text-white/50 text-[10px] block">USD/{code}</span>
                 <span className="text-white font-bold text-sm">
-                  {rates?.[code] ? rates[code].value.toFixed(4) : "—"}
+                  {formatRate(code)}
                 </span>
               </div>
             ))}
@@ -178,8 +202,8 @@ export default function Login() {
                 {TICKER_CURRENCIES.map((code) => (
                   <span key={`${code}-${rep}`} className="flex items-center gap-1.5 text-xs font-medium">
                     <span className="text-purple-300 font-bold">{code}</span>
-                    <span className="text-white/80">{rates?.[code] ? rates[code].value.toFixed(code === "CDF" || code === "BIF" || code === "UGX" || code === "TZS" || code === "KES" || code === "NGN" || code === "XAF" || code === "XOF" || code === "RWF" ? 2 : 4) : "—"}</span>
-                    <span className="text-green-400 text-[10px]">●</span>
+                    <span className="text-white/80">{formatRate(code)}</span>
+                    <span className={`text-[10px] ${rateMode === "live" ? "text-green-400" : rateMode === "error" ? "text-red-300" : "text-amber-300"}`}>●</span>
                   </span>
                 ))}
               </div>
@@ -263,8 +287,8 @@ export default function Login() {
               {TICKER_CURRENCIES.map((code) => (
                 <span key={`${code}-${rep}`} className="flex items-center gap-1.5 text-xs font-medium">
                   <span className="text-purple-300 font-bold">{code}</span>
-                  <span className="text-white/80">{rates?.[code] ? rates[code].value.toFixed(code === "CDF" || code === "BIF" || code === "UGX" || code === "TZS" || code === "KES" || code === "NGN" || code === "XAF" || code === "XOF" || code === "RWF" ? 2 : 4) : "—"}</span>
-                  <span className="text-green-400 text-[10px]">●</span>
+                  <span className="text-white/80">{formatRate(code)}</span>
+                  <span className={`text-[10px] ${rateMode === "live" ? "text-green-400" : rateMode === "error" ? "text-red-300" : "text-amber-300"}`}>●</span>
                 </span>
               ))}
             </div>
