@@ -1,9 +1,6 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
-import { useLanguage } from "@/app/providers/LanguageProvider";
-import { getTranslation } from "@/lib/i18n";
 
 type RatesResponse = {
   result?: string;
@@ -42,9 +39,17 @@ const CURRENCY_INFO: {
   { code: "AOA", name: "Angolan Kwanza", flag: "🇦🇴", region: "Africa" },
 ];
 
-export default function CurrencyDashboard() {
-  const { language } = useLanguage();
+function formatRate(rate: number): string {
+  if (!Number.isFinite(rate)) return "—";
 
+  const digits = rate > 100
+    ? { minimumFractionDigits: 0, maximumFractionDigits: 0 }
+    : { minimumFractionDigits: 2, maximumFractionDigits: 4 };
+
+  return rate.toLocaleString("en-US", digits);
+}
+
+export default function CurrencyDashboard() {
   const [rates, setRates] = useState<Record<string, number>>({});
   const [mode, setMode] = useState<DisplayMode>("loading");
   const [loading, setLoading] = useState(true);
@@ -93,7 +98,10 @@ export default function CurrencyDashboard() {
 
     loadRates();
 
-    const interval = setInterval(loadRates, 5 * 60 * 1000);
+    const interval = setInterval(
+      loadRates,
+      5 * 60 * 1000
+    );
 
     return () => {
       active = false;
@@ -160,6 +168,7 @@ export default function CurrencyDashboard() {
           { id: "North America", label: "Americas" },
         ].map((item) => (
           <button
+            type="button"
             key={item.id}
             onClick={() => setFilter(item.id)}
             className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
@@ -208,13 +217,7 @@ export default function CurrencyDashboard() {
                 </span>
 
                 <span className="text-sm font-bold text-purple-700 mt-1">
-                  {hasRate
-                    ? rate.toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits:
-                          rate > 100 ? 0 : 4,
-                      })
-                    : "—"}
+                  {hasRate ? formatRate(rate) : "—"}
                 </span>
 
                 <span className="text-[10px] text-gray-400">
