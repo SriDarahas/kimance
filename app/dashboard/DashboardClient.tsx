@@ -209,6 +209,29 @@ export default function DashboardClient({
                 <span className="material-icons-outlined text-2xl">arrow_forward</span>
               </div>
             </Link>
+
+            {/* Connect Bank Link */}
+            <Link
+              href="/dashboard/bank-connect"
+              className="group block rounded-2xl border border-purple-200 bg-white p-4 shadow-sm transition-all duration-200 hover:border-purple-400 hover:bg-purple-50 hover:shadow-lg"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-purple-100 text-purple-700">
+                    <span className="material-icons-outlined text-2xl">account_balance</span>
+                  </div>
+                  <div>
+                    <h3 className="font-serif text-base font-bold text-gray-900">Connect Bank</h3>
+                    <p className="mt-1 text-xs leading-relaxed text-gray-500">
+                      Link a bank account to your Kimance Wallet
+                    </p>
+                  </div>
+                </div>
+                <span className="material-icons-outlined text-xl text-purple-600 transition-transform group-hover:translate-x-1">
+                  arrow_forward
+                </span>
+              </div>
+            </Link>
           </div>
         </div>
       </div>
