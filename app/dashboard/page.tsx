@@ -1,8 +1,18 @@
 import { createClient } from "@/lib/supabase/server";
 import DashboardClient from "./DashboardClient";
-import { isFundingTransaction, isSendTransaction } from '@/lib/services/wallets';
+import { isFundingTransaction } from '@/lib/services/wallets';
 
 export const dynamic = 'force-dynamic';
+
+type TransactionRow = {
+  id: string;
+  sender_id: string;
+  sender_email: string;
+  recipient_email: string;
+  amount: number | string;
+  note: string | null;
+  created_at: string;
+};
 
 async function getUserTotalBalance(supabase: Awaited<ReturnType<typeof createClient>>, userId: string) {
   const { data: wallets } = await supabase
@@ -52,7 +62,7 @@ async function getNotifications(
 
   if (!data) return [];
 
-  return data.map((tx: any) => {
+  return data.map((tx: TransactionRow) => {
     const isSender = tx.sender_id === userId;
     const isOwnFunding = isFundingTransaction(tx.note) && tx.sender_id === userId;
 
@@ -112,7 +122,6 @@ export default async function DashboardPage() {
   return (
     <DashboardClient 
       userName={userName}
-      userEmail={userEmail}
       balance={balance}
       transactions={transactions}
       userId={user!.id}

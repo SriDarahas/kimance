@@ -8,6 +8,7 @@ import { useLanguage } from "@/app/providers/LanguageProvider";
 import { getTranslation } from "@/lib/i18n";
 import NotificationBell from "@/app/components/NotificationBell";
 import { createClient } from "@/lib/supabase/client";
+import StripeConnectCard from "./StripeConnectCard";
 
 type SettingsTab = "profile" | "security" | "billing" | "notifications";
 
@@ -15,9 +16,15 @@ interface SettingsClientProps {
   userName: string;
   userEmail: string;
   isAdmin?: boolean;
+  stripeConfigured: boolean;
 }
 
-export default function SettingsClient({ userName, userEmail, isAdmin = false }: SettingsClientProps) {
+export default function SettingsClient({
+  userName,
+  userEmail,
+  isAdmin = false,
+  stripeConfigured,
+}: SettingsClientProps) {
   const { language } = useLanguage();
   const t = (key: any, vars?: Record<string, string>) => getTranslation(language, key, vars);
   const mobileHeader = (
@@ -373,6 +380,7 @@ export default function SettingsClient({ userName, userEmail, isAdmin = false }:
                   </button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <StripeConnectCard configured={stripeConfigured} />
                   <button className="group bg-white border border-gray-100 p-4 rounded-2xl flex items-center gap-3 hover:border-purple-600/50 transition-all shadow-sm hover:shadow-md text-left">
                     <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
                       <span className="material-icons-outlined text-gray-600 text-lg">
